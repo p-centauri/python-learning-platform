@@ -2,6 +2,11 @@
 
 Operational state (2026-10-16): user-authorized academy deployment is running at https://academy.45-141-22-101.sslip.io with fresh accounts, a separate PostgreSQL volume and preserved carwash app. Local services/data remain stopped/preserved. Hosted execution is unavailable pending a separately isolated worker; broader public acceptance remains open. See SERVER_DEPLOYMENT and STATUS.
 
+## Source publication (2026-10-16)
+
+- [x] Publish source and durable project history to the user-selected public [p-centauri/python-learning-platform](https://github.com/p-centauri/python-learning-platform) repository on `main`; verify remote SHA, exclude local data/credentials/generated files, scan staged content and pass Ruff/TypeScript.
+- [ ] Observe a complete successful GitHub Actions run. The first source publication triggered the workflow; queued status alone does not verify CI.
+
 ## Design tooling (2026-10-16)
 
 - [x] Install requested UI/UX Pro Max, official Anthropic Frontend Design and historical official OpenAI Frontend Skill; pin sources, adapt Pro Max command paths and verify installed files/local searches. See UI_UX_SKILLS.
