@@ -1,0 +1,382 @@
+{
+  "version": "2026.09-code-v1",
+  "note": "Passing these finite behavioral checks is objective test evidence, not a complete code review or certification. Coding results are recorded separately from scenario mastery.",
+  "exercises": [
+    {
+      "id": "python-exact-cents",
+      "language": "python",
+      "title": "Parse exact money without floats",
+      "prompt": "Implement parse_cents(text). Accept only ASCII digits with an optional dot followed by one or two digits. Return nonnegative integer cents. Reject signs, spaces, empty text, excess precision and non-strings with ValueError. Use integer arithmetic; 0 and leading zeros are valid. The tests inspect returned values and error types.",
+      "starter": "def parse_cents(text):\n    \"\"\"Return exact cents, or raise ValueError for invalid input.\"\"\"\n    raise NotImplementedError\n",
+      "function": "parse_cents",
+      "lesson_id": "python-values",
+      "tests": [
+        {
+          "name": "Whole amount",
+          "args": [
+            "12"
+          ],
+          "public": true,
+          "expected": 1200
+        },
+        {
+          "name": "One decimal digit",
+          "args": [
+            "0.5"
+          ],
+          "public": true,
+          "expected": 50
+        },
+        {
+          "name": "Excess precision",
+          "args": [
+            "1.234"
+          ],
+          "public": true,
+          "error": "ValueError"
+        },
+        {
+          "name": "Leading zeros",
+          "args": [
+            "0003.07"
+          ],
+          "public": false,
+          "expected": 307
+        },
+        {
+          "name": "Invalid type",
+          "args": [
+            true
+          ],
+          "public": false,
+          "error": "ValueError"
+        },
+        {
+          "name": "No signs or spaces",
+          "args": [
+            " -1.00"
+          ],
+          "public": false,
+          "error": "ValueError"
+        }
+      ]
+    },
+    {
+      "id": "python-category-totals",
+      "language": "python",
+      "title": "Build fresh category totals",
+      "prompt": "Implement category_totals(rows). Each row is a dict with category (a nonblank string) and cents (a nonnegative int, excluding bool). Strip category whitespace and combine repeated names, preserving case. Return a fresh dict of integer totals. Empty input returns {}. Raise ValueError for invalid rows. Do not change the input rows. These finite checks test values and invalid cases, not every possible input.",
+      "starter": "def category_totals(rows):\n    \"\"\"Validate rows and return a fresh category-to-cents dictionary.\"\"\"\n    raise NotImplementedError\n",
+      "function": "category_totals",
+      "lesson_id": "python-collections",
+      "tests": [
+        {
+          "name": "Repeated category",
+          "args": [
+            [
+              {
+                "category": " Food ",
+                "cents": 100
+              },
+              {
+                "category": "Food",
+                "cents": 50
+              }
+            ]
+          ],
+          "public": true,
+          "expected": {
+            "Food": 150
+          }
+        },
+        {
+          "name": "Empty input",
+          "args": [
+            []
+          ],
+          "public": true,
+          "expected": {}
+        },
+        {
+          "name": "Reject boolean amount",
+          "args": [
+            [
+              {
+                "category": "Food",
+                "cents": true
+              }
+            ]
+          ],
+          "public": true,
+          "error": "ValueError"
+        },
+        {
+          "name": "Case stays distinct",
+          "args": [
+            [
+              {
+                "category": "food",
+                "cents": 0
+              },
+              {
+                "category": "Food",
+                "cents": 7
+              }
+            ]
+          ],
+          "public": false,
+          "expected": {
+            "food": 0,
+            "Food": 7
+          }
+        },
+        {
+          "name": "Blank category",
+          "args": [
+            [
+              {
+                "category": "  ",
+                "cents": 1
+              }
+            ]
+          ],
+          "public": false,
+          "error": "ValueError"
+        }
+      ]
+    },
+    {
+      "id": "python-retry-delay",
+      "language": "python",
+      "title": "Bound a retry delay",
+      "prompt": "Implement retry_delay(attempt, cap). Both values must be positive ints, excluding bool; invalid values raise ValueError. Return min(2 ** (attempt - 1), cap) as integer seconds. Avoid constructing a huge power for a very large attempt. This function computes a delay only; it does not sleep or contact a service.",
+      "starter": "def retry_delay(attempt, cap):\n    \"\"\"Return a capped exponential delay in seconds.\"\"\"\n    raise NotImplementedError\n",
+      "function": "retry_delay",
+      "lesson_id": "python-functions",
+      "tests": [
+        {
+          "name": "First retry",
+          "args": [
+            1,
+            30
+          ],
+          "public": true,
+          "expected": 1
+        },
+        {
+          "name": "Cap applies",
+          "args": [
+            8,
+            30
+          ],
+          "public": true,
+          "expected": 30
+        },
+        {
+          "name": "Invalid attempt",
+          "args": [
+            0,
+            30
+          ],
+          "public": true,
+          "error": "ValueError"
+        },
+        {
+          "name": "Huge attempt",
+          "args": [
+            1000000000,
+            17
+          ],
+          "public": false,
+          "expected": 17
+        },
+        {
+          "name": "Bool is not an attempt",
+          "args": [
+            true,
+            10
+          ],
+          "public": false,
+          "error": "ValueError"
+        }
+      ]
+    },
+    {
+      "id": "sql-paid-totals",
+      "language": "sql",
+      "title": "Keep customers with no paid orders",
+      "prompt": "Write one PostgreSQL SELECT query. Return every customer, including customers with no paid orders. Sum total_cents only for orders whose status is paid. Use 0 when none qualify. Return columns customer_id and total_cents, ordered by customer_id ascending. Keep filtering from accidentally dropping unmatched customers.",
+      "starter": "-- Return customer_id and total_cents for every customer.\nSELECT id AS customer_id, 0 AS total_cents\nFROM customers\nORDER BY id;\n",
+      "schema": "customers(id integer PK, name text)\norders(id integer PK, customer_id integer FK, status text, total_cents integer)",
+      "tests": [
+        {
+          "name": "Paid, cancelled and no orders",
+          "setup_sql": "CREATE TABLE customers(id integer PRIMARY KEY, name text NOT NULL); CREATE TABLE orders(id integer PRIMARY KEY, customer_id integer REFERENCES customers(id), status text NOT NULL, total_cents integer NOT NULL);INSERT INTO customers VALUES (1,'A'),(2,'B'),(3,'C'); INSERT INTO orders VALUES (1,1,'paid',120),(2,1,'cancelled',999),(3,1,'paid',30),(4,2,'pending',50);",
+          "columns": [
+            "customer_id",
+            "total_cents"
+          ],
+          "expected": [
+            [
+              "1",
+              "150"
+            ],
+            [
+              "2",
+              "0"
+            ],
+            [
+              "3",
+              "0"
+            ]
+          ],
+          "public": true
+        },
+        {
+          "name": "Empty customer table",
+          "setup_sql": "CREATE TABLE customers(id integer PRIMARY KEY, name text NOT NULL); CREATE TABLE orders(id integer PRIMARY KEY, customer_id integer REFERENCES customers(id), status text NOT NULL, total_cents integer NOT NULL);",
+          "columns": [
+            "customer_id",
+            "total_cents"
+          ],
+          "expected": [],
+          "public": false
+        },
+        {
+          "name": "Two matching paid orders",
+          "setup_sql": "CREATE TABLE customers(id integer PRIMARY KEY, name text NOT NULL); CREATE TABLE orders(id integer PRIMARY KEY, customer_id integer REFERENCES customers(id), status text NOT NULL, total_cents integer NOT NULL);INSERT INTO customers VALUES (4,'D'),(9,'E'); INSERT INTO orders VALUES (1,4,'paid',50),(2,4,'paid',50),(3,9,'cancelled',800);",
+          "columns": [
+            "customer_id",
+            "total_cents"
+          ],
+          "expected": [
+            [
+              "4",
+              "100"
+            ],
+            [
+              "9",
+              "0"
+            ]
+          ],
+          "public": false
+        }
+      ],
+      "lesson_id": "postgres-locks"
+    },
+    {
+      "id": "sql-latest-event",
+      "language": "sql",
+      "title": "Choose one latest event per order",
+      "prompt": "Write one PostgreSQL SELECT query. Return one row per order_id with columns order_id and event_type, ordered by order_id ascending. The latest occurred_at wins; if two timestamps tie, the larger event id wins. A timestamp alone is not a unique tie-breaker.",
+      "starter": "-- Return the latest event_type per order_id.\nSELECT order_id, event_type FROM events\nORDER BY order_id;\n",
+      "schema": "events(id integer PK, order_id integer, occurred_at timestamptz, event_type text)",
+      "tests": [
+        {
+          "name": "Timestamp tie",
+          "setup_sql": "CREATE TABLE events(id integer PRIMARY KEY, order_id integer NOT NULL, occurred_at timestamptz NOT NULL, event_type text NOT NULL);INSERT INTO events VALUES (1,10,'2026-01-01T00:00:00Z','created'),(2,10,'2026-01-02T00:00:00Z','paid'),(3,10,'2026-01-02T00:00:00Z','shipped'),(4,20,'2026-01-01T00:00:00Z','created');",
+          "columns": [
+            "order_id",
+            "event_type"
+          ],
+          "expected": [
+            [
+              "10",
+              "shipped"
+            ],
+            [
+              "20",
+              "created"
+            ]
+          ],
+          "public": true
+        },
+        {
+          "name": "ID does not replace time ordering",
+          "setup_sql": "CREATE TABLE events(id integer PRIMARY KEY, order_id integer NOT NULL, occurred_at timestamptz NOT NULL, event_type text NOT NULL);INSERT INTO events VALUES (9,1,'2026-01-01T00:00:00Z','old'),(2,1,'2026-01-02T00:00:00Z','new');",
+          "columns": [
+            "order_id",
+            "event_type"
+          ],
+          "expected": [
+            [
+              "1",
+              "new"
+            ]
+          ],
+          "public": false
+        },
+        {
+          "name": "Empty events",
+          "setup_sql": "CREATE TABLE events(id integer PRIMARY KEY, order_id integer NOT NULL, occurred_at timestamptz NOT NULL, event_type text NOT NULL);",
+          "columns": [
+            "order_id",
+            "event_type"
+          ],
+          "expected": [],
+          "public": false
+        }
+      ],
+      "lesson_id": "postgres-locks"
+    },
+    {
+      "id": "sql-tenant-invoices",
+      "language": "sql",
+      "title": "Filter outstanding invoices by tenant",
+      "prompt": "Write one PostgreSQL SELECT query for tenant 7 only. Return unpaid invoices as columns invoice_id and amount_cents, ordered by invoice_id ascending. Rows from another tenant must never appear, even if their amounts look similar. This exercise checks query output; application authorization needs separate design and tests.",
+      "starter": "-- Return unpaid invoices belonging to tenant 7.\nSELECT id AS invoice_id, amount_cents FROM invoices\nORDER BY id;\n",
+      "schema": "invoices(id integer PK, tenant_id integer, amount_cents integer, paid boolean)",
+      "tests": [
+        {
+          "name": "Mixed tenants and payment states",
+          "setup_sql": "CREATE TABLE invoices(id integer PRIMARY KEY, tenant_id integer NOT NULL, amount_cents integer NOT NULL, paid boolean NOT NULL);INSERT INTO invoices VALUES (1,7,100,false),(2,8,100,false),(3,7,300,true),(4,7,50,false);",
+          "columns": [
+            "invoice_id",
+            "amount_cents"
+          ],
+          "expected": [
+            [
+              "1",
+              "100"
+            ],
+            [
+              "4",
+              "50"
+            ]
+          ],
+          "public": true
+        },
+        {
+          "name": "Only another tenant has outstanding work",
+          "setup_sql": "CREATE TABLE invoices(id integer PRIMARY KEY, tenant_id integer NOT NULL, amount_cents integer NOT NULL, paid boolean NOT NULL);INSERT INTO invoices VALUES (1,8,90,false),(2,7,40,true);",
+          "columns": [
+            "invoice_id",
+            "amount_cents"
+          ],
+          "expected": [],
+          "public": false
+        },
+        {
+          "name": "Zero amount is still an unpaid invoice",
+          "setup_sql": "CREATE TABLE invoices(id integer PRIMARY KEY, tenant_id integer NOT NULL, amount_cents integer NOT NULL, paid boolean NOT NULL);INSERT INTO invoices VALUES (7,7,0,false),(6,7,20,false);",
+          "columns": [
+            "invoice_id",
+            "amount_cents"
+          ],
+          "expected": [
+            [
+              "6",
+              "20"
+            ],
+            [
+              "7",
+              "0"
+            ]
+          ],
+          "public": false
+        }
+      ],
+      "lesson_id": "postgres-locks"
+    }
+  ]
+}

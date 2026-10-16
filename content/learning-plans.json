@@ -1,0 +1,30 @@
+{
+  "version": "2026.09-plan-v2",
+  "goals": [
+    {"id":"python","title":"Build Python confidence","description":"Work through the published Python modules and their practice.","tracks":["python"]},
+    {"id":"backend","title":"Become a backend engineer","description":"Python, databases, APIs and reliable backend services.","tracks":["python","postgres","http","fastapi","distributed","architecture","queues","production"]},
+    {"id":"applied-ai","title":"Build applied AI systems","description":"Python and data foundations, then retrieval, tools, evaluation and AI security.","tracks":["python","postgres","http","llm","embeddings","rag","tools","ai-evaluation","ai-security"]},
+    {"id":"backend-ai","title":"Backend + Applied AI engineer","description":"Follow the combined backend and applied AI path.","tracks":["python","postgres","http","fastapi","distributed","architecture","queues","production","llm","embeddings","rag","tools","ai-evaluation","ai-security"]}
+  ],
+  "topic_lessons": {
+    "Values & expressions":"python-values",
+    "Collections":"python-collections",
+    "Control flow":"python-control-flow",
+    "Functions & errors":"python-functions",
+    "Files & modules":"python-files",
+    "Functions & scope":"python-functions",
+    "Objects & types":"python-classes",
+    "Iteration & resources":"python-iterators",
+    "Reliability & standard library":"python-dates",
+    "Testing & packages":"python-tests",
+    "Object model & protocols":"python-protocols",
+    "Typing & API contracts":"python-type-hints",
+    "Resource lifetime & isolation":"python-context-managers",
+    "Performance & memory":"python-streaming"
+  },
+  "knowledge_entry_points": {
+    "python-beginner-v1":"python-text-bytes",
+    "python-intermediate-v1":"python-classes",
+    "python-advanced-v1":"python-iterators"
+  }
+}

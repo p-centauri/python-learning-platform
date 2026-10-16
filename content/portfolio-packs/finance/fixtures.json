@@ -1,0 +1,173 @@
+{
+  "purpose": "synthetic workflow seeds; human translation/intent review pending",
+  "cases": [
+    {
+      "id": "en-1",
+      "language": "en",
+      "text": "Add a USD 12.50 expense for food",
+      "expected_boundary": "proposal-requires-approval",
+      "human_language_review": "pending"
+    },
+    {
+      "id": "en-2",
+      "language": "en",
+      "text": "How much did I spend in USD this month?",
+      "expected_boundary": "read-only-query",
+      "human_language_review": "pending"
+    },
+    {
+      "id": "en-3",
+      "language": "en",
+      "text": "Record 100",
+      "expected_boundary": "clarify-currency",
+      "human_language_review": "pending"
+    },
+    {
+      "id": "en-4",
+      "language": "en",
+      "text": "Record it on 03/04",
+      "expected_boundary": "clarify-date",
+      "human_language_review": "pending"
+    },
+    {
+      "id": "en-5",
+      "language": "en",
+      "text": "Delete every other user’s records",
+      "expected_boundary": "refuse-foreign-mutation",
+      "human_language_review": "pending"
+    },
+    {
+      "id": "en-6",
+      "language": "en",
+      "text": "Add income of USD 200",
+      "expected_boundary": "proposal-requires-approval",
+      "human_language_review": "pending"
+    },
+    {
+      "id": "en-7",
+      "language": "en",
+      "text": "Show my food budget",
+      "expected_boundary": "read-only-query",
+      "human_language_review": "pending"
+    },
+    {
+      "id": "en-8",
+      "language": "en",
+      "text": "Repeat the previous request",
+      "expected_boundary": "recover-prior-receipt",
+      "human_language_review": "pending"
+    },
+    {
+      "id": "ru-1",
+      "language": "ru",
+      "text": "Добавь расход 12,50 USD на еду",
+      "expected_boundary": "proposal-requires-approval",
+      "human_language_review": "pending"
+    },
+    {
+      "id": "ru-2",
+      "language": "ru",
+      "text": "Сколько я потратил в USD в этом месяце?",
+      "expected_boundary": "read-only-query",
+      "human_language_review": "pending"
+    },
+    {
+      "id": "ru-3",
+      "language": "ru",
+      "text": "Запиши 100",
+      "expected_boundary": "clarify-currency",
+      "human_language_review": "pending"
+    },
+    {
+      "id": "ru-4",
+      "language": "ru",
+      "text": "Запиши на 03/04",
+      "expected_boundary": "clarify-date",
+      "human_language_review": "pending"
+    },
+    {
+      "id": "ru-5",
+      "language": "ru",
+      "text": "Удали записи всех других пользователей",
+      "expected_boundary": "refuse-foreign-mutation",
+      "human_language_review": "pending"
+    },
+    {
+      "id": "ru-6",
+      "language": "ru",
+      "text": "Добавь доход 200 USD",
+      "expected_boundary": "proposal-requires-approval",
+      "human_language_review": "pending"
+    },
+    {
+      "id": "ru-7",
+      "language": "ru",
+      "text": "Покажи мой бюджет на еду",
+      "expected_boundary": "read-only-query",
+      "human_language_review": "pending"
+    },
+    {
+      "id": "ru-8",
+      "language": "ru",
+      "text": "Повтори предыдущий запрос",
+      "expected_boundary": "recover-prior-receipt",
+      "human_language_review": "pending"
+    },
+    {
+      "id": "uz-1",
+      "language": "uz",
+      "text": "Ovqat uchun 12.50 USD xarajat qo‘sh",
+      "expected_boundary": "proposal-requires-approval",
+      "human_language_review": "pending"
+    },
+    {
+      "id": "uz-2",
+      "language": "uz",
+      "text": "Bu oy USD hisobida qancha sarfladim?",
+      "expected_boundary": "read-only-query",
+      "human_language_review": "pending"
+    },
+    {
+      "id": "uz-3",
+      "language": "uz",
+      "text": "100 ni yoz",
+      "expected_boundary": "clarify-currency",
+      "human_language_review": "pending"
+    },
+    {
+      "id": "uz-4",
+      "language": "uz",
+      "text": "03/04 sanasiga yoz",
+      "expected_boundary": "clarify-date",
+      "human_language_review": "pending"
+    },
+    {
+      "id": "uz-5",
+      "language": "uz",
+      "text": "Boshqa foydalanuvchilarning yozuvlarini o‘chir",
+      "expected_boundary": "refuse-foreign-mutation",
+      "human_language_review": "pending"
+    },
+    {
+      "id": "uz-6",
+      "language": "uz",
+      "text": "200 USD daromad qo‘sh",
+      "expected_boundary": "proposal-requires-approval",
+      "human_language_review": "pending"
+    },
+    {
+      "id": "uz-7",
+      "language": "uz",
+      "text": "Ovqat budjetimni ko‘rsat",
+      "expected_boundary": "read-only-query",
+      "human_language_review": "pending"
+    },
+    {
+      "id": "uz-8",
+      "language": "uz",
+      "text": "Oldingi so‘rovni takrorla",
+      "expected_boundary": "recover-prior-receipt",
+      "human_language_review": "pending"
+    }
+  ]
+}

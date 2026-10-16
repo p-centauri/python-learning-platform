@@ -1,0 +1,503 @@
+{
+  "version": "retrieval-fixture-v1",
+  "spec": {
+    "model": "manual-vectors",
+    "version": "fixture-v1",
+    "dimensions": 6
+  },
+  "chunking": {
+    "width": 96,
+    "overlap": 24
+  },
+  "documents": [
+    {
+      "tenant": "alpha",
+      "id": "python-errors",
+      "revision": 1,
+      "text": "Catch only the error you expect. Keep the original cause when translating a failure. Always release a file in a context manager, even when reading fails.",
+      "topic": "python",
+      "groups": [],
+      "active": true,
+      "vectors": [
+        [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "tenant": "alpha",
+      "id": "python-types",
+      "revision": 1,
+      "text": "A type annotation helps a checker. Validate untrusted values at runtime before using them.",
+      "topic": "python",
+      "groups": [],
+      "active": true,
+      "vectors": [
+        [
+          0.1,
+          1,
+          0,
+          0,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "tenant": "alpha",
+      "id": "db-transactions",
+      "revision": 1,
+      "text": "A transaction groups changes. Commit only when all required writes succeed. Roll back after an error so partial updates do not become the saved state.",
+      "topic": "database",
+      "groups": [],
+      "active": true,
+      "vectors": [
+        [
+          0,
+          0,
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          1,
+          0,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "tenant": "alpha",
+      "id": "http-retries",
+      "revision": 1,
+      "text": "Retry only a safe request after a temporary failure. Bound attempts and time. Use an idempotency key when repeating a supported write could create a duplicate.",
+      "topic": "http",
+      "groups": [],
+      "active": true,
+      "vectors": [
+        [
+          0,
+          0,
+          0,
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          1,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "tenant": "alpha",
+      "id": "policy-ops",
+      "revision": 1,
+      "text": "Operations members review alerts each morning. Record who owns an unresolved incident.",
+      "topic": "policy",
+      "groups": [
+        "ops"
+      ],
+      "active": true,
+      "vectors": [
+        [
+          0,
+          0,
+          0,
+          0,
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "tenant": "alpha",
+      "id": "policy-general",
+      "revision": 1,
+      "text": "Public policy: every incident needs an owner and a short explanation of the next action.",
+      "topic": "policy",
+      "groups": [],
+      "active": true,
+      "vectors": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0.8,
+          0.2
+        ]
+      ]
+    },
+    {
+      "tenant": "alpha",
+      "id": "private-admin",
+      "revision": 1,
+      "text": "Administrator-only policy. This fixture tests exclusion before any similarity calculation.",
+      "topic": "policy",
+      "groups": [
+        "admin"
+      ],
+      "active": true,
+      "vectors": [
+        [
+          0,
+          0,
+          0,
+          0,
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "tenant": "beta",
+      "id": "python-errors",
+      "revision": 1,
+      "text": "Catch the expected error. This note belongs to a different tenant with its own permission.",
+      "topic": "python",
+      "groups": [],
+      "active": true,
+      "vectors": [
+        [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "tenant": "alpha",
+      "id": "revision",
+      "revision": 1,
+      "text": "Old public policy: contact the retired team for assistance.",
+      "topic": "policy",
+      "groups": [],
+      "active": true,
+      "vectors": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "tenant": "alpha",
+      "id": "revision",
+      "revision": 2,
+      "text": "Current policy: contact the service owner and record the next action.",
+      "topic": "policy",
+      "groups": [],
+      "active": true,
+      "vectors": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "tenant": "alpha",
+      "id": "inactive",
+      "revision": 1,
+      "text": "Old public policy: an archived operation was available here.",
+      "topic": "policy",
+      "groups": [],
+      "active": true,
+      "vectors": [
+        [
+          0,
+          0,
+          0,
+          0,
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "tenant": "alpha",
+      "id": "inactive",
+      "revision": 2,
+      "text": "Current inactive policy: this operation is no longer available.",
+      "topic": "policy",
+      "groups": [],
+      "active": false,
+      "vectors": [
+        [
+          0,
+          0,
+          0,
+          0,
+          1,
+          0
+        ]
+      ]
+    }
+  ],
+  "queries": [
+    {
+      "id": "errors",
+      "text": "\"type annotation checker runtime values\" is a log label. How should I handle a failure and release resources?",
+      "vector": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "tenant": "alpha",
+      "groups": [],
+      "topic": "python",
+      "document": null,
+      "min_score": null,
+      "relevant": [
+        {
+          "tenant": "alpha",
+          "document": "python-errors",
+          "revision": 1,
+          "ordinal": 0
+        },
+        {
+          "tenant": "alpha",
+          "document": "python-errors",
+          "revision": 1,
+          "ordinal": 1
+        }
+      ]
+    },
+    {
+      "id": "types",
+      "text": "annotation checker runtime values",
+      "vector": [
+        0,
+        1,
+        0,
+        0,
+        0,
+        0
+      ],
+      "tenant": "alpha",
+      "groups": [],
+      "topic": "python",
+      "document": null,
+      "min_score": null,
+      "relevant": [
+        {
+          "tenant": "alpha",
+          "document": "python-types",
+          "revision": 1,
+          "ordinal": 0
+        }
+      ]
+    },
+    {
+      "id": "rollback",
+      "text": "transaction commit rollback error",
+      "vector": [
+        0,
+        0,
+        1,
+        0,
+        0,
+        0
+      ],
+      "tenant": "alpha",
+      "groups": [],
+      "topic": "database",
+      "document": null,
+      "min_score": null,
+      "relevant": [
+        {
+          "tenant": "alpha",
+          "document": "db-transactions",
+          "revision": 1,
+          "ordinal": 0
+        },
+        {
+          "tenant": "alpha",
+          "document": "db-transactions",
+          "revision": 1,
+          "ordinal": 1
+        }
+      ]
+    },
+    {
+      "id": "retry",
+      "text": "repeat a safe request without a duplicate",
+      "vector": [
+        0,
+        0,
+        0,
+        1,
+        0,
+        0
+      ],
+      "tenant": "alpha",
+      "groups": [],
+      "topic": "http",
+      "document": null,
+      "min_score": null,
+      "relevant": [
+        {
+          "tenant": "alpha",
+          "document": "http-retries",
+          "revision": 1,
+          "ordinal": 0
+        },
+        {
+          "tenant": "alpha",
+          "document": "http-retries",
+          "revision": 1,
+          "ordinal": 1
+        }
+      ]
+    },
+    {
+      "id": "team-policy",
+      "text": "Who reviews alerts?",
+      "vector": [
+        0,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "tenant": "alpha",
+      "groups": [
+        "ops"
+      ],
+      "topic": "policy",
+      "document": null,
+      "min_score": null,
+      "relevant": [
+        {
+          "tenant": "alpha",
+          "document": "policy-ops",
+          "revision": 1,
+          "ordinal": 0
+        }
+      ]
+    },
+    {
+      "id": "revised",
+      "text": "Where do I request assistance?",
+      "vector": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "tenant": "alpha",
+      "groups": [],
+      "topic": "policy",
+      "document": "revision",
+      "min_score": null,
+      "relevant": [
+        {
+          "tenant": "alpha",
+          "document": "revision",
+          "revision": 2,
+          "ordinal": 0
+        }
+      ]
+    },
+    {
+      "id": "other-tenant",
+      "text": "expected error",
+      "vector": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "tenant": "beta",
+      "groups": [],
+      "topic": "python",
+      "document": null,
+      "min_score": null,
+      "relevant": [
+        {
+          "tenant": "beta",
+          "document": "python-errors",
+          "revision": 1,
+          "ordinal": 0
+        }
+      ]
+    },
+    {
+      "id": "empty-filter",
+      "text": "unavailable topic",
+      "vector": [
+        0,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "tenant": "alpha",
+      "groups": [],
+      "topic": "policy",
+      "document": "missing",
+      "min_score": null,
+      "relevant": []
+    },
+    {
+      "id": "no-evidence",
+      "text": "What is the capital of the moon?",
+      "vector": [
+        0,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "tenant": "alpha",
+      "groups": [],
+      "topic": "policy",
+      "document": null,
+      "min_score": null,
+      "relevant": []
+    }
+  ]
+}

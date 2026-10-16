@@ -1,0 +1,370 @@
+{
+  "id": "python-beginner-v1",
+  "version": "2026.09.20-v2",
+  "title": "Python · Beginner evaluation",
+  "level": "Beginner",
+  "description": "A focused Python 3.13+ knowledge evaluation: 20 code-prediction, debugging and reasoning questions. Topic feedback appears after submission. This is not a practical coding certification.",
+  "minutes": 35,
+  "questions": [
+    {
+      "id": "pb-01",
+      "skill": "Values & expressions",
+      "prompt": "An environment variable provides the string \"12\". Which expression produces the integer 15?",
+      "options": [
+        "\"12\" + 3",
+        "int(\"12\") + 3",
+        "str(12) + \"3\"",
+        "int(\"12\" + \"3\")"
+      ],
+      "answer": 1,
+      "explanation": "int(\"12\") turns the text \"12\" into the number 12. Adding 3 then gives 15. Joining text instead would give \"123\", and adding text directly to a number raises TypeError."
+    },
+    {
+      "id": "pb-02",
+      "skill": "Values & expressions",
+      "prompt": "A configured retry count may legitimately be zero. What does this code print?",
+      "options": [
+        "3",
+        "None",
+        "0",
+        "False"
+      ],
+      "answer": 0,
+      "explanation": "This prints 3. Python treats zero as false in an `or` expression, so it uses the fallback. If zero is allowed, use `3 if configured is None else configured` instead.",
+      "code": "configured = 0\nretries = configured or 3\nprint(retries)",
+      "validation_output": "3"
+    },
+    {
+      "id": "pb-03",
+      "skill": "Values & expressions",
+      "prompt": "Which comparison checks whether two lists contain equal values, without requiring them to be the same object?",
+      "options": [
+        "a is b",
+        "id(a) == id(b)",
+        "a = b",
+        "a == b"
+      ],
+      "answer": 3,
+      "explanation": "Use == to check whether the lists have equal contents. Use `is` to check whether both names point to the exact same object. For example, two separately created lists can be equal without being the same list."
+    },
+    {
+      "id": "pb-04",
+      "skill": "Values & expressions",
+      "prompt": "A five-character string is sliced below. What is printed?",
+      "options": [
+        "B",
+        "BCD",
+        "BC",
+        "ABC"
+      ],
+      "answer": 2,
+      "explanation": "This prints BC. The slice starts at position 1 and stops before position 3. Python counts positions from zero, so it takes B and C. The original string stays unchanged.",
+      "code": "code = \"ABCDE\"\nprint(code[1:3])",
+      "validation_output": "BC"
+    },
+    {
+      "id": "pb-05",
+      "skill": "Collections",
+      "prompt": "You need fast membership checks for already-seen, hashable job IDs and do not need duplicates or order. Which collection best expresses that need?",
+      "options": [
+        "list",
+        "tuple",
+        "set",
+        "str"
+      ],
+      "answer": 2,
+      "explanation": "Use a set when you only need unique IDs and fast membership checks. For example, `job_id in seen` checks whether an ID is already there. A list may contain duplicates and may need to check each item."
+    },
+    {
+      "id": "pb-06",
+      "skill": "Collections",
+      "prompt": "A field might be absent from a dictionary. Which expression returns \"unknown\" when it is absent without inserting anything?",
+      "options": [
+        "row.get(\"status\", \"unknown\")",
+        "row[\"status\"]",
+        "row.pop(\"status\")",
+        "row.setdefault(\"status\", \"unknown\")"
+      ],
+      "answer": 0,
+      "explanation": "`row.get(\"status\", \"unknown\")` returns the stored value, or \"unknown\" if the key is missing. It does not change the dictionary. `setdefault` would insert the missing key. A stored None is still returned as None."
+    },
+    {
+      "id": "pb-07",
+      "skill": "Collections",
+      "prompt": "The same list has two names. What does the final line print?",
+      "options": [
+        "[1]",
+        "[2]",
+        "None",
+        "[1, 2]"
+      ],
+      "answer": 3,
+      "explanation": "This prints [1, 2]. `alias = items` gives the same list a second name; it does not copy it. Adding an item through either name changes the list that both names refer to.",
+      "code": "items = [1]\nalias = items\nalias.append(2)\nprint(items)",
+      "validation_output": "[1, 2]"
+    },
+    {
+      "id": "pb-08",
+      "skill": "Collections",
+      "prompt": "The following code assigns the return value of an in-place method. What is printed?",
+      "options": [
+        "[1, 2, 3] [1, 2, 3]",
+        "[1, 2, 3] None",
+        "[3, 1, 2] [1, 2, 3]",
+        "None None"
+      ],
+      "answer": 1,
+      "explanation": "This prints [1, 2, 3] None. `sort()` changes the existing list and returns None. Use `sorted(values)` if you want a new sorted list that you can assign to a variable.",
+      "code": "values = [3, 1, 2]\nresult = values.sort()\nprint(values, result)",
+      "validation_output": "[1, 2, 3] None"
+    },
+    {
+      "id": "pb-09",
+      "skill": "Control flow",
+      "prompt": "How many times does this loop execute its body?",
+      "options": [
+        "4",
+        "5",
+        "3",
+        "It never terminates"
+      ],
+      "answer": 0,
+      "explanation": "The loop runs four times: for 1, 2, 3 and 4. `range(1, 5)` does not include 5. Remember that the stop number is left out when checking loop boundaries.",
+      "code": "count = 0\nfor number in range(1, 5):\n    count += 1\nprint(count)",
+      "validation_output": "4"
+    },
+    {
+      "id": "pb-10",
+      "skill": "Control flow",
+      "prompt": "What does this comprehension produce?",
+      "options": [
+        "[1, 4, 9]",
+        "[2]",
+        "[4]",
+        "[1, 9]"
+      ],
+      "answer": 2,
+      "explanation": "This produces [4]. First keep only even numbers from the input: that leaves 2. Then multiply that number by itself: 2 * 2 is 4.",
+      "code": "print([n * n for n in [1, 2, 3] if n % 2 == 0])",
+      "validation_output": "[4]"
+    },
+    {
+      "id": "pb-11",
+      "skill": "Control flow",
+      "prompt": "You want to skip a malformed row but keep processing later rows in the same loop. Which statement expresses that?",
+      "options": [
+        "break",
+        "return",
+        "pass",
+        "continue"
+      ],
+      "answer": 3,
+      "explanation": "`continue` skips the rest of the current loop round and moves to the next item. `break` ends the loop, `return` leaves the function, and `pass` does nothing."
+    },
+    {
+      "id": "pb-12",
+      "skill": "Control flow",
+      "prompt": "You need each name together with a one-based display position. Which iteration is most direct?",
+      "options": [
+        "for name in range(names):",
+        "for position, name in enumerate(names, start=1):",
+        "for position, name in names:",
+        "for name in zip(names):"
+      ],
+      "answer": 1,
+      "explanation": "`enumerate(names, start=1)` gives pairs such as (1, \"Ali\") and (2, \"Sara\"). This gives you both the display number and the name without managing a separate counter."
+    },
+    {
+      "id": "pb-13",
+      "skill": "Functions & errors",
+      "prompt": "The caller needs the numeric result. What does the final print output?",
+      "options": [
+        "10",
+        "5",
+        "None",
+        "A SyntaxError"
+      ],
+      "answer": 2,
+      "explanation": "This prints None. The function calculates total, but never sends it back to the caller. Add `return total` inside the function to return the calculated number.",
+      "code": "def double(value):\n    total = value * 2\n\nresult = double(5)\nprint(result)",
+      "validation_output": "None"
+    },
+    {
+      "id": "pb-14",
+      "skill": "Functions & errors",
+      "prompt": "A user enters \"twelve\" when an integer is required. Which exception should this conversion handler catch specifically?",
+      "options": [
+        "KeyError",
+        "ValueError",
+        "FileNotFoundError",
+        "IndexError"
+      ],
+      "answer": 1,
+      "explanation": "Catch ValueError. The text \"twelve\" is not a number that int can read. Catch this expected error so you can explain the bad input without hiding unrelated bugs."
+    },
+    {
+      "id": "pb-15",
+      "skill": "Functions & errors",
+      "prompt": "What does calling greet(\"Ali\", punctuation=\"?\") return?",
+      "options": [
+        "Hello Ali?",
+        "Hello Ali!",
+        "Hello punctuation?",
+        "A TypeError"
+      ],
+      "answer": 0,
+      "explanation": "This returns \"Hello Ali?\". The caller supplies punctuation=\"?\", so that value is used. The default \"!\" is used only when the caller leaves punctuation out.",
+      "code": "def greet(name, punctuation=\"!\"):\n    return f\"Hello {name}{punctuation}\"\n\nprint(greet(\"Ali\", punctuation=\"?\"))",
+      "validation_output": "Hello Ali?"
+    },
+    {
+      "id": "pb-16",
+      "skill": "Functions & errors",
+      "prompt": "A parsing function expects a non-negative age. Which design lets its caller distinguish invalid data from a valid age of zero?",
+      "options": [
+        "Return 0 for every invalid input",
+        "Print an error and return None without documenting it",
+        "Catch every exception and return 0",
+        "Raise ValueError for invalid data and document that contract"
+      ],
+      "answer": 3,
+      "explanation": "Raise ValueError for invalid input. Returning 0 would hide the difference between a real age of zero and a failed conversion. Document the error so callers know how to handle it."
+    },
+    {
+      "id": "pb-17",
+      "skill": "Files & modules",
+      "prompt": "You open a text file and processing raises an exception. Which structure closes the file reliably?",
+      "options": [
+        "file = open(path); process(file); file.close()",
+        "with open(path, encoding=\"utf-8\") as file: process(file)",
+        "Rely on restarting the program",
+        "Keep the file in a global variable"
+      ],
+      "answer": 1,
+      "explanation": "Use `with open(...) as file`. It closes the file when the block ends, even if processing fails. A plain `file.close()` after processing may never run if an error happens first."
+    },
+    {
+      "id": "pb-18",
+      "skill": "Files & modules",
+      "prompt": "An HTTP response contains a JSON string. Which standard-library operation turns that string into Python values?",
+      "options": [
+        "eval(payload)",
+        "json.dumps(payload)",
+        "str(payload)",
+        "json.loads(payload)"
+      ],
+      "answer": 3,
+      "explanation": "`json.loads` reads JSON text and creates Python values. `json.dumps` goes the other way. Avoid eval for external data: it can run code. After parsing, still check that the data has the fields and values you expect."
+    },
+    {
+      "id": "pb-19",
+      "skill": "Files & modules",
+      "prompt": "Importing your report module unexpectedly starts generating files. Where should the script entry point be placed?",
+      "options": [
+        "Under if __name__ == \"__main__\":",
+        "Inside every import statement",
+        "In a filename ending with .txt",
+        "In a try block that suppresses all errors"
+      ],
+      "answer": 0,
+      "explanation": "Put the script's starting code under `if __name__ == \"__main__\":`. It runs when you execute the file directly, but not when another file imports its functions."
+    },
+    {
+      "id": "pb-20",
+      "skill": "Files & modules",
+      "prompt": "Two projects need incompatible versions of the same package. What is the ordinary first solution?",
+      "options": [
+        "Edit installed package source globally",
+        "Rename Python to another filename",
+        "Use separate virtual environments and install each project’s dependencies there",
+        "Import both versions with the same name in one environment"
+      ],
+      "answer": 2,
+      "explanation": "Give each project its own virtual environment. Each can then install the package version it needs. Use `python -m pip` with that environment's Python. An environment separates packages; it does not make unsafe code safe."
+    }
+  ],
+  "library_note": "These are working-proficiency targets for this academy, not a universal list required by every employer. Built-ins are language fundamentals; the standard library ships with Python. Third-party packages and tools are labeled separately. The test samples knowledge and does not assess every library listed.",
+  "libraries": [
+    {
+      "name": "pathlib",
+      "kind": "Core standard library",
+      "expectation": "Build paths, read/write text with explicit encoding, and handle missing files.",
+      "url": "https://docs.python.org/3/library/pathlib.html"
+    },
+    {
+      "name": "json and csv",
+      "kind": "Core standard library",
+      "expectation": "Parse and write interchange files; distinguish serialization from data validation.",
+      "url": "https://docs.python.org/3/library/json.html"
+    },
+    {
+      "name": "datetime and time",
+      "kind": "Core standard library",
+      "expectation": "Parse/format basic dates and durations; distinguish elapsed time from calendar time.",
+      "url": "https://docs.python.org/3/library/datetime.html"
+    },
+    {
+      "name": "math and random",
+      "kind": "Core standard library",
+      "expectation": "Use common numeric helpers and reproducible non-security randomness; do not use random for secrets.",
+      "url": "https://docs.python.org/3/library/math.html"
+    },
+    {
+      "name": "os and sys",
+      "kind": "Core standard library",
+      "expectation": "Read environment variables and arguments; understand interpreter and process boundaries.",
+      "url": "https://docs.python.org/3/library/os.html"
+    },
+    {
+      "name": "venv and python -m pip",
+      "kind": "Environment tools",
+      "expectation": "Create a project environment and install packages into the correct interpreter. pip is a package-management tool, not an imported application library.",
+      "url": "https://docs.python.org/3/library/venv.html"
+    },
+    {
+      "name": "unittest or pytest",
+      "kind": "Testing choice",
+      "expectation": "Write small success, boundary and failure tests. unittest is built in; pytest is an optional third-party alternative.",
+      "url": "https://docs.python.org/3/library/unittest.html"
+    },
+    {
+      "name": "HTTPX or Requests",
+      "kind": "Optional integration practice",
+      "expectation": "Try one HTTP client after fundamentals: status handling, JSON, and explicit timeouts. Neither is required to qualify as a Python beginner.",
+      "url": "https://www.python-httpx.org/quickstart/"
+    }
+  ],
+  "practical_followup": "Build a CLI that reads a CSV of expenses, validates amounts, groups by category, writes a JSON summary and tests invalid/missing input. Review the code and tests manually; this test does not execute or grade that project.",
+  "study_resources": [
+    {
+      "skill": "Values & expressions",
+      "title": "Values, expressions and strings",
+      "url": "https://docs.python.org/3/tutorial/introduction.html"
+    },
+    {
+      "skill": "Collections",
+      "title": "Lists, mappings and sets",
+      "url": "https://docs.python.org/3/tutorial/datastructures.html"
+    },
+    {
+      "skill": "Control flow",
+      "title": "Iteration and comprehensions",
+      "url": "https://docs.python.org/3/tutorial/controlflow.html"
+    },
+    {
+      "skill": "Functions & errors",
+      "title": "Functions and exception contracts",
+      "url": "https://docs.python.org/3/tutorial/errors.html"
+    },
+    {
+      "skill": "Files & modules",
+      "title": "File I/O and reusable modules",
+      "url": "https://docs.python.org/3/tutorial/inputoutput.html"
+    }
+  ],
+  "evaluation_policy": {
+    "overall_target": 80,
+    "category_target": 60,
+    "note": "Provisional learning target: at least 80% overall and 60% in every category. These small question banks are not psychometrically calibrated and do not establish practical competence."
+  }
+}

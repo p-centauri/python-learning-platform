@@ -1,0 +1,848 @@
+{
+  "version": "2026.10-project-review-v27",
+  "scale": [
+    {
+      "score": 0,
+      "label": "Not demonstrated",
+      "description": "Evidence is missing, or the required behavior fails."
+    },
+    {
+      "score": 1,
+      "label": "Partly demonstrated",
+      "description": "Some behavior works, but important cases or evidence are missing."
+    },
+    {
+      "score": 2,
+      "label": "Meets the stated contract",
+      "description": "Specific evidence supports the required behavior and important failure cases."
+    },
+    {
+      "score": 3,
+      "label": "Strong evidence and reasoning",
+      "description": "The contract is met, with additional regression evidence and clear trade-off reasoning."
+    }
+  ],
+  "note": "A review records a person's judgment against this rubric. It does not certify expertise or increase skill mastery. Test output is learner-reported; the academy has not executed it.",
+  "projects": {
+    "python-expenses": [
+      {
+        "id": "amounts",
+        "title": "Exact amounts",
+        "expectation": "Show integer-cent parsing with zero, one/two decimal digits, and rejection of malformed or over-precise amounts."
+      },
+      {
+        "id": "summary",
+        "title": "Validated summaries",
+        "expectation": "Show category normalization, empty input, repeated calls, and row errors without state leaking between runs."
+      },
+      {
+        "id": "files",
+        "title": "Files and command behavior",
+        "expectation": "Show valid CSV including quoted fields, closed files, and empty stdout plus a nonzero exit after invalid input."
+      },
+      {
+        "id": "tests",
+        "title": "Tests and explanation",
+        "expectation": "Provide the public-suite output, three added regression tests, and explain the choices using specific code and cases."
+      }
+    ],
+    "python-event-timeline": [
+      {
+        "id": "text",
+        "title": "Text correctness",
+        "expectation": "Show strict UTF-8 decoding, the documented Unicode label rule, equivalent spellings, and invalid-byte rejection."
+      },
+      {
+        "id": "time",
+        "title": "Time and ordering",
+        "expectation": "Prove explicit-offset conversion to UTC, stable ties, no lost records, and contextual rejection of malformed timestamps."
+      },
+      {
+        "id": "debugging",
+        "title": "Debugging reasoning",
+        "expectation": "Describe small reproductions, inspected values, root causes, and why each fix repairs the cause."
+      },
+      {
+        "id": "tests",
+        "title": "Regression evidence",
+        "expectation": "Provide the public-suite output, two added regression cases, and before/after examples tied to the fixes."
+      }
+    ],
+    "python-task-inbox": [
+      {
+        "id": "values",
+        "title": "Validated values",
+        "expectation": "Show direct-construction and parser validation, normalization, frozen values, and no mutation of outside input."
+      },
+      {
+        "id": "storage",
+        "title": "State and ownership",
+        "expectation": "Prove store isolation, duplicate rejection, insertion order, and immutable snapshots using concrete tests."
+      },
+      {
+        "id": "service",
+        "title": "Service boundaries",
+        "expectation": "Show injected recording/failing stores, validation before writes, exactly one accepted write, and failure propagation."
+      },
+      {
+        "id": "types",
+        "title": "Runtime and type evidence",
+        "expectation": "Provide 14 public runtime results, strict mypy output, an incompatible-store diagnostic, two regression cases, and explain their limits."
+      }
+    ],
+    "python-log-stream": [
+      {
+        "id": "lazy",
+        "title": "Lazy parsing",
+        "expectation": "Prove no eager consumption, one-use input support, strict validation, record positions, and preserved original error causes."
+      },
+      {
+        "id": "memory",
+        "title": "One-pass bounded work",
+        "expectation": "Show fixed group totals, no input materialization, fresh state, and oversized-line reads capped at limit + 1 bytes."
+      },
+      {
+        "id": "cleanup",
+        "title": "Resource ownership",
+        "expectation": "Prove owned files close after full use, no use, early exit, and parser/consumer errors; borrowed sources remain open."
+      },
+      {
+        "id": "tests",
+        "title": "Tests and explanation",
+        "expectation": "Provide 16 public test results, two new regressions, no partial CLI success on late failure, and an explanation of retained state."
+      }
+    ],
+    "backend": [
+      {
+        "id": "contract",
+        "title": "API and tenant boundaries",
+        "expectation": "Provide the API contract, permission matrix, and tests for unauthorized access and domain invariants."
+      },
+      {
+        "id": "transactions",
+        "title": "Transactions and retries",
+        "expectation": "Show stock reservation, idempotency and outbox behavior; include two-session proof that the last unit cannot be sold twice."
+      },
+      {
+        "id": "worker",
+        "title": "Recoverable workers",
+        "expectation": "Demonstrate transactional deduplication, bounded retries, poison-message handling, and a commit-before-ack crash test."
+      },
+      {
+        "id": "operations",
+        "title": "Operational evidence",
+        "expectation": "Provide migrations, Compose, CI output, p95/p99 measurements with a stated workload, and a tested rollback/restore runbook."
+      }
+    ],
+    "enterprise-rag": [
+      {
+        "id": "evaluation",
+        "title": "Evaluation dataset",
+        "expectation": "Show supporting-passage labels for at least 30 representative questions, exact IDs, boundary cases, no-answer cases, and a held-out set."
+      },
+      {
+        "id": "ingestion",
+        "title": "Versioned ingestion",
+        "expectation": "Prove preserved versions, offsets and ACLs; test replacement, deletion, retry and duplicate ingestion."
+      },
+      {
+        "id": "retrieval",
+        "title": "Retrieval and support",
+        "expectation": "Compare retrieval choices with recall@k, answer support, latency and cost; provide reproducible runs and failure examples."
+      },
+      {
+        "id": "security",
+        "title": "Authorization attacks",
+        "expectation": "Test tenant filters, caches, citation downloads and malicious documents; show unauthorized data/tool access is blocked."
+      }
+    ],
+    "finance": [
+      {
+        "id": "ledger",
+        "title": "Ledger invariants",
+        "expectation": "Demonstrate exact money, account/currency ownership, recurring entries and audit events with invariant tests."
+      },
+      {
+        "id": "tools",
+        "title": "Trusted action boundaries",
+        "expectation": "Show strict tool schemas, authorization, action-bound approval, and idempotency under duplicate retries."
+      },
+      {
+        "id": "languages",
+        "title": "Multilingual evaluation",
+        "expectation": "Provide Uzbek, Russian and English cases for ambiguous dates, currency, intent and refusals with observed outcomes."
+      },
+      {
+        "id": "operations",
+        "title": "Traceable operation",
+        "expectation": "Show redacted model/prompt/tool traces, latency/cost budgets, provider-failure recovery, reports and a voice-ready API boundary."
+      }
+    ],
+    "python-ingestion-package": [
+      {
+        "id": "artifact",
+        "title": "Installable artifact",
+        "expectation": "Show wheel and source-archive builds, bundled data and typing marker, declared dependencies, quiet imports and both installed command forms outside the source tree."
+      },
+      {
+        "id": "parsing",
+        "title": "Bounded typed parsing",
+        "expectation": "Prove arbitrary chunk framing, lazy borrowed input, inclusive byte limits, strict types/shape, useful line positions, original causes and fresh one-pass totals."
+      },
+      {
+        "id": "http",
+        "title": "Managed HTTP failures",
+        "expectation": "Show owned response cleanup on every exit, borrowed client reuse, configured timeouts, actual body-byte enforcement, rejected redirects/compression/status and no silent retries."
+      },
+      {
+        "id": "evidence",
+        "title": "Tests and reasoning",
+        "expectation": "Provide the 28 public test results, strict type/lint and clean-install evidence, two new regressions, and explanations of URL trust, deadline and fake-transport limitations."
+      }
+    ],
+    "python-feed-policy": [
+      {
+        "id": "rules",
+        "title": "Bounded grammar & independent settings",
+        "expectation": "Show complete ASCII matching, inclusive domain limits, invalid-type handling and independent closures without changing the previous parser contract."
+      },
+      {
+        "id": "transparency",
+        "title": "Transparent reporter behavior",
+        "expectation": "Prove input/result/error identity, one call, preserved metadata and positional-only reporting, with no retries, materialization or resource ownership changes."
+      },
+      {
+        "id": "diagnostics",
+        "title": "Safe observable diagnostics",
+        "expectation": "Inspect real log records for event names, levels, source labels and count. Demonstrate late failure has no success and no sensitive payload or traceback logging."
+      },
+      {
+        "id": "evidence",
+        "title": "Test design & installed composition",
+        "expectation": "Provide public pytest results, strict type/lint and clean-install evidence, two meaningful regressions and a typed integration with prior records. Explain fixture, patch, logger and finite-test limitations."
+      }
+    ],
+    "python-async-feeds": [
+      {
+        "id": "ownership",
+        "title": "Async streaming & ownership",
+        "expectation": "Show strict lazy framed records, owned response/generator cleanup on every exit and borrowed client reuse, with actual-byte enforcement and precise caller/HTTP error boundaries."
+      },
+      {
+        "id": "bounds",
+        "title": "Bounded work & complete reports",
+        "expectation": "Prove pre-I/O validation, source snapshot, bounded queue/fixed task count, balanced queue gets and fresh totals published only after all source owners close."
+      },
+      {
+        "id": "shutdown",
+        "title": "Structured shutdown & deadline evidence",
+        "expectation": "Demonstrate late/cleanup failures, grouped original errors, awaited sibling/caller cancellation, child-only incomplete outcomes and cooperative total time budgets using Events."
+      },
+      {
+        "id": "evidence",
+        "title": "Installed tests & honest limits",
+        "expectation": "Supply 75 public cases, strict type/lint and clean artifact evidence, typed prior-selector composition and two regressions. Explain fake transport, watchdog, cooperative cleanup and non-durable queue limitations."
+      }
+    ],
+    "python-feed-objects": [
+      {
+        "id": "lookup",
+        "title": "Lookup & descriptor ownership",
+        "expectation": "Show class/instance access, independent fields and missing values, and prove validation preserves earlier state. Explain why a property is simpler for one field."
+      },
+      {
+        "id": "identity",
+        "title": "Equality & stable identity",
+        "expectation": "Both fields define immutable identity and hashing; equal distinct keys work in a dict. Unsupported comparisons defer. Do not claim collision-free or persistent hash integers."
+      },
+      {
+        "id": "snapshot",
+        "title": "Sequence & bounded input",
+        "expectation": "Preserve order, negative indices, tuple slices and snapshot independence. Reject wrong/duplicate/overflow input, observe at most 65 items and preserve borrowed cleanup ownership."
+      },
+      {
+        "id": "evidence",
+        "title": "Reproductions & installed evidence",
+        "expectation": "Provide actual public test/type/lint/build/install output, two regressions, an offline adapter and a cooperative diamond trace with each method once. Explain composition tradeoffs and finite limits."
+      }
+    ],
+    "python-typed-transforms": [
+      {
+        "id": "relations",
+        "title": "Generic relationships & variance",
+        "expectation": "Preserve T/U results without Any/casts/type-ignore escape. Explain read-only producer and consumer substitution, and why mutable lists remain invariant."
+      },
+      {
+        "id": "calls",
+        "title": "Call contracts & observation phases",
+        "expectation": "Keep ParamSpec arguments/results and wraps metadata. Demonstrate exact target calls/results/errors with a reliable observer, plus explicit observer failure and later generator/awaitable limits."
+      },
+      {
+        "id": "validation",
+        "title": "Overloads & validated boundaries",
+        "expectation": "Preserve first/default identity and optional result branches. Check current external shape/types and value rules before Row construction; explain guard/cast/mutable-alias limits."
+      },
+      {
+        "id": "evidence",
+        "title": "Runtime, checker & installed evidence",
+        "expectation": "Provide actual public runtime, positive/ten negative checker, strict type/lint/build/install output, two regressions, a corrected rejected call and offline prior-record/snapshot composition. Separate finite checks from judgment."
+      }
+    ],
+    "python-resource-scopes": [
+      {
+        "id": "ownership",
+        "title": "Acquisition ownership & bounds",
+        "expectation": "Register each handoff before further work. Demonstrate count overflow, borrowed input and partial/caller-failure cleanup; do not claim release of unreturned resources."
+      },
+      {
+        "id": "outcomes",
+        "title": "Cleanup outcomes & awaited release",
+        "expectation": "Show reverse order, native chaining, callback non-suppression and awaited cooperative cancellation. Explain repeated cancellation, blocking and termination limits."
+      },
+      {
+        "id": "state",
+        "title": "Context restoration & weak lifetime",
+        "expectation": "Restore nested tokens in the same context, demonstrate task snapshots and cleanup labels, and separate weak lookup from ownership and authorization."
+      },
+      {
+        "id": "evidence",
+        "title": "Installed artifacts & review evidence",
+        "expectation": "Provide actual 54-case/type/lint/build/install output, two regressions and prior-value composition. Explain closed-handle validity and finalizer retention traps; separate judgment from tests."
+      }
+    ],
+    "python-bounded-offload": [
+      {
+        "id": "admission",
+        "title": "Admission, order & borrowed ownership",
+        "expectation": "Show a finite submitted-but-not-retired window, one-pass input, observed overflow without extra submission, ordered latency tradeoffs and preserved borrowed input/pool."
+      },
+      {
+        "id": "shutdown",
+        "title": "Failure, cancellation & owner shutdown",
+        "expectation": "Show input/submit/worker failures, queued versus running cancellation and wait-only timeout. Join owned workers before return/failure; explain no rollback or hard deadline."
+      },
+      {
+        "id": "process",
+        "title": "Serialization, process & resource boundaries",
+        "expectation": "Prove explicit spawn, guarded quiet imports, top-level callable and actual process PIDs. Open/close inside workers; keep named files alive. Record build/runtime GIL facts and synchronization limits."
+      },
+      {
+        "id": "evidence",
+        "title": "Installed artifacts & review evidence",
+        "expectation": "Provide actual public-test/type/lint/source/wheel/install/demo output, two regressions and typed prior-value composition. Keep finite tests/manual judgment distinct from mastery and speed claims."
+      }
+    ],
+    "python-measured-cache": [
+      {
+        "id": "measurement",
+        "title": "Comparable measurements & raw evidence",
+        "expectation": "State environment/workload/clock/state/order, preserve raw samples and equivalent results, distinguish wall/CPU and effects, and avoid universal speedup or brittle timing gates."
+      },
+      {
+        "id": "memory",
+        "title": "Allocation interpretation & reference ownership",
+        "expectation": "Separate profiling/tracing from timing; explain current/peak/snapshot versus RSS/native/deep graph sizes, fresh tracer ownership and cache/borrower references."
+      },
+      {
+        "id": "cache",
+        "title": "Cache keys, failures & bounded lifetime",
+        "expectation": "Show namespace/revision keys, falsy identity hits, LRU promotion/eviction, attempted failed misses, restored reentrancy guards and explicit clear without implicit close or thread/freshness guarantees."
+      },
+      {
+        "id": "evidence",
+        "title": "Compatible installed callers & review evidence",
+        "expectation": "Provide actual public-test/type/lint/source/wheel/install/demo output, two regressions, supported generic old/new callers and warning location/error behavior. Keep finite tests/manual judgment separate from mastery."
+      }
+    ],
+    "python-ingestion-persistence": [
+      {
+        "id": "model",
+        "title": "Relational model & database constraints",
+        "expectation": "Explain full identities, parent references, CHECK/NOT NULL and early Python validation. Record actual direct-SQL violation types/SQLSTATE; keep namespace separate from authorization."
+      },
+      {
+        "id": "transaction",
+        "title": "Transaction ownership & failure evidence",
+        "expectation": "Show idle preconditions and untouched rejected caller work, safe values, scoped cursors, separate-connection visibility, late whole-batch rollback and healthy reuse. Explain external effects and uncertain commit outcomes."
+      },
+      {
+        "id": "duplicates",
+        "title": "Duplicate identity & bounded reads",
+        "expectation": "Show insertion versus exact repeat versus changed-value conflict, all key parts, counts only after commit, deterministic order and extra-row overflow. Explain append-only/isolation/count limitations."
+      },
+      {
+        "id": "evidence",
+        "title": "Installed persistence & review evidence",
+        "expectation": "Provide actual public tests/types/lint/source/wheel/fresh-install/demo output, two regressions and typed earlier-record integration. Distinguish skipped checks, reported/manual evidence, mastery and full deployment."
+      }
+    ],
+    "python-ingestion-service": [
+      {
+        "id": "http",
+        "title": "HTTP, strict input & public output",
+        "expectation": "State methods/statuses and strict shape/types/ranges, zero behavior, output DTO allowlists, no-store and request/byte/query limits. Preserve actual response evidence."
+      },
+      {
+        "id": "permissions",
+        "title": "Authentication & namespace permission",
+        "expectation": "Show private generated credentials, 401 versus 403, checks before database access, rejected body/cursor scope escape, every-page filters and safe fixed logs. Separate local credentials from public auth readiness."
+      },
+      {
+        "id": "transactions",
+        "title": "Session ownership & transaction failures",
+        "expectation": "Show request-owned Sessions, borrowed Engine/idle caller rules, commit before success, first/repeated/conflict/driver/commit-boundary behavior, observer visibility and pool return. Explain uncertain outcomes and keyset mutation limits."
+      },
+      {
+        "id": "evidence",
+        "title": "Migrations, installed service & review evidence",
+        "expectation": "Provide actual PostgreSQL upgrade/downgrade/re-upgrade data/metadata evidence, readiness/drift, tests/types/lint/source/wheel/install/ASGI/TCP output and two regressions with typed prior-value adaptation. Manual interpretation is not mastery/deployment proof."
+      }
+    ],
+    "python-competing-ingestion": [
+      {
+        "id": "observe",
+        "title": "Visibility, lock waits & isolation evidence",
+        "expectation": "Show actual independent-connection snapshots, pg_blocking_pids waits, commit/rollback/conflict outcomes, real 40001/40P01/55P03/57014 and bounded joined cleanup. Explain finite fixture versus load/fairness."
+      },
+      {
+        "id": "retry",
+        "title": "Retry classification & transaction ownership",
+        "expectation": "Preserve copied bounded facts, full transaction replay, fresh Session per attempt and cleanup before delay. Stop unknown/constraint/domain/pool/timeout failures; record attempt bounds, final committed receipt and causes."
+      },
+      {
+        "id": "reconcile",
+        "title": "Scoped reconciliation & uncertain outcomes",
+        "expectation": "Show namespace/full key/value comparisons, unique counts, missing/conflict/complete, in-flight absence and modeled response loss around actual commit. Separate observed facts from attribution/replay permission and preserve application authorization."
+      },
+      {
+        "id": "evidence",
+        "title": "Installed competition & review evidence",
+        "expectation": "Provide actual tests/types/lint/source/wheel/fresh-install/JSON and previous-service API evidence, two regressions, timeout reset and resource cleanup. Report skips/models/limits honestly; no automatic mastery, hard deadline or durable recovery claim."
+      }
+    ],
+    "python-durable-outbox": [
+      {
+        "id": "atomic",
+        "title": "Atomic recording & stable identity",
+        "expectation": "Show bounded strict facts, complete keys, zero/revision handling, historical adoption, no requeue after ack, late whole-batch rollback and explicit additive setup."
+      },
+      {
+        "id": "publish",
+        "title": "Claim, confirmation & acknowledgment",
+        "expectation": "Show separate-owned locked claims, SKIP LOCKED availability, exact durable confirmation before ack, callback failures and pending replay. Explain lack of global order, leases and publisher deadlines."
+      },
+      {
+        "id": "consume",
+        "title": "Consumer transaction & process replay",
+        "expectation": "Show inbox/effect shared commit, actual CHECK rollback, conflicting repeats and all three real child exits. Prove one local effect despite repeated delivery; distinguish modeled response loss and external effects."
+      },
+      {
+        "id": "evidence",
+        "title": "Installed outbox & recovery evidence",
+        "expectation": "Provide tests/types/lint/source/wheel/fresh install/actual JSON, packaged resources, prior-API evidence and resource cleanup. Add two regressions; report skips, one-time DDL and durability limits honestly."
+      }
+    ],
+    "python-leased-worker": [
+      {
+        "id": "lease",
+        "title": "Reservation & fenced settlement",
+        "expectation": "Show short committed claims, complete keys, copied events, increasing generations, live database-clock guards and actual shared settlement/ack rollback. Explain unavailable rows and unsupported mixed publishers."
+      },
+      {
+        "id": "policy",
+        "title": "Saved retries & quarantine",
+        "expectation": "Show immutable scope policy, bounded adoption/attempts, explicit and expired retry schedules, no early claim, poison/exhaustion without acknowledgment, and no accidental duplicate redrive."
+      },
+      {
+        "id": "shutdown",
+        "title": "Admission & process shutdown",
+        "expectation": "Show sequential finite admission without held pool connections, stop-before-claim semantics, original errors, two actual child exits with observed expiry/reclaim and one effect, plus real cooperative SIGTERM. Explain hard-stop and external-effect limits."
+      },
+      {
+        "id": "evidence",
+        "title": "Installed worker & recovery evidence",
+        "expectation": "Provide four source/wheel builds, fresh outside-source tests/types/resources/quiet imports/JSON, prior API permissions and owned cleanup. Add two regressions, label skips/models/one-time DDL and keep reported evidence separate from expertise."
+      }
+    ],
+    "python-stream-delivery": [
+      {
+        "id": "envelope",
+        "title": "Supported envelopes & scope",
+        "expectation": "Show exact supported shapes/versions, bounded strict JSON without duplicate/non-finite fields, stable keys, range/type validation and wrong-scope/unknown-version rejection before effects."
+      },
+      {
+        "id": "acceptance",
+        "title": "Broker acceptance & ownership",
+        "expectation": "Show XADD and checked local WAITAOF on one dedicated physical connection, released lease/borrowed pool, producer completion separate from the consumer effect, and uncertain append/retry identity."
+      },
+      {
+        "id": "consumer",
+        "title": "Consumer commit & recovery",
+        "expectation": "Show inbox/effect commit before XACK, real rollback, duplicate/conflict handling, pending/idle/cursor/deleted-gap semantics, two actual child exits and controlled AOF broker restart. Explain lack of external exactly-once/fencing claims."
+      },
+      {
+        "id": "evidence",
+        "title": "Installed broker & recovery evidence",
+        "expectation": "Provide five source/wheel builds, clean installed types/resources/quiet import/checks/actual JSON and prior API permissions. Add regressions, prove owned cleanup and label skips/models/crashes/restart boundaries honestly."
+      }
+    ],
+    "python-delivery-schema": [
+      {
+        "id": "chain",
+        "title": "Versioned schema & preserved facts",
+        "expectation": "Show the unchanged service revisions and additive delivery chain, actual all-field/timestamp preservation, explicit fact adoption and rejection of unversioned collisions without stamping."
+      },
+      {
+        "id": "check",
+        "title": "Head, drift & compatibility",
+        "expectation": "Separate exact head from combined autogenerate comparison, demonstrate supported drift and CHECK/data blind spots, and explain the previous service readiness incompatibility."
+      },
+      {
+        "id": "rollback",
+        "title": "Transactional failure & explicit rollback",
+        "expectation": "Show actual late upgrade/downgrade rollback, advisory/DDL lock behavior, released settings/pool, exact loss flag and retained facts versus lost delivery/deduplication history."
+      },
+      {
+        "id": "evidence",
+        "title": "Installed migration evidence",
+        "expectation": "Provide six real source/wheel builds, installed packaged revisions/types, actual PostgreSQL/Redis tests and JSON, previous API permissions, regressions and owned cleanup. Label skips and deployment/backup/replay limits."
+      }
+    ],
+    "python-delivery-recovery": [
+      {
+        "id": "redrive",
+        "title": "Inspection & guarded redrive",
+        "expectation": "Show bounded scoped copied observations, full Event/value/current generation matching, explicit poison approval, saved budget/generation preservation, one concurrent success, stale lease refusal and exhausted refusal."
+      },
+      {
+        "id": "retention",
+        "title": "Retention & replay identity",
+        "expectation": "Show current-group pending/unread refusal, matching local producer/inbox completion and exact payload removal. Preserve every local history row and observe one effect after the same Event gets a new transport id."
+      },
+      {
+        "id": "failure",
+        "title": "Failure & loss boundaries",
+        "expectation": "Show actual database rollback, replaced payload rejection, deletion surviving later call failure and released pool. Explain frozen topology/rewinds, future-group replay loss, trusted group bounds and lack of cross-store atomicity."
+      },
+      {
+        "id": "evidence",
+        "title": "Installed recovery observations",
+        "expectation": "Provide actual source/wheel/clean-install checks, packaged Lua/types, store tests/JSON and owned cleanup. Add two regressions, name skipped cases and distinguish reported evidence from certification."
+      }
+    ],
+    "python-delivery-release": [
+      {
+        "id": "settings",
+        "title": "Configuration & private diagnostics",
+        "expectation": "Show immutable revalidated snapshots, duplicate/size/type rejection before allocation and generic errors with no DSN/token in repr/logs/responses."
+      },
+      {
+        "id": "readiness",
+        "title": "Compatible readiness & business contracts",
+        "expectation": "Show exact delivery_004, required column probes, read-only released connections, old service 503, real dependency/head failure and preserved 401/403/200/input/output behavior."
+      },
+      {
+        "id": "lifecycle",
+        "title": "Owned lifecycle & loss decisions",
+        "expectation": "Show construction/refused/normal disposal once, new admission refusal, actual installed SIGTERM/reaped connections and stopped rollback with exact retained/lost history. Explain cooperative bounds and no restored history."
+      },
+      {
+        "id": "evidence",
+        "title": "Installed operating observations",
+        "expectation": "Provide source/wheel/fresh installation/types/public cases and actual PostgreSQL/Redis JSON, loopback process cleanup and two added regressions. Name skips and limits; separate reported/manual evidence from mastery."
+      }
+    ],
+    "python-query-analysis": [
+      {
+        "id": "semantics",
+        "title": "Join & window semantics",
+        "expectation": "Show full-key scope, note-fanout prevention, zero/equal/empty/absent behavior, gaps/previous/delta/explicit frames and newest flags before output limits. Add useful regressions."
+      },
+      {
+        "id": "jsonb",
+        "title": "JSONB & newest search",
+        "expectation": "Show bound strict copied JSON filters, null/missing/empty distinctions, duplicate/type/size rejection, complete-key EXISTS, old-note refusal and stable equal-value output order."
+      },
+      {
+        "id": "ownership",
+        "title": "Read ownership & compatibility",
+        "expectation": "Show read-only released connections, actual write/timeout rollback, copied output and caller-owned engines. Preserve source facts/head/metadata and explain prior application authorization/separate snapshots."
+      },
+      {
+        "id": "evidence",
+        "title": "Observed plans & installed artifact",
+        "expectation": "Provide actual installed SQL/types/tests/JSON, stated deterministic workload/ANALYZE, equivalent ordered results, baseline/indexed selective/wide node/row/loop/buffer/cost/time observations and restored fixture indexes/owned cleanup. No timing/fixed-plan/certification claim."
+      }
+    ],
+    "python-api-depth": [
+      {
+        "id": "validators",
+        "title": "Validators & permission",
+        "expectation": "Show exact response-byte tags, private validation, bodyless weak/list/wildcard 304, changed/empty/limited/scoped representations and permission before condition/store with no error ETags."
+      },
+      {
+        "id": "signatures",
+        "title": "Signatures & strict input",
+        "expectation": "Show framed raw bytes/route/delivery/time, configured copied keys, constant-time fixed-format comparison, tamper/freshness/duplicate header and strict JSON tests with safe errors/logs."
+      },
+      {
+        "id": "receipts",
+        "title": "Atomic receipts & failure contracts",
+        "expectation": "Show real competing receipt insertion, stable resigned retries, changed-body/read conflicts, rollback/lock-timeout cleanup and preserved prior API/head/no implicit outbox; state external effect limits."
+      },
+      {
+        "id": "evidence",
+        "title": "Installed requests & original evidence",
+        "expectation": "Provide clean artifacts/types/public cases, actual loopback report/status/database counts, an independent regression, owned cleanup and manual interpretation without certification/public deployment claims."
+      }
+    ],
+    "python-practical-review": [
+      {
+        "id": "contracts",
+        "title": "Object, typing & caller compatibility",
+        "expectation": "Show exact copied public page/cursor, complete-key conflict/latest selection, zero/domain refusal, Record/Row/Snapshot/generic mapping, installed strict types and preserved old HTTP/no-store/duplicates/rollback/readiness plus deprecated caller warning/identity."
+      },
+      {
+        "id": "ownership",
+        "title": "Resource & async failure ownership",
+        "expectation": "Show borrowed client/Engine/tracer, owned response cleanup on cancellation/error, partial acquisition cleanup/original propagation, context restoration and separate-page snapshot/uncertain effect limits."
+      },
+      {
+        "id": "bounds",
+        "title": "Bounded work & process boundaries",
+        "expectation": "Show eight-page/body/row/result/request/cache bounds, worker/pending limits, actual thread/spawn values, worker-local closed files, joined shutdown and no shared Engine; distinguish bounds from hard deadlines/hostile load proofs."
+      },
+      {
+        "id": "evidence",
+        "title": "Profile, installation & original artifact",
+        "expectation": "Provide built archives/wheels/versions/commands, actual service facts/report/JSON, equivalent ordered hot/cyclic outputs, raw wall/CPU/profile/allocation interpretation and independent case/regression/decision note. Originality and adequacy need self/human review; no automatic expertise/speed award."
+      }
+    ],
+    "model-contracts": [
+      {
+        "id": "requests",
+        "title": "Configuration & context admission",
+        "expectation": "Show pinned provider/model/prompt/schema, copied immutable full envelopes for both fixture formats, exact fit/overflow/no partial calls and the distinction between byte fixture units and real model tokenization."
+      },
+      {
+        "id": "outputs",
+        "title": "Output variants & strict proposals",
+        "expectation": "Show bounded duplicate-free UTF-8 JSON, exact identity/usage/variant/domain, no coercion/repair, no Decision for refusal/incomplete and separate truth/authorization limits."
+      },
+      {
+        "id": "budgets",
+        "title": "Attempts, accounting & cancellation",
+        "expectation": "Show reserve-before-call/exact cost edge, validated settlement, unknown full reserves/no retries, step bounds, one shrinking deadline, observed cooperative cleanup and propagated external cancellation; local ledger is not durable billing."
+      },
+      {
+        "id": "evidence",
+        "title": "Installed evidence & independent regression",
+        "expectation": "Provide exact versions/revision/commands, source archive/wheel/outside-source typed installation, actual fixture JSON/failure evidence and independently designed regression/decision note. Label offline provider, fictional rates, quality/conformance/privacy/durable-accounting limitations; self/human review does not certify mastery."
+      }
+    ],
+    "retrieval": [
+      {
+        "id": "chunks",
+        "title": "Source identity & window contract",
+        "expectation": "Show complete tenant/document/revision/ordinal keys, exact character offsets and UTF-8 digests, stable overlap/final tail, immutable inputs and whole-call cap failure. Explain chunk-size tradeoffs and source-lifecycle assumptions."
+      },
+      {
+        "id": "ranking",
+        "title": "Access & compatible ranking",
+        "expectation": "Show model/version/dimension/finite-norm validation, latest revision before active/access/topic/document rules, no old-public fallback, no forbidden scoring and top-k after filtering. Compare exact cosine and stated ASCII set Jaccard with full-key ties/threshold limits."
+      },
+      {
+        "id": "metrics",
+        "title": "Judgments & metric denominators",
+        "expectation": "Show existing eligible current labels, requested-k precision, label recall and first-relevant rank, threshold misses, positive-label macro averages and separate no-label count/unwanted hits/null recall. Empty observations do not imply perfection."
+      },
+      {
+        "id": "evidence",
+        "title": "Installed evidence & original regression",
+        "expectation": "Provide source revision, exact versions/commands, source archive/wheel/outside-source typed resource installation and actual retrieval.json. Add an independently predicted regression/decision note. Label hand-supplied development vectors, no held-out model quality, no ANN/database lifecycle guarantee and manual originality/review separate from mastery."
+      }
+    ],
+    "rag": [
+      {
+        "id": "lifecycle",
+        "title": "Document revisions & deletion lifecycle",
+        "expectation": "Show atomic whole text/vector/metadata/ACL updates, scoped monotonic revision/replay/conflict rules, rollback and deletion-marker persistence/reopen/old-input rejection. Keep SQLite lab files separate and state production/distributed lifecycle limits."
+      },
+      {
+        "id": "context",
+        "title": "Scoped retrieval & whole context",
+        "expectation": "Show pre-context authorization/activity/metadata/vector compatibility, the explicitly limited task-term gate, deterministic keyword/cosine reranking, whole UTF-8 evidence objects and pinned source snapshot. Explain misses versus gate/ranking/budget omissions."
+      },
+      {
+        "id": "answers",
+        "title": "Citations, abstention & fresh authority",
+        "expectation": "Show the distinct strict RAG schema, selected distinct IDs/exact whole excerpts, zero-call missing/context/cost rejection, metering uncertainty, refusal/incomplete/timeout/cancellation, refreshed application authority and second-owner update/delete/ACL rejection. Resolve old citations under current permission; no cache or permanent access guarantee."
+      },
+      {
+        "id": "evidence",
+        "title": "Installed artifacts & independent review",
+        "expectation": "Provide exact versions/commands, all three archives/wheels/outside-source typed imports and actual rag.json. Add a predicted original regression and policy tradeoff. Distinguish exact provenance, source truth/semantic support, controlled fixtures, SQLite operations and reported/self/human review from mastery or real model quality."
+      }
+    ],
+    "tools": [
+      {
+        "id": "proposals",
+        "title": "Strict proposal & dispatch boundaries",
+        "expectation": "Show bounded exact JSON/model/schema/status/usage and complete call/finish/refused/incomplete variants. Reject unknown tools, authority/URL/extra fields and malformed labels before dispatch. A proposal or finish claim grants no authority and proves no effect."
+      },
+      {
+        "id": "authority",
+        "title": "Current scope & exact action approval",
+        "expectation": "Show current application actor/principal/read/source checks around provider/tool waits and exact canonical policy/tenant/actor/operation/tool/label/citation approval. Explain why a digest is identity, not a grant, and why changed parameters require new approval. No old source text in public reports; final observations are not distributed revocation."
+      },
+      {
+        "id": "replay",
+        "title": "Atomic local effect & stable replay",
+        "expectation": "Show one local note/receipt transaction, scoped application operation ID independent of model IDs, identical replay/conflicting payload, reopen, caps and late SQL rollback. Replays still check current approval/source. Observe timeout/cancellation after commit and explicit receipt reconciliation; do not claim remote exactly-once or undo a committed effect."
+      },
+      {
+        "id": "evidence",
+        "title": "Installed artifacts, budgets & original review",
+        "expectation": "Provide exact versions/commands, four archives/wheels/outside-source typed imports and computed tools.json. Show full request/output/cost admission, one shared cooperative deadline, step limits, cleanup and uncertain outcomes without automatic effect retry. Add an original predicted regression and policy tradeoff; distinguish controlled local checks and reported/self/human evidence from model quality, production authority and mastery."
+      }
+    ],
+    "ai-evaluation": [
+      {
+        "id": "cases",
+        "title": "Versioned cases & current observations",
+        "expectation": "Show strict packaged development cases, complete fixed scenario coverage, dataset/candidate/source/model/prompt/schema digests and actual composed observations. Observe missing/stale/private evidence and role/URL/extra-field tool rejection; do not claim real model or general SSRF protection."
+      },
+      {
+        "id": "metrics",
+        "title": "Exact measurements & privacy",
+        "expectation": "Show requested-k precision, positive-label recall/MRR, separate unlabelled unwanted hits and exact inclusive fractions. Measure expected answer/tool/effect boundaries separately from permission/privacy. Preserve threshold misses and uncertain committed effects; redact raw source/query/arguments/private exceptions and state metadata risks."
+      },
+      {
+        "id": "gates",
+        "title": "Pinned gates & explicit semantic review",
+        "expectation": "Show pinned policy/dataset identity, incomplete/mixed/duplicate/stale failure, objective permission/privacy blocks and separately pending/rejected/recorded quality. Review ordinary/malicious quoted answers explicitly with candidate-bound reported identity/notes; no invented rating or reviewer authentication. Manual approval cannot override an objective failure."
+      },
+      {
+        "id": "evidence",
+        "title": "Installed artifacts & connected independent review",
+        "expectation": "Provide source revision, exact versions/commands, five archives/wheels/outside-source typed imports/case resources and actual release.json. Label simulated mutations separately, add an original predicted regression and threshold/coverage decision. Audit connected lesson/layer/prerequisite/project paths while preserving earlier definitions and manual artifacts. State finite development/controlled/provider/production/mastery limits."
+      }
+    ],
+    "exam-knowledge": [
+      {
+        "id": "area-1",
+        "title": "Python",
+        "expectation": "Reviewer: require explicit client lifetime, cancellation/awaited cleanup, limits and an observed failure test."
+      },
+      {
+        "id": "area-2",
+        "title": "HTTP and API",
+        "expectation": "Reviewer: require concrete API examples, actor-derived scope, request-bound replay, conflict and reconciliation."
+      },
+      {
+        "id": "area-3",
+        "title": "PostgreSQL",
+        "expectation": "Reviewer: require measured query count, complete join keys, result equivalence, workload and honest limits."
+      },
+      {
+        "id": "area-4",
+        "title": "Distributed systems",
+        "expectation": "Reviewer: require named commit/ack windows, durable observer facts, duplicate tests and external-effect limits."
+      },
+      {
+        "id": "area-5",
+        "title": "Architecture and operations",
+        "expectation": "Reviewer: require measurable user outcome, workload, thresholds, compatible rollback and restore evidence."
+      },
+      {
+        "id": "area-6",
+        "title": "Applied AI and RAG",
+        "expectation": "Reviewer: require reproducible candidates, denominators, permissions, held-out use and separate semantic quality."
+      },
+      {
+        "id": "area-7",
+        "title": "Tool calling and finance",
+        "expectation": "Reviewer: require separated transcript/proposal/approval/execution, exact money, permissions and durable reconciliation."
+      },
+      {
+        "id": "area-8",
+        "title": "Security",
+        "expectation": "Reviewer: require concrete actor/source/tool boundaries, adversarial cases, URL controls and limits."
+      }
+    ],
+    "exam-design": [
+      {
+        "id": "requirements",
+        "title": "Explicit requirements and capacity",
+        "expectation": "State measurable SLOs, workload arithmetic, tenant assumptions, non-goals and changing limits."
+      },
+      {
+        "id": "architecture",
+        "title": "Data and service design",
+        "expectation": "Show full keys/indexes, API contracts, write ownership, caching/queues and justified trade-offs."
+      },
+      {
+        "id": "authority",
+        "title": "Permissions and action authority",
+        "expectation": "Enforce current ACLs at every exposure, strict tools and exact action approval; include adversarial tests."
+      },
+      {
+        "id": "reliability",
+        "title": "Failures and durable effects",
+        "expectation": "Reason about commit/ack gaps, destination cooperation, retries, fallback, duplicate receipts and uncertain outcomes."
+      },
+      {
+        "id": "retrieval",
+        "title": "Retrieval and semantic quality",
+        "expectation": "Preserve sources/versions/citations, measured hybrid retrieval and held-out labels, independent human quality checks."
+      },
+      {
+        "id": "operations",
+        "title": "Operations, recovery and cost",
+        "expectation": "Give safe traces, budgets, deploy/rollback, restore drills and concrete RPO/RTO/SLO evidence."
+      },
+      {
+        "id": "adaptation",
+        "title": "Incident adaptation",
+        "expectation": "For each incident revise earlier assumptions, choose a response, explain trade-offs and define a verification experiment."
+      }
+    ],
+    "exam-repair": [
+      {
+        "id": "invariants",
+        "title": "State and transactions",
+        "expectation": "Show atomic order/reservation/outbox state, request-bound replay/conflicts and the rollback regression. Distinguish sequential SQLite fixtures from PostgreSQL races."
+      },
+      {
+        "id": "delivery",
+        "title": "Retry and duplicate effects",
+        "expectation": "Explain commit-before-ack, durable inbox design, bounded retries, poison cases and destination cooperation. The offline event fixture is not a real broker."
+      },
+      {
+        "id": "queries",
+        "title": "SQL and caching",
+        "expectation": "Show full tenant join keys, correct grain, actual query counts/plans and cache version/ACL behavior. The private contract cannot certify SQL performance."
+      },
+      {
+        "id": "security",
+        "title": "API and tool authority",
+        "expectation": "Validate actor scope, exact schemas, action approval and receipt reconciliation. Add HTTP boundary and malicious-document tests beyond this offline core."
+      },
+      {
+        "id": "ai",
+        "title": "Retrieval and honest answers",
+        "expectation": "Return only authorized current support, deterministic ranking and explicit refusal. Exact quote matching is not semantic quality or an injection guarantee."
+      },
+      {
+        "id": "async",
+        "title": "Async lifetime",
+        "expectation": "Bound live jobs, handle failure, await cancellation/cleanup and record a real async regression."
+      },
+      {
+        "id": "operations",
+        "title": "Architecture, Docker and observability",
+        "expectation": "Separate request/state/retrieval/tool ownership. Repair the Dockerfile, add redacted traces, startup/health and a reproducible launch. Provide observed evidence rather than checklist claims."
+      }
+    ]
+  }
+}

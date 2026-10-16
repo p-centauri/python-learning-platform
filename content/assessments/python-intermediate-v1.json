@@ -1,0 +1,482 @@
+{
+  "id": "python-intermediate-v1",
+  "version": "2026.09.20-v2",
+  "title": "Python · Intermediate evaluation",
+  "level": "Intermediate",
+  "description": "A focused Python 3.13+ knowledge evaluation: 24 code-prediction, debugging and reasoning questions. Topic feedback appears after submission. This is not a practical coding certification.",
+  "minutes": 55,
+  "questions": [
+    {
+      "id": "pi-01",
+      "skill": "Functions & scope",
+      "prompt": "When the callbacks are called after the loop, what is printed?",
+      "options": [
+        "[0, 1, 2]",
+        "[2, 2, 2]",
+        "[0, 0, 0]",
+        "A NameError"
+      ],
+      "answer": 1,
+      "explanation": "Each function reads i when you call it. By then the loop has finished and i is 2, so they all return 2. `lambda i=i: i` stores the current value as that function's default argument instead.",
+      "code": "callbacks = []\nfor i in range(3):\n    callbacks.append(lambda: i)\nprint([callback() for callback in callbacks])",
+      "validation_output": "[2, 2, 2]"
+    },
+    {
+      "id": "pi-02",
+      "skill": "Functions & scope",
+      "prompt": "Why does a call to count() fail here?",
+      "options": [
+        "An assignment makes total local, so += reads it before local assignment",
+        "Integers cannot be incremented",
+        "Module globals are always read-only",
+        "The return statement requires await"
+      ],
+      "answer": 0,
+      "explanation": "Python sees the assignment and treats total as a local variable. But += needs to read its old value before writing the new one, and no local value exists yet. A clearer design is to pass total in and return the updated value.",
+      "code": "total = 0\ndef count():\n    total += 1\n    return total"
+    },
+    {
+      "id": "pi-03",
+      "skill": "Functions & scope",
+      "prompt": "A decorator forwards arbitrary arguments correctly, but inspection now shows the wrapper’s name and docstring. Which addition preserves the wrapped function’s usual metadata?",
+      "options": [
+        "@staticmethod",
+        "@property",
+        "@dataclass",
+        "@functools.wraps(original)"
+      ],
+      "answer": 3,
+      "explanation": "`functools.wraps` keeps useful details such as the original function's name and documentation. It also records the original function in __wrapped__. It does not fix the wrapper's behavior or automatically await an async function."
+    },
+    {
+      "id": "pi-04",
+      "skill": "Functions & scope",
+      "prompt": "What does the second call print?",
+      "options": [
+        "[\"second\"]",
+        "[]",
+        "[\"first\", \"second\"]",
+        "None"
+      ],
+      "answer": 2,
+      "explanation": "Python creates the default dictionary once, when it defines the function. Later calls reuse it, including its inner list. Use a None default and build a fresh dictionary inside the function when each call needs separate data.",
+      "code": "def remember(label, state={\"seen\": []}):\n    state[\"seen\"].append(label)\n    return state[\"seen\"]\n\nremember(\"first\")\nprint(remember(\"second\"))",
+      "validation_output": "['first', 'second']"
+    },
+    {
+      "id": "pi-05",
+      "skill": "Objects & types",
+      "prompt": "Each batch needs its own mutable list. Which dataclass field declaration expresses that?",
+      "options": [
+        "items: list = []",
+        "items: list = field(default_factory=list)",
+        "items: list = list",
+        "items: list = None # automatically becomes a list"
+      ],
+      "answer": 1,
+      "explanation": "`default_factory=list` makes a new list for each object. That keeps one object's changes out of another object's list. A shared list would mix their data; using None would require you to create the list yourself."
+    },
+    {
+      "id": "pi-06",
+      "skill": "Objects & types",
+      "prompt": "What does this program print under ordinary Python execution without an external runtime validator?",
+      "options": [
+        "6",
+        "A TypeError before entering twice",
+        "33",
+        "A ValidationError"
+      ],
+      "answer": 2,
+      "explanation": "This produces \"33\". Type hints do not automatically reject the string \"3\" at runtime; multiplying a string repeats it. A type checker can flag the wrong call before running, while input validation checks actual incoming data.",
+      "code": "def twice(value: int) -> int:\n    return value * 2\n\nprint(twice(\"3\"))",
+      "validation_output": "33"
+    },
+    {
+      "id": "pi-07",
+      "skill": "Objects & types",
+      "prompt": "A service needs any object with a send(message: str) method. You want structural static typing without forcing every implementation to inherit your base class. What fits?",
+      "options": [
+        "typing.Protocol",
+        "A single mutable global sender",
+        "A decorator that catches every exception",
+        "Only concrete inheritance is possible"
+      ],
+      "answer": 0,
+      "explanation": "A Protocol lists the methods or attributes an object must provide for a type checker. Different classes can satisfy it without sharing a parent class. It describes how to use the object; it does not check permissions or validate incoming data."
+    },
+    {
+      "id": "pi-08",
+      "skill": "Objects & types",
+      "prompt": "Two instances unexpectedly share a mutable cache. Where should a per-instance cache be initialized?",
+      "options": [
+        "Only in a type annotation",
+        "As a mutable class attribute",
+        "Inside __repr__",
+        "As self.cache = {} in __init__"
+      ],
+      "answer": 3,
+      "explanation": "A dictionary created on the class is shared when instances access that class attribute. Create `self.cache = {}` inside __init__ to give each instance its own dictionary. Share a cache only when you have decided how long it should live and who can change it."
+    },
+    {
+      "id": "pi-09",
+      "skill": "Iteration & resources",
+      "prompt": "What is the output after consuming this generator twice?",
+      "options": [
+        "[0, 1, 4] [0, 1, 4]",
+        "[] []",
+        "[0, 1, 4] []",
+        "A TypeError"
+      ],
+      "answer": 2,
+      "explanation": "A generator moves forward through its items once. After the first full pass, there is nothing left for a second pass. Create a new generator, or store the items in a list if you need to reuse them and they fit in memory.",
+      "code": "squares = (n * n for n in range(3))\nprint(list(squares), list(squares))",
+      "validation_output": "[0, 1, 4] []"
+    },
+    {
+      "id": "pi-10",
+      "skill": "Iteration & resources",
+      "prompt": "What does the cleanup print when processing raises inside this context manager?",
+      "options": [
+        "closed",
+        "It prints nothing because yield disables cleanup",
+        "opened",
+        "An infinite sequence of closed"
+      ],
+      "answer": 0,
+      "explanation": "The error from the with block returns to the context manager at yield. Its finally block runs to clean up, and then the error continues to the caller. Do not catch and ignore it unless hiding that particular error is intentional.",
+      "code": "from contextlib import contextmanager\n\n@contextmanager\ndef resource():\n    try:\n        yield \"handle\"\n    finally:\n        print(\"closed\")\n\ntry:\n    with resource():\n        raise ValueError(\"invalid\")\nexcept ValueError:\n    pass",
+      "validation_output": "closed"
+    },
+    {
+      "id": "pi-11",
+      "skill": "Iteration & resources",
+      "prompt": "Rows have keys A, B, A. What assumption is wrong when using itertools.groupby to aggregate all A rows together?",
+      "options": [
+        "groupby requires dictionaries",
+        "groupby sorts the input automatically",
+        "groupby returns lists only",
+        "groupby groups adjacent equal keys; sorting or explicit accumulation is needed for global grouping"
+      ],
+      "answer": 3,
+      "explanation": "`groupby` groups neighboring items with the same key. It does not gather matching items from everywhere in the input. Sort first if that cost is acceptable, or collect items in a dictionary when you need groups across the whole input."
+    },
+    {
+      "id": "pi-12",
+      "skill": "Iteration & resources",
+      "prompt": "A 10 GB newline-delimited file must be transformed with bounded memory. Which approach is appropriate?",
+      "options": [
+        "read_text().splitlines() followed by a list comprehension",
+        "Iterate the file and stream each transformed result to the output",
+        "list(file) before filtering",
+        "Read the whole file twice to verify it"
+      ],
+      "answer": 1,
+      "explanation": "Read and process one line at a time so the whole file does not need to fit in memory. Also limit very large individual records, close files reliably, and decide what happens to partial output if processing fails."
+    },
+    {
+      "id": "pi-13",
+      "skill": "Reliability & standard library",
+      "prompt": "A parser catches a low-level exception and raises a domain error. Which form retains explicit causal context?",
+      "options": [
+        "raise DomainError(\"bad input\") from None",
+        "return None",
+        "pass",
+        "raise DomainError(\"bad input\") from exc"
+      ],
+      "answer": 3,
+      "explanation": "`raise NewError(...) from exc` keeps the original error as the cause. That helps someone debugging see both what failed and why. Returning None or ignoring the error can make a failure look like a normal result."
+    },
+    {
+      "id": "pi-14",
+      "skill": "Reliability & standard library",
+      "prompt": "Amounts arrive as decimal strings. Which operation avoids first introducing a binary floating-point approximation?",
+      "options": [
+        "Decimal(0.1)",
+        "Decimal(\"0.1\")",
+        "round(0.1, 2) converted to Decimal",
+        "float(\"0.1\")"
+      ],
+      "answer": 1,
+      "explanation": "Use a string, such as Decimal(\"0.1\"), to express the decimal amount directly. A float may already contain a small rounding difference, and Decimal(float_value) keeps it. For money, also decide the allowed precision and rounding rule."
+    },
+    {
+      "id": "pi-15",
+      "skill": "Reliability & standard library",
+      "prompt": "A one-time event timestamp must represent an instant unambiguously across servers. What is the strongest default representation here?",
+      "options": [
+        "A timezone-aware UTC datetime",
+        "A naive local datetime without an offset",
+        "The local clock formatted without a date",
+        "A string containing only the month"
+      ],
+      "answer": 0,
+      "explanation": "Store a moment with its time zone, often UTC, and convert it for display. A repeating rule such as \"9 a.m. in London\" also needs that city's time zone and a decision about clock changes; a UTC time alone does not express the rule."
+    },
+    {
+      "id": "pi-16",
+      "skill": "Reliability & standard library",
+      "prompt": "A production handler catches an exception. Which diagnostic practice preserves useful evidence without leaking a request’s secrets?",
+      "options": [
+        "Log every request header and password",
+        "Suppress the exception and return success",
+        "Log the exception traceback and safe correlation fields, redacting sensitive data",
+        "Only print \"failed\" with no context"
+      ],
+      "answer": 2,
+      "explanation": "Inside an error handler, `logger.exception` records the error and the calls that led to it. Add safe request details to help find the problem. Leave passwords and tokens out of logs, and do not report success after an operation failed."
+    },
+    {
+      "id": "pi-17",
+      "skill": "Async & concurrency",
+      "prompt": "You call an async function without awaiting or scheduling the returned coroutine. What happens?",
+      "options": [
+        "Its body runs immediately in a new OS thread",
+        "It runs to completion before the next line",
+        "It automatically enters the event loop",
+        "It returns a coroutine object; the body has not run"
+      ],
+      "answer": 3,
+      "explanation": "Calling an async function creates a coroutine: work that has not run yet. Await it, or schedule it as a task on a running event loop. Writing async does not start a new thread or run the work by itself."
+    },
+    {
+      "id": "pi-18",
+      "skill": "Async & concurrency",
+      "prompt": "Independent requests must be capped at five in flight in one event loop. Which design enforces that bound?",
+      "options": [
+        "Create an unlimited task for each item",
+        "Use an asyncio.Semaphore(5) around the awaited request and bound task creation for huge inputs",
+        "Use time.sleep before each await",
+        "Await a new semaphore object for every request"
+      ],
+      "answer": 1,
+      "explanation": "A shared semaphore can limit how many requests run at once. Waiting tasks still take memory, though. For a huge input, use a fixed set of workers and a queue with a size limit instead of creating a task for every item."
+    },
+    {
+      "id": "pi-19",
+      "skill": "Async & concurrency",
+      "prompt": "An async handler must call a blocking file/network library that has no async API. What avoids blocking the event loop?",
+      "options": [
+        "Use an appropriate thread offload such as await asyncio.to_thread(...)",
+        "Add async to the library function’s name",
+        "Call time.sleep(0) before it",
+        "Increase a request model’s field limit"
+      ],
+      "answer": 0,
+      "explanation": "Move blocking I/O to a thread so it does not stop the event loop from serving other tasks. This does not usually speed up pure-Python CPU work on a GIL-enabled build. Cancelling the wait also does not forcibly stop a thread that is already running."
+    },
+    {
+      "id": "pi-20",
+      "skill": "Async & concurrency",
+      "prompt": "A task is cancelled while holding a resource. What is the usual safe cleanup behavior?",
+      "options": [
+        "Catch cancellation and report success unconditionally",
+        "Skip cleanup because cancellation means process exit",
+        "Use finally for cleanup and normally propagate CancelledError",
+        "Restart all unrelated tasks"
+      ],
+      "answer": 2,
+      "explanation": "When a task is cancelled, clean up its resources and normally raise the cancellation again. Its parent can then tell that the work stopped. Hiding cancellation can confuse task groups and timeouts or make unfinished work look successful."
+    },
+    {
+      "id": "pi-21",
+      "skill": "Testing & packages",
+      "prompt": "A module under test does `from mailer import send`. Which symbol should a test normally patch to replace that module’s send call?",
+      "options": [
+        "Only the original source file on disk",
+        "The name send in the module under test where it is looked up",
+        "Every function in the package",
+        "The built-in print function"
+      ],
+      "answer": 1,
+      "explanation": "Replace the name that the tested code actually uses. If orders imported send directly, patch orders.send. Changing the original module's send later will not replace that already-imported name. Passing a fake dependency directly can make the test clearer."
+    },
+    {
+      "id": "pi-22",
+      "skill": "Testing & packages",
+      "prompt": "A division function should reject a zero divisor. Which test actually checks that failure contract?",
+      "options": [
+        "Call divide(1, 1) twice",
+        "Mock divide itself to always raise",
+        "Assert the function object exists",
+        "Assert ZeroDivisionError is raised by the real divide(1, 0) implementation"
+      ],
+      "answer": 3,
+      "explanation": "Call the real function with bad input and check that it raises the expected error, using pytest.raises or unittest.assertRaises. Replacing the function itself with a mock only checks the mock, not whether your function handles the input correctly."
+    },
+    {
+      "id": "pi-23",
+      "skill": "Testing & packages",
+      "prompt": "An HTTP integration passes locally but can wait forever when the provider stalls. Which policy belongs at the integration boundary?",
+      "options": [
+        "Explicit finite timeouts, classified failures and bounded retries only where safe",
+        "Retry every exception forever",
+        "Disable timeouts for reliability",
+        "Catch all failures and return invented data"
+      ],
+      "answer": 0,
+      "explanation": "Set time limits for network operations and limit retries. Before retrying, consider whether repeating the request could repeat a payment or another side effect. A timeout means you stopped waiting; it does not always mean the remote operation did nothing."
+    },
+    {
+      "id": "pi-24",
+      "skill": "Testing & packages",
+      "prompt": "A package imports correctly only when launched from the repository root. Which repair best addresses packaging assumptions?",
+      "options": [
+        "Append arbitrary absolute paths to sys.path in every module",
+        "Copy dependencies into every source folder",
+        "Declare an installable package in pyproject.toml and test installation in a clean environment",
+        "Require every caller to use the author’s home directory"
+      ],
+      "answer": 2,
+      "explanation": "Declare the package and its dependencies, then install and test it in a clean environment. Also test the built package when releasing it. Code that works only from the repository folder may be finding files that were left out of the package."
+    }
+  ],
+  "library_note": "These are working-proficiency targets for this academy, not a universal list required by every employer. Built-ins are language fundamentals; the standard library ships with Python. Third-party packages and tools are labeled separately. The test samples knowledge and does not assess every library listed.",
+  "libraries": [
+    {
+      "name": "collections and collections.abc",
+      "kind": "Core standard library",
+      "expectation": "Choose Counter/defaultdict/deque and reason about collection interfaces and shared state.",
+      "url": "https://docs.python.org/3/library/collections.html"
+    },
+    {
+      "name": "itertools and functools",
+      "kind": "Core standard library",
+      "expectation": "Build lazy pipelines, understand adjacent groupby, use wraps and justify bounded caching.",
+      "url": "https://docs.python.org/3/library/itertools.html"
+    },
+    {
+      "name": "dataclasses, enum and copy",
+      "kind": "Core standard library",
+      "expectation": "Model value objects, use default_factory, distinguish shallow/deep copying and mutation ownership.",
+      "url": "https://docs.python.org/3/library/dataclasses.html"
+    },
+    {
+      "name": "typing",
+      "kind": "Core standard library",
+      "expectation": "Annotate collections and unions; understand generics and basic Protocol usage, static checking versus runtime validation.",
+      "url": "https://docs.python.org/3/library/typing.html"
+    },
+    {
+      "name": "contextlib",
+      "kind": "Core standard library",
+      "expectation": "Manage resources with context managers, finally and explicit exception propagation.",
+      "url": "https://docs.python.org/3/library/contextlib.html"
+    },
+    {
+      "name": "logging",
+      "kind": "Core standard library",
+      "expectation": "Use levels, named loggers, tracebacks and safe correlation fields; avoid leaking secrets.",
+      "url": "https://docs.python.org/3/library/logging.html"
+    },
+    {
+      "name": "datetime, zoneinfo and decimal",
+      "kind": "Core standard library",
+      "expectation": "Distinguish instants/local schedules, use time zones deliberately and implement explicit decimal rounding policies.",
+      "url": "https://docs.python.org/3/library/zoneinfo.html"
+    },
+    {
+      "name": "pathlib, tempfile and shutil",
+      "kind": "Core standard library",
+      "expectation": "Stream files, clean temporary resources, and reason about partial writes and file operations.",
+      "url": "https://docs.python.org/3/library/tempfile.html"
+    },
+    {
+      "name": "re and argparse",
+      "kind": "Core standard library",
+      "expectation": "Use focused patterns and named groups, and create CLI contracts with validation and help.",
+      "url": "https://docs.python.org/3/library/argparse.html"
+    },
+    {
+      "name": "asyncio and concurrent.futures",
+      "kind": "Core for this backend path",
+      "expectation": "Await/schedule work, bound concurrency, handle cancellation and select threads versus processes based on the workload and interpreter.",
+      "url": "https://docs.python.org/3/library/asyncio.html"
+    },
+    {
+      "name": "unittest.mock; pytest",
+      "kind": "Testing practice",
+      "expectation": "Patch the lookup site, use fixtures/parametrization, and test failures without mocking the behavior under test. pytest is the recommended third-party test runner for this path.",
+      "url": "https://docs.pytest.org/en/stable/"
+    },
+    {
+      "name": "sqlite3 and secrets",
+      "kind": "Useful standard-library boundaries",
+      "expectation": "Bind SQL parameters and understand transactions; generate security tokens with secrets rather than random.",
+      "url": "https://docs.python.org/3/library/sqlite3.html"
+    },
+    {
+      "name": "HTTPX",
+      "kind": "Backend integration recommendation",
+      "expectation": "Use a managed client, timeouts, status/error handling and async clients when appropriate. Requests is a sync alternative; learning both is not a gate.",
+      "url": "https://www.python-httpx.org/"
+    },
+    {
+      "name": "Pydantic",
+      "kind": "Backend boundary recommendation",
+      "expectation": "Validate external input with models, understand coercion/strictness, and keep authorization in application logic.",
+      "url": "https://docs.pydantic.dev/latest/concepts/models/"
+    },
+    {
+      "name": "FastAPI or Django/DRF; SQLAlchemy, Alembic and psycopg",
+      "kind": "Next backend specialization",
+      "expectation": "Learn a framework and database stack through a project. These are domain skills, not prerequisites for general intermediate Python.",
+      "url": "https://fastapi.tiangolo.com/"
+    },
+    {
+      "name": "Hypothesis",
+      "kind": "Optional testing depth",
+      "expectation": "Explore invariants with property-based tests after mastering example-based tests.",
+      "url": "https://hypothesis.readthedocs.io/en/latest/"
+    },
+    {
+      "name": "NumPy, pandas, scikit-learn, PyTorch, provider SDKs",
+      "kind": "Optional data/AI specialization",
+      "expectation": "Add only for the chosen project. Tensor frameworks, data libraries and orchestration frameworks are not general Python level requirements.",
+      "url": "https://numpy.org/doc/stable/"
+    },
+    {
+      "name": "Ruff; mypy or Pyright; pip/uv and pyproject.toml",
+      "kind": "Development tools",
+      "expectation": "Run lint/format and static checks; declare and reproduce package dependencies. Tools support proficiency but are not imported runtime libraries.",
+      "url": "https://packaging.python.org/en/latest/tutorials/packaging-projects/"
+    }
+  ],
+  "practical_followup": "Build an installable ingestion package with typed boundaries, streaming parsing, managed HTTP clients, bounded concurrency, explicit cancellation/errors, and tests using fakes. Add regression cases for duplicate input and malformed records. Review the implementation separately; this knowledge score does not certify it.",
+  "study_resources": [
+    {
+      "skill": "Functions & scope",
+      "title": "Scopes, closures and name binding",
+      "url": "https://docs.python.org/3/reference/executionmodel.html"
+    },
+    {
+      "skill": "Objects & types",
+      "title": "Classes and object ownership",
+      "url": "https://docs.python.org/3/tutorial/classes.html"
+    },
+    {
+      "skill": "Iteration & resources",
+      "title": "Iterator tools and resource lifetimes",
+      "url": "https://docs.python.org/3/library/contextlib.html"
+    },
+    {
+      "skill": "Reliability & standard library",
+      "title": "Decimal arithmetic and diagnostics",
+      "url": "https://docs.python.org/3/library/decimal.html"
+    },
+    {
+      "skill": "Async & concurrency",
+      "title": "Coroutines, tasks and cancellation",
+      "url": "https://docs.python.org/3/library/asyncio-task.html"
+    },
+    {
+      "skill": "Testing & packages",
+      "title": "Mocking and package boundaries",
+      "url": "https://docs.python.org/3/library/unittest.mock.html"
+    }
+  ],
+  "evaluation_policy": {
+    "overall_target": 80,
+    "category_target": 60,
+    "note": "Provisional learning target: at least 80% overall and 60% in every category. These small question banks are not psychometrically calibrated and do not establish practical competence."
+  }
+}

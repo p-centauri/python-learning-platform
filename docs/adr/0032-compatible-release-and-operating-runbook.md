@@ -1,0 +1,17 @@
+# ADR 0032: compatible release and explicit local operation
+
+Date: 2026-10-07. Status: accepted.
+
+The completed delivery chain advances the service schema to delivery_004 while the published old application expects service_002. Editing that earlier package would change a verified contract. Operators also need an explicit configuration/resource owner and rollback loss decision.
+
+Use a separate installable release extension depending on the completed recovery wheel. Declare the parent health/readiness routes before mounting the unchanged service at /. Snapshot and revalidate exact bounded private configuration before engine allocation. Imports and construction never connect/migrate. The parent lifespan preflights the release, admits business requests and disposes its owned engine once on failed startup/normal exit; construction failures release before handoff. The one-way stop gate refuses subsequent work, with no public mutation endpoint. Reentry after stop refuses before acquiring a new connection.
+
+Readiness accepts exactly delivery_004 and performs required table/column LIMIT 0 probes in a fresh read-only PostgreSQL/psycopg2 READ COMMITTED transaction with individual lock/statement limits. Finite head/schema/storage/stopping reasons exclude secrets and raw errors. Programmer errors stay errors. This check is temporary, does not authorize or guarantee the next request, and is separate from explicit migration/autogenerate comparison. API readiness observes PostgreSQL only; broker/worker evidence stays separate.
+
+Supplied explicit prepare/check/serve/rollback commands and RUNBOOK.md order stopped writers, configuration, migrations, startup, observation, SIGTERM/reaping and loss-aware rollback. Expected CLI store/migration failures use finite events. delivery_003 loses worker policies and jobs; service_002 also loses outbox/inbox/effects. Service facts/timestamps remain; re-upgrade does not restore lost history. An old binary alone remains incompatible at delivery_004. No shared broker/database transaction, complete CHECK/data/index audit, hard synchronous callback deadline, zero-downtime rollout, backup restoration or full academy deployment is claimed.
+
+Four simple lessons/eight scenarios and complete interactive/glossary/private recall layers link to an authenticated fourteen-file starter with three unfinished functions, 33 finite public cases (15 offline/18 live) and four manual criteria. Trusted maintainer subprocesses build eight sdists/wheels, freshly install outside source, verify types/resources/imports and observe actual PostgreSQL/Redis composition, CLI/TCP/SIGTERM cleanup, readiness transitions, rollback losses and JSON readback. The academy only serves bytes/stores reported and manual evidence. No learner code execution, academy schema/dependency, old exam or isolated-runner change.
+
+Alternatives: changing or patching old routes obscures compatibility; automatic startup migrations mix writer ownership with admission; head-only checks miss required column failures; readiness as a future guarantee misleads; schema re-upgrade as recovery falsely restores erased deduplication decisions. We keep those boundaries explicit.
+
+Primary behavior references: [FastAPI lifespan](https://fastapi.tiangolo.com/advanced/events/), [mounted applications](https://fastapi.tiangolo.com/advanced/sub-applications/), [Uvicorn shutdown](https://uvicorn.dev/server-behavior/). Local pinned artifact observations determine the evidence scope; no latest-version behavior claim.

@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools==83.0.0", "wheel==0.48.0"]
+build-backend = "setuptools.build_meta"
+[project]
+name = "academy-delivery-schema-lab"
+version = "0.1.0"
+description = "Versioned delivery schema, explicit rollback and bounded readiness checks"
+requires-python = ">=3.13"
+dependencies = ["academy-stream-delivery-lab==0.1.0"]
+[project.optional-dependencies]
+dev = ["pytest==9.0.3", "mypy==2.3.1", "types-psycopg2==2.9.21.20260911", "build==1.2.2.post1", "ruff==0.16.7", "httpx==0.28.1"]
+[tool.setuptools.packages.find]
+where = ["src"]
+[tool.setuptools.package-data]
+academy_delivery_schema = ["py.typed", "migrations/*.py", "migrations/versions/*.py"]
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--strict-markers --strict-config"
+markers = ["live: requires explicitly disposable PostgreSQL; broker integration also needs Redis"]
+[tool.mypy]
+strict = true
+[tool.ruff]
+line-length = 110
+target-version = "py313"
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F"]

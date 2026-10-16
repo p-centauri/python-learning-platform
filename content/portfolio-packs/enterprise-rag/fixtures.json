@@ -1,0 +1,525 @@
+{
+  "purpose": "synthetic seed labels; independently verify and expand; never tune on held-out",
+  "documents": [
+    {
+      "id": "source-1",
+      "tenant": "alpha",
+      "version": "1",
+      "language": "en",
+      "text": "Office 1 closes at 18:00.",
+      "allowed": true
+    },
+    {
+      "id": "source-2",
+      "tenant": "alpha",
+      "version": "1",
+      "language": "ru",
+      "text": "Офис 1 закрывается в 18:00.",
+      "allowed": true
+    },
+    {
+      "id": "source-3",
+      "tenant": "alpha",
+      "version": "1",
+      "language": "uz",
+      "text": "1-ofis soat 18:00 da yopiladi.",
+      "allowed": true
+    },
+    {
+      "id": "source-4",
+      "tenant": "alpha",
+      "version": "1",
+      "language": "en",
+      "text": "Office 2 closes at 18:00.",
+      "allowed": true
+    },
+    {
+      "id": "source-5",
+      "tenant": "alpha",
+      "version": "1",
+      "language": "ru",
+      "text": "Офис 2 закрывается в 18:00.",
+      "allowed": true
+    },
+    {
+      "id": "source-6",
+      "tenant": "alpha",
+      "version": "1",
+      "language": "uz",
+      "text": "2-ofis soat 18:00 da yopiladi.",
+      "allowed": true
+    },
+    {
+      "id": "source-7",
+      "tenant": "alpha",
+      "version": "1",
+      "language": "en",
+      "text": "Office 3 closes at 18:00.",
+      "allowed": true
+    },
+    {
+      "id": "source-8",
+      "tenant": "alpha",
+      "version": "1",
+      "language": "ru",
+      "text": "Офис 3 закрывается в 18:00.",
+      "allowed": true
+    },
+    {
+      "id": "source-9",
+      "tenant": "alpha",
+      "version": "1",
+      "language": "uz",
+      "text": "3-ofis soat 18:00 da yopiladi.",
+      "allowed": true
+    },
+    {
+      "id": "source-10",
+      "tenant": "alpha",
+      "version": "1",
+      "language": "en",
+      "text": "Office 4 closes at 18:00.",
+      "allowed": true
+    },
+    {
+      "id": "source-11",
+      "tenant": "alpha",
+      "version": "1",
+      "language": "ru",
+      "text": "Офис 4 закрывается в 18:00.",
+      "allowed": true
+    },
+    {
+      "id": "source-12",
+      "tenant": "alpha",
+      "version": "1",
+      "language": "uz",
+      "text": "4-ofis soat 18:00 da yopiladi.",
+      "allowed": true
+    },
+    {
+      "id": "source-13",
+      "tenant": "alpha",
+      "version": "1",
+      "language": "en",
+      "text": "Office 5 closes at 18:00.",
+      "allowed": true
+    },
+    {
+      "id": "source-14",
+      "tenant": "alpha",
+      "version": "1",
+      "language": "ru",
+      "text": "Офис 5 закрывается в 18:00.",
+      "allowed": true
+    },
+    {
+      "id": "source-15",
+      "tenant": "alpha",
+      "version": "1",
+      "language": "uz",
+      "text": "5-ofis soat 18:00 da yopiladi.",
+      "allowed": true
+    },
+    {
+      "id": "source-16",
+      "tenant": "alpha",
+      "version": "1",
+      "language": "en",
+      "text": "Office 6 closes at 18:00.",
+      "allowed": true
+    },
+    {
+      "id": "source-17",
+      "tenant": "alpha",
+      "version": "1",
+      "language": "ru",
+      "text": "Офис 6 закрывается в 18:00.",
+      "allowed": true
+    },
+    {
+      "id": "source-18",
+      "tenant": "alpha",
+      "version": "1",
+      "language": "uz",
+      "text": "6-ofis soat 18:00 da yopiladi.",
+      "allowed": true
+    },
+    {
+      "id": "source-19",
+      "tenant": "alpha",
+      "version": "1",
+      "language": "en",
+      "text": "Office 7 closes at 18:00.",
+      "allowed": true
+    },
+    {
+      "id": "source-20",
+      "tenant": "alpha",
+      "version": "1",
+      "language": "ru",
+      "text": "Офис 7 закрывается в 18:00.",
+      "allowed": true
+    },
+    {
+      "id": "source-21",
+      "tenant": "alpha",
+      "version": "1",
+      "language": "uz",
+      "text": "7-ofis soat 18:00 da yopiladi.",
+      "allowed": true
+    },
+    {
+      "id": "source-22",
+      "tenant": "alpha",
+      "version": "1",
+      "language": "en",
+      "text": "Office 8 closes at 18:00.",
+      "allowed": true
+    },
+    {
+      "id": "source-23",
+      "tenant": "alpha",
+      "version": "1",
+      "language": "ru",
+      "text": "Офис 8 закрывается в 18:00.",
+      "allowed": true
+    },
+    {
+      "id": "source-24",
+      "tenant": "alpha",
+      "version": "1",
+      "language": "uz",
+      "text": "8-ofis soat 18:00 da yopiladi.",
+      "allowed": true
+    },
+    {
+      "id": "source-25",
+      "tenant": "alpha",
+      "version": "1",
+      "language": "en",
+      "text": "Office 9 closes at 18:00.",
+      "allowed": true
+    },
+    {
+      "id": "source-26",
+      "tenant": "alpha",
+      "version": "1",
+      "language": "ru",
+      "text": "Офис 9 закрывается в 18:00.",
+      "allowed": true
+    },
+    {
+      "id": "source-27",
+      "tenant": "alpha",
+      "version": "1",
+      "language": "uz",
+      "text": "9-ofis soat 18:00 da yopiladi.",
+      "allowed": true
+    },
+    {
+      "id": "source-28",
+      "tenant": "alpha",
+      "version": "1",
+      "language": "en",
+      "text": "Office 10 closes at 18:00.",
+      "allowed": true
+    },
+    {
+      "id": "source-29",
+      "tenant": "alpha",
+      "version": "1",
+      "language": "ru",
+      "text": "Офис 10 закрывается в 18:00.",
+      "allowed": true
+    },
+    {
+      "id": "source-30",
+      "tenant": "alpha",
+      "version": "1",
+      "language": "uz",
+      "text": "10-ofis soat 18:00 da yopiladi.",
+      "allowed": true
+    }
+  ],
+  "queries": [
+    {
+      "id": "q-1",
+      "language": "en",
+      "query": "When does office 1 close?",
+      "relevant": [
+        "source-1"
+      ],
+      "split": "development"
+    },
+    {
+      "id": "q-2",
+      "language": "ru",
+      "query": "Когда закрывается офис 1?",
+      "relevant": [
+        "source-2"
+      ],
+      "split": "development"
+    },
+    {
+      "id": "q-3",
+      "language": "uz",
+      "query": "1-ofis qachon yopiladi?",
+      "relevant": [
+        "source-3"
+      ],
+      "split": "development"
+    },
+    {
+      "id": "q-4",
+      "language": "en",
+      "query": "When does office 2 close?",
+      "relevant": [
+        "source-4"
+      ],
+      "split": "development"
+    },
+    {
+      "id": "q-5",
+      "language": "ru",
+      "query": "Когда закрывается офис 2?",
+      "relevant": [
+        "source-5"
+      ],
+      "split": "development"
+    },
+    {
+      "id": "q-6",
+      "language": "uz",
+      "query": "2-ofis qachon yopiladi?",
+      "relevant": [
+        "source-6"
+      ],
+      "split": "development"
+    },
+    {
+      "id": "q-7",
+      "language": "en",
+      "query": "When does office 3 close?",
+      "relevant": [
+        "source-7"
+      ],
+      "split": "development"
+    },
+    {
+      "id": "q-8",
+      "language": "ru",
+      "query": "Когда закрывается офис 3?",
+      "relevant": [
+        "source-8"
+      ],
+      "split": "development"
+    },
+    {
+      "id": "q-9",
+      "language": "uz",
+      "query": "3-ofis qachon yopiladi?",
+      "relevant": [
+        "source-9"
+      ],
+      "split": "development"
+    },
+    {
+      "id": "q-10",
+      "language": "en",
+      "query": "When does office 4 close?",
+      "relevant": [
+        "source-10"
+      ],
+      "split": "development"
+    },
+    {
+      "id": "q-11",
+      "language": "ru",
+      "query": "Когда закрывается офис 4?",
+      "relevant": [
+        "source-11"
+      ],
+      "split": "development"
+    },
+    {
+      "id": "q-12",
+      "language": "uz",
+      "query": "4-ofis qachon yopiladi?",
+      "relevant": [
+        "source-12"
+      ],
+      "split": "development"
+    },
+    {
+      "id": "q-13",
+      "language": "en",
+      "query": "When does office 5 close?",
+      "relevant": [
+        "source-13"
+      ],
+      "split": "development"
+    },
+    {
+      "id": "q-14",
+      "language": "ru",
+      "query": "Когда закрывается офис 5?",
+      "relevant": [
+        "source-14"
+      ],
+      "split": "development"
+    },
+    {
+      "id": "q-15",
+      "language": "uz",
+      "query": "5-ofis qachon yopiladi?",
+      "relevant": [
+        "source-15"
+      ],
+      "split": "development"
+    },
+    {
+      "id": "q-16",
+      "language": "en",
+      "query": "When does office 6 close?",
+      "relevant": [
+        "source-16"
+      ],
+      "split": "development"
+    },
+    {
+      "id": "q-17",
+      "language": "ru",
+      "query": "Когда закрывается офис 6?",
+      "relevant": [
+        "source-17"
+      ],
+      "split": "development"
+    },
+    {
+      "id": "q-18",
+      "language": "uz",
+      "query": "6-ofis qachon yopiladi?",
+      "relevant": [
+        "source-18"
+      ],
+      "split": "development"
+    },
+    {
+      "id": "q-19",
+      "language": "en",
+      "query": "When does office 7 close?",
+      "relevant": [
+        "source-19"
+      ],
+      "split": "development"
+    },
+    {
+      "id": "q-20",
+      "language": "ru",
+      "query": "Когда закрывается офис 7?",
+      "relevant": [
+        "source-20"
+      ],
+      "split": "development"
+    },
+    {
+      "id": "q-21",
+      "language": "uz",
+      "query": "7-ofis qachon yopiladi?",
+      "relevant": [
+        "source-21"
+      ],
+      "split": "development"
+    },
+    {
+      "id": "q-22",
+      "language": "en",
+      "query": "When does office 8 close?",
+      "relevant": [
+        "source-22"
+      ],
+      "split": "development"
+    },
+    {
+      "id": "q-23",
+      "language": "ru",
+      "query": "Когда закрывается офис 8?",
+      "relevant": [
+        "source-23"
+      ],
+      "split": "development"
+    },
+    {
+      "id": "q-24",
+      "language": "uz",
+      "query": "8-ofis qachon yopiladi?",
+      "relevant": [
+        "source-24"
+      ],
+      "split": "development"
+    },
+    {
+      "id": "q-25",
+      "language": "en",
+      "query": "When does office 9 close?",
+      "relevant": [
+        "source-25"
+      ],
+      "split": "held-out"
+    },
+    {
+      "id": "q-26",
+      "language": "ru",
+      "query": "Когда закрывается офис 9?",
+      "relevant": [
+        "source-26"
+      ],
+      "split": "held-out"
+    },
+    {
+      "id": "q-27",
+      "language": "uz",
+      "query": "9-ofis qachon yopiladi?",
+      "relevant": [
+        "source-27"
+      ],
+      "split": "held-out"
+    },
+    {
+      "id": "q-28",
+      "language": "en",
+      "query": "When does office 10 close?",
+      "relevant": [
+        "source-28"
+      ],
+      "split": "held-out"
+    },
+    {
+      "id": "q-29",
+      "language": "ru",
+      "query": "Когда закрывается офис 10?",
+      "relevant": [
+        "source-29"
+      ],
+      "split": "held-out"
+    },
+    {
+      "id": "q-30",
+      "language": "uz",
+      "query": "10-ofis qachon yopiladi?",
+      "relevant": [
+        "source-30"
+      ],
+      "split": "held-out"
+    }
+  ],
+  "no_answer_queries": [
+    "What is the alpha office alarm password?"
+  ],
+  "private_document": {
+    "id": "private-1",
+    "tenant": "beta",
+    "text": "private fixture marker"
+  }
+}

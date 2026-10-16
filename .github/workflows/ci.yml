@@ -1,0 +1,72 @@
+name: Academy checks
+on: [push, pull_request]
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - run: pip install -r apps/api/requirements.txt -r apps/api/requirements-dev.txt
+      - run: ruff check apps/api apps/runner apps/web/tests/fixtures scripts/setup_runner.py scripts/verify_ingestion_package.py scripts/verify_feed_policy.py scripts/verify_async_feeds.py scripts/verify_feed_objects.py scripts/verify_typed_transforms.py scripts/verify_resource_scopes.py scripts/verify_bounded_offload.py scripts/verify_measured_cache.py scripts/verify_ingestion_persistence.py scripts/persistence_db.py scripts/verify_ingestion_service.py scripts/verify_competing_ingestion.py scripts/verify_durable_outbox.py scripts/verify_leased_worker.py scripts/verify_stream_delivery.py scripts/stream_broker.py scripts/verify_delivery_schema.py scripts/verify_delivery_recovery.py scripts/verify_delivery_release.py scripts/verify_query_analysis.py scripts/verify_api_depth.py scripts/verify_practical_review.py scripts/verify_model_contracts.py scripts/verify_retrieval.py scripts/verify_rag.py scripts/verify_tools.py scripts/verify_ai_evaluation.py scripts/verify_comprehensive.py scripts/audit_learning_paths.py scripts/academy_backup.py scripts/configure_compose_runner.py scripts/tests
+      - run: python -m unittest discover -s tests -v
+        working-directory: apps/api
+      - run: python -m unittest discover -s scripts/tests -v
+      - run: python scripts/verify_ingestion_package.py
+      - run: python scripts/verify_feed_policy.py
+      - run: python scripts/verify_async_feeds.py
+      - run: python scripts/verify_feed_objects.py
+      - run: python scripts/verify_typed_transforms.py
+      - run: python scripts/verify_resource_scopes.py
+      - run: python scripts/verify_bounded_offload.py
+      - run: python scripts/verify_measured_cache.py
+      - run: docker pull postgres@sha256:b0f9560a2de083e2cc7382e75f808c7381a32852a7ec49117deedb300e552b24
+      - run: python scripts/verify_ingestion_persistence.py
+      - run: python scripts/verify_ingestion_service.py
+      - run: python scripts/verify_competing_ingestion.py
+      - run: python scripts/verify_durable_outbox.py
+      - run: python scripts/verify_leased_worker.py
+      - run: docker pull redis@sha256:02419de7eddf55aa5bcf49efb74e88fa8d931b4d77c07eff8a6b2144472b6952
+      - run: python scripts/verify_stream_delivery.py
+      - run: python scripts/verify_delivery_schema.py
+      - run: python scripts/verify_delivery_recovery.py
+      - run: python scripts/verify_delivery_release.py
+      - run: python scripts/verify_query_analysis.py
+      - run: python scripts/verify_api_depth.py
+      - run: python scripts/verify_practical_review.py
+      - run: python scripts/verify_model_contracts.py
+      - run: python scripts/verify_retrieval.py
+      - run: python scripts/verify_rag.py
+      - run: python scripts/verify_tools.py
+      - run: python scripts/verify_ai_evaluation.py
+      - run: python scripts/audit_learning_paths.py
+      - run: alembic upgrade head && python -m app.seed && alembic check
+        working-directory: apps/api
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: apps/web/package-lock.json
+      - run: npm ci
+        working-directory: apps/web
+      - run: npm audit --audit-level=high
+        working-directory: apps/web
+      - run: npm run build
+        working-directory: apps/web
+  isolated-runner:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - run: pip install -r apps/api/requirements.txt -r apps/api/requirements-dev.txt
+      - run: docker pull python@sha256:2325bb286ec344af3e5898cc224b5844e2707ac6e26b1632516fd3edc84a5e26
+      - run: docker pull postgres@sha256:b0f9560a2de083e2cc7382e75f808c7381a32852a7ec49117deedb300e552b24
+      - run: PYTHONPATH=apps/runner python -m unittest discover -s apps/runner/tests -v
+      - run: python scripts/verify_comprehensive.py

@@ -1,0 +1,10 @@
+{
+  "row_count": 5,
+  "total_cents": 1625,
+  "by_category": {
+    "food": 1300,
+    "travel": 200,
+    "food, snacks": 125,
+    "café": 0
+  }
+}

@@ -1,0 +1,210 @@
+{
+  "version": "2026.10-portfolio-v1",
+  "projects": {
+    "backend": {
+      "title": "Production backend platform",
+      "duration": "40–60 focused hours; estimates depend on prior experience",
+      "summary": "Build a tenant-scoped commerce platform that keeps inventory, orders and fulfillment correct through retries and crashes.",
+      "libraries": [
+        "FastAPI and Pydantic: typed HTTP contracts and strict input/output",
+        "SQLAlchemy and Psycopg: transaction/session ownership and PostgreSQL behavior",
+        "Alembic: versioned upgrades and compatible rollback",
+        "Redis and Celery: measured caching, worker delivery and failure recovery",
+        "pytest and HTTPX: API, concurrency and regression cases",
+        "Docker/Compose and CI: reproducible runtime and observed release"
+      ],
+      "sections": [
+        {
+          "title": "Domain and invariants",
+          "text": "Use organizations, memberships, products, stock, orders, order lines, idempotency receipts, outbox, inbox and fulfillment. Tenant is part of every business key. Store exact integer minor units plus currency. Stock is never negative. One request key cannot identify two bodies. Order, stock and intent commit together. Fulfillment is one durable effect per full event identity."
+        },
+        {
+          "title": "API acceptance",
+          "text": "POST /orders accepts {key,sku,qty}; derives tenant from a real session/token. First success returns 201 and a stable receipt; identical retry returns 200 and the same order; changed body with the same scoped key returns 409. Bad positive integer/currency fields return 422. GET /orders/{id} and /orders use current membership, scoped keys and bounded keyset pages. Foreign/unknown IDs return the same 404 shape; no private fields leak. POST webhook has a verified signature, timestamp policy and replay identity. Do not trust a supplied role/tenant."
+        },
+        {
+          "title": "Database and concurrency",
+          "text": "Create PostgreSQL migrations with full keys, constraints and indexes. Conditional reservation or an explicit lock must prevent two connections selling the last unit. Record order and outbox in the same transaction. Test simultaneous writers using a barrier and distinct connections, request conflicts, rollback and uncertain commit reconciliation. SQLite cannot substitute for this evidence."
+        },
+        {
+          "title": "Worker and delivery",
+          "text": "Use Celery/Redis with documented at-least-once behavior. Commit inbox plus protected fulfillment together. Test actual process exits before commit, after commit/before ack and stale lease settlement. Bound retries/deadlines, quarantine poison and explain redrive. External payments need destination idempotency/reconciliation; a local inbox alone is insufficient."
+        },
+        {
+          "title": "Cache and HTTP",
+          "text": "Use tenant/permission/version-aware keys. Specify invalidation and the Redis-down fallback. Define ETags/preconditions and page semantics. Check query counts and actual plans at a stated data size. Cache failure must not bypass permission or trigger unlimited retries."
+        },
+        {
+          "title": "Release and operations",
+          "text": "Ship a non-root API/worker Compose deployment, expected schema/readiness checks, migration procedure and CI with independent regression cases. Emit safe IDs, finite failure categories, latency and job age; omit tokens and private payloads. State a workload and p50/p95/p99/errors. Restore a backup to an isolated database and check invariants; record RPO/RTO and a compatible rollback. Do not call a written runbook a tested restore."
+        },
+        {
+          "title": "Failure matrix",
+          "text": "Required: foreign tenant collision; last-unit race; conflicting request key; malformed money/quantity; rollback between writes; lost HTTP response; commit-before-ack redelivery; poisoned event; worker process exit; Redis outage; webhook signature/replay; stale cache/ACL; migration mismatch; dependency timeout; restore with dangling/duplicate effects."
+        },
+        {
+          "title": "Final review packet",
+          "text": "Use the four existing rubric criteria: contract, transactions, worker, operations. Link exact commits/files and commands/output for every claim. Include a diagram, permission matrix, OpenAPI examples, schema/migrations, concurrency and crash transcripts, measured release report, restore evidence and residual risks. Invite a registered reviewer; revise separately after feedback."
+        }
+      ],
+      "learning": [
+        "python-service-evidence",
+        "python-outbox-evidence",
+        "python-query-evidence",
+        "python-api-depth-evidence"
+      ],
+      "references": [
+        {
+          "title": "FastAPI testing",
+          "url": "https://fastapi.tiangolo.com/tutorial/testing/"
+        },
+        {
+          "title": "SQLAlchemy session ownership",
+          "url": "https://docs.sqlalchemy.org/en/20/orm/session_basics.html"
+        },
+        {
+          "title": "PostgreSQL transaction isolation",
+          "url": "https://www.postgresql.org/docs/current/transaction-iso.html"
+        }
+      ]
+    },
+    "enterprise-rag": {
+      "title": "Enterprise RAG system",
+      "duration": "40–60 focused hours; semantic labeling/review is separate effort",
+      "summary": "Build a document assistant with versioned evidence, current permissions and measurable multilingual retrieval quality.",
+      "libraries": [
+        "FastAPI/Pydantic: ingestion, query, citations and strict output contracts",
+        "PostgreSQL, SQLAlchemy, Alembic and pgvector: source/version/ACL storage and compatible vector spaces",
+        "Parser/chunker chosen for declared formats: offsets and bounded ingestion",
+        "Embedding provider adapter: pinned model/version/dimensions and time/cost budgets",
+        "Hybrid search and reranking adapters: deterministic baselines and measured candidates",
+        "pytest/HTTPX and an evaluation harness: held-out labels, denominators and failure cases"
+      ],
+      "sections": [
+        {
+          "title": "Evidence domain",
+          "text": "Model tenants, memberships, documents, immutable source versions, jobs, chunks with offsets, ACLs, vector-space identity, evaluation datasets/candidates and citations. Replaced/deleted or permission-revoked versions must not appear as current support. Store raw content only with a declared access/retention policy. Vector dimensions alone do not identify a model space."
+        },
+        {
+          "title": "Ingestion contract",
+          "text": "Accept declared text/PDF formats with size/type limits and bounded parser work. A stable tenant/source/version digest identifies ingestion. Preserve original location, language, offsets and ACLs through retries/chunking. Replace/deletion revokes current support; reprocessing is idempotent. Queue bounded jobs, record failure categories and reconcile uncertain completion. A parser is not a sandbox for hostile files."
+        },
+        {
+          "title": "Query and citation API",
+          "text": "POST /ask accepts {query,language,k}; derives actor scope, performs authorized retrieval before any model call, returns {status,answer,citations:[{source_id,version,chunk_id,offset}]}. No support returns status=no-support and no invented answer. GET /citations/{id} rechecks current ACL/version before exposure. Citation IDs, caches and rerankers must not bypass scope."
+        },
+        {
+          "title": "Retrieval experiments",
+          "text": "Build lexical and vector baselines, then hybrid candidates and a reranker. Pin dataset split, model space, chunking, index settings and candidate revision. Report requested-k precision, positive-label recall/MRR, no-answer/unwanted hits, denominators, latency distribution and actual cost with units. Review answer support/semantic quality separately; exact citation matching is not correctness."
+        },
+        {
+          "title": "Dataset and holdout",
+          "text": "The pack supplies 30 synthetic labeled multilingual seed questions with source IDs and development/held-out split. Expand and independently verify labels for your corpus. Do not tune on the held-out questions or present synthetic labels as real-company/population evidence. Include boundary/colliding IDs, no-answer, stale/private sources, exact names, lexical vs semantic misses and permission changes."
+        },
+        {
+          "title": "Security and failure matrix",
+          "text": "Required: foreign tenant text; revoked ACL in cache/citation; same chunk ID under different tenants; stale source; incompatible embedding versions; empty retrieval; duplicate ingestion; parser failure; provider timeout/refusal; malicious source instructions; reranker leaking candidates; model/tool role escalation. Treat source text as evidence, never approval. Demonstrate observed boundaries and residual semantic risk."
+        },
+        {
+          "title": "Operations and scale",
+          "text": "Ship migrations/Compose with PostgreSQL+pgvector, bounded ingestion workers, read/write pool budgets, current schema/readiness, backpressure and safe traces. State measured corpus/workload/quality, storage/index growth and budget. Exercise replace/delete, provider outage and restore. Explain ACL/vector rebuild after restore; do not claim millions-of-documents performance from a small fixture."
+        },
+        {
+          "title": "Final review packet",
+          "text": "Use existing evaluation, ingestion, retrieval and security criteria. Provide fixed repository, source/version examples, permission matrix, reproducible candidate reports, labels/splits, redacted failure traces, citation access tests, human answer judgments and deployment/recovery evidence. Downloaded fixtures/checklists do not award mastery."
+        }
+      ],
+      "learning": [
+        "retrieval-evidence",
+        "rag-practical-evidence",
+        "ai-release-review",
+        "python-api-depth-evidence"
+      ],
+      "references": [
+        {
+          "title": "FastAPI testing",
+          "url": "https://fastapi.tiangolo.com/tutorial/testing/"
+        },
+        {
+          "title": "SQLAlchemy session ownership",
+          "url": "https://docs.sqlalchemy.org/en/20/orm/session_basics.html"
+        },
+        {
+          "title": "PostgreSQL transaction isolation",
+          "url": "https://www.postgresql.org/docs/current/transaction-iso.html"
+        },
+        {
+          "title": "pgvector contracts and indexing",
+          "url": "https://github.com/pgvector/pgvector"
+        }
+      ]
+    },
+    "finance": {
+      "title": "AI finance assistant",
+      "duration": "50–80 focused hours; multilingual/financial UX review is separate effort",
+      "summary": "Build the flagship multilingual expense, income and budget product with trusted ledger mutations and auditable AI proposals.",
+      "libraries": [
+        "FastAPI/Pydantic: trusted business API and strict tool proposal schemas",
+        "PostgreSQL/SQLAlchemy/Alembic: exact ledger values, constraints and durable receipts",
+        "Decimal or integer minor units plus explicit currency: exact financial arithmetic",
+        "Date/time and zoneinfo: recurring entries, ambiguous local dates and explicit timezones",
+        "Provider adapter and validated tools: action approval, reconciliation and refusal",
+        "pytest/HTTPX, localization and evaluation harness: Uzbek/Russian/English workflows, redaction and metrics"
+      ],
+      "sections": [
+        {
+          "title": "Ledger and domain",
+          "text": "Model owned accounts, currency, categories, expenses/income, budgets, recurring schedules/occurrences, immutable audit records, action approvals and operation receipts. Use exact amounts and explicit currency; define conversion policy and never sum unlike currencies. No LLM or client role field owns ledger authority. Corrections/compensation retain an audit trail rather than erasing history."
+        },
+        {
+          "title": "Business API",
+          "text": "Authenticated POST /expenses accepts {key,cents,currency,category,date}; validates actor ownership, positive exact integer cents, allowed currency/category and unambiguous date. First returns 201 plus durable receipt; same scoped key/body returns 200 same receipt; changed body returns 409. GET /reports/monthly derives owner, bounds interval, groups exact income/expense/budget by currency and exposes only that actor. Implement income, categories, budgets and recurring occurrences with stable occurrence keys."
+        },
+        {
+          "title": "AI orchestration and tools",
+          "text": "Separate user intent/transcript, model proposal, strict schema, current permissions, action-bound approval and application execution. Only allowlisted domain tools exist. Approval binds actor, exact canonical arguments, expiry and operation identity; changed amounts/owners require fresh approval. Commit ledger and receipt together. A provider timeout after commit recovers the receipt; it cannot imply rollback. No model SQL or arbitrary URL/file tool."
+        },
+        {
+          "title": "Languages and clarification",
+          "text": "Support Uzbek, Russian and English display/query/action flows. The pack contains 24 synthetic examples (eight per language), including ambiguous dates/currency, refusals and mutation proposals. Human speakers must review translations/intent and locale formats. Dates such as 03/04 need clarification under an ambiguous locale. “100” without an agreed currency is not permission to guess. Translation quality is separate from authorization."
+        },
+        {
+          "title": "Analytics and reports",
+          "text": "Provide exact currency-scoped totals, category breakdown, budget warnings and recurring forecasts with provenance/date boundaries. Natural-language queries compile to a validated bounded domain query, not model-generated arbitrary SQL. AI insights cite report facts and separate suggestions from financial advice. RAG may support documented product policies; it is not authority to change balances."
+        },
+        {
+          "title": "Voice-ready boundary",
+          "text": "Specify transcript/provider metadata, locale, confidence/ambiguity, session/action identity and confirmation. A transcript alone is neither authenticated intent nor approval. Keep proposal/confirmation/execution separate so a future mobile/voice client can use the same contracts. Do not claim voice support from a text-only boundary."
+        },
+        {
+          "title": "Failure matrix and operations",
+          "text": "Required: owner collision; negative/bool/overprecision amount; unlike currencies; ambiguous dates; duplicate orchestration; changed approval; expired approval; duplicate recurring occurrence; provider outage/refusal; tool committed before answer timeout; malicious tool role; private trace leak; reports around timezone boundaries; migration/restore; budget cutoff. Measure language/intent/action outcomes separately, latency/cost/provider versions and human quality judgments. Ship CI, non-root deployment, bounded provider calls, redacted logs, backups and restore evidence."
+        },
+        {
+          "title": "Final review packet",
+          "text": "Use ledger, tools, languages and operations criteria. Supply exact revision, migrations/invariants, public API examples, approval/deduplication/crash tests, reports, 24 seed cases plus independent multilingual labels, actual provider or clearly marked controlled-fixture outcomes, cost/latency observations, voice contract and a human-reviewed release decision. No fake financial/provider/voice readiness from a checklist."
+        }
+      ],
+      "learning": [
+        "tools-practical-evidence",
+        "python-values",
+        "ai-release-review",
+        "python-api-depth-evidence"
+      ],
+      "references": [
+        {
+          "title": "FastAPI testing",
+          "url": "https://fastapi.tiangolo.com/tutorial/testing/"
+        },
+        {
+          "title": "SQLAlchemy session ownership",
+          "url": "https://docs.sqlalchemy.org/en/20/orm/session_basics.html"
+        },
+        {
+          "title": "PostgreSQL transaction isolation",
+          "url": "https://www.postgresql.org/docs/current/transaction-iso.html"
+        }
+      ]
+    }
+  }
+}

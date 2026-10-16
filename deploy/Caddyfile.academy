@@ -1,0 +1,25 @@
+# Append this site to the existing Caddyfile after validation; preserve carwash.
+# Replace the hostname if this installation moves to an owned domain.
+http://academy.45-141-22-101.sslip.io {
+    redir https://academy.45-141-22-101.sslip.io{uri} permanent
+}
+
+https://academy.45-141-22-101.sslip.io {
+    encode zstd gzip
+    request_body {
+        max_size 512KB
+    }
+    header {
+        defer
+        Strict-Transport-Security "max-age=31536000"
+        X-Content-Type-Options nosniff
+        X-Frame-Options DENY
+        Referrer-Policy strict-origin-when-cross-origin
+    }
+    reverse_proxy engineering-academy-web:3000 {
+        transport http {
+            dial_timeout 5s
+            response_header_timeout 30s
+        }
+    }
+}

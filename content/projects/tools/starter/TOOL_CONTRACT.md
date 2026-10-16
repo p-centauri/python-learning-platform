@@ -1,0 +1,25 @@
+# Tool contract v1
+
+## Application authority
+
+Context is an exact immutable application value: original Principal, actor, stable operation_id, one to three distinct same-tenant Citation values, untrusted task up to 512 UTF-8 bytes and max_notes 1..8. Authority is refreshed from a trusted callback. Actor and the complete principal snapshot must match, read must be an exact True, and every selected citation must still resolve against the current RAG index. Model text cannot supply authority. An authority change is forbidden; changed/deleted/restricted/inactive sources are stale_source. This conservative context check includes all selected sources.
+
+`source_excerpt` takes exactly a selected citation ID. `save_note` additionally takes a nonblank 1..120-byte label with no ASCII control characters. The application approval is SHA256 of canonical policy/tenant/actor/operation/tool/label/exact Citation data. `approval_for` is an application helper, not an authorization token produced by the model. An exact matching digest must be present in trusted Authority. Model call ID is excluded so orchestration retries cannot create a second write by changing that ID. A changed actor, operation, source or label requires a new concrete approval. A committed operation with different content still conflicts.
+
+## Proposal envelope
+
+Exact bytes, 1..16384, strict UTF-8 JSON, no duplicate fields or nonfinite constants. Root has exactly model/schema/status/proposal/usage; model equals configured model, schema is tool-proposals-v1. Usage has exact integer input_units 0..full-request-byte bound and output_units 0..configured output limit. Complete proposal is exactly {kind:finish}, or {kind:call,id,name,arguments}; names/argument shapes are the two fixed tools. Refused/incomplete requires null proposal. Extra fields, URLs as citation IDs, claims of role/tenant, unknown tools or finish summaries fail. Decode validation never grants permission. Fully invalid envelopes retain the unknown-usage reservation rather than inventing a free call.
+
+## Local side effect and replay
+
+The separate explicitly initialized SQLite store uses tool-store-v1 and three tables: metadata, notes, receipts. One immediate transaction checks a scoped (tenant,actor,application operation_id) receipt, applies a note and inserts its receipt. Same fingerprint returns its existing note ID; changed fingerprint yields operation_conflict. Per-actor max_notes and global 32-note caps are checked transactionally; replay at a cap remains possible. A late receipt SQL failure rolls back the note. Connections close on success/failure. Reopening preserves receipt identity. Current approval/source checks happen before replay, so a saved receipt cannot restore revoked access.
+
+The stored note is a bounded data label plus source digest, never executable instructions. It remains a historical local effect when permission later changes; it does not grant current access to source text. This SQLite transaction covers these two local tables only. It cannot make a remote email/payment/API effect atomic with this receipt or close the cross-store source-revocation race. Production authorization, transactions and reconciliation need their own design.
+
+## Loop and observations
+
+Borrow configured public ModelConfig/Request/Provider/Adapter; pin provider/dialect/model/prompt. Input units count the complete canonical request UTF-8 bytes including tool declarations and fresh observed results. Add output reserve before context admission; reserve fictional integer cost before attempts. Settle only a fully validated proposal's usage. Limit one possible tool call per provider step, configured max_steps and one cooperative asyncio timeout over the whole loop. Provider exceptions/invalid proposals/refusal/incomplete and blocked/uncertain tool outcomes stop; no automatic tool retry or invented completed result.
+
+LocalTools waits only at trusted fixture hooks, then executes with refreshed authority; a post-effect hook models a lost result. Recheck authority/source after the provider and tool awaits, and before resending prior read evidence. Public Report steps redact source text; only currently authorized prompt history receives excerpts. Actual provider requests, notes/receipts, charge/step facts and cleanup are observed. Public reports also pin configured provider, model, prompt and schema versions. Timeouts distinguish provider_timeout from tool_timeout; a timed-out tool may already have committed. External CancelledError propagates after awaited cleanup and returns no durable provider cost report. Explicit reconciliation uses the same application operation ID and current exact approval. Imports and constructors are quiet; no learner or model code is executed.
+
+Cooperative deadlines do not interrupt blocking SQLite calls or noncooperative code. Trusted hooks/metadata/callbacks, hand vectors and invented wire proposals are fixtures. Final source checks are observation points, not permanent access or distributed revocation. These tests prove finite local contracts, not real model quality, injection resistance, universal idempotency or expert mastery.

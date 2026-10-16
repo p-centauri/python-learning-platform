@@ -1,0 +1,9 @@
+# Delivery release lab
+
+Finish three functions in `operations.py`: load_settings, assess, create_release. Supplied helpers validate pure settings and finite events; you implement the released ownership and readiness contracts. Use Python 3.13+ and the seven completed prior wheels, then `python -m pip install -e '.[dev]'`. Never point this lab at the academy database or a production database.
+
+Run `python -m pytest -q`. Live cases require ACADEMY_RELEASE_TEST_DSN naming a disposable PostgreSQL store. Missing store configuration explicitly skips them; skips are not live evidence. The TCP case removes PYTHONPATH and works with an installed package. Install your completed wheel before that case. Run `python demo.py --output release.json` with the same private disposable DSN and ACADEMY_BROKER_URL to compose actual redrive/pruning with readiness and rollback. The demo never prints credentials.
+
+Read RUNBOOK.md before migration/start/rollback. The old service factory expects service_002; do not edit it or monkeypatch routes. Mount that unchanged application behind the new parent application's /health and /ready. Business permissions, input/output and commit-before-success must remain intact. Creating a release must not connect or migrate. Its lifespan owns exactly one disposal on startup failure and shutdown. Never use a returned application without its lifespan owner.
+
+The academy maintainer command `make verify-delivery-release` builds eight source archives/wheels, installs them outside source in a fresh environment, evaluates the public cases on owned stores and saves actual report JSON. It only evaluates trusted authored references, never uploads. Public tests are finite cases; add two useful regressions and explain limits in your own review artifact. Four criteria are manual. Reported tests/checklists do not award mastery.

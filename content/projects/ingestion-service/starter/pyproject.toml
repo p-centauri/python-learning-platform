@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools==83.0.0", "wheel==0.48.0"]
+build-backend = "setuptools.build_meta"
+[project]
+name = "academy-ingestion-service-lab"
+version = "0.1.0"
+description = "Permission-scoped FastAPI ingestion, owned SQLAlchemy transactions and explicit migrations"
+requires-python = ">=3.13"
+dependencies = ["fastapi==0.141.1", "starlette==1.6.0", "pydantic==2.13.5", "SQLAlchemy==2.0.43", "alembic==1.16.5", "psycopg2-binary==2.9.10"]
+[project.optional-dependencies]
+dev = ["uvicorn==0.35.0", "httpx==0.28.1", "pytest==9.0.3", "mypy==2.3.1", "types-psycopg2==2.9.21.20260911", "build==1.2.2.post1", "ruff==0.16.7"]
+[tool.setuptools.packages.find]
+where = ["src"]
+[tool.setuptools.package-data]
+academy_ingestion_service = ["py.typed", "migrations/*.py", "migrations/versions/*.py"]
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--strict-markers --strict-config"
+markers = ["postgres: needs an explicitly disposable PostgreSQL database"]
+[tool.mypy]
+strict = true
+[tool.ruff]
+line-length = 110
+target-version = "py313"
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F"]

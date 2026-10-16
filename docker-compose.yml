@@ -1,0 +1,71 @@
+name: engineering-academy
+services:
+  db:
+    image: postgres@sha256:b0f9560a2de083e2cc7382e75f808c7381a32852a7ec49117deedb300e552b24
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-academy}
+      POSTGRES_USER: ${POSTGRES_USER:-academy}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-academy-local-change-before-deploy}
+    volumes:
+      - academy_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+  db-setup:
+    image: postgres@sha256:b0f9560a2de083e2cc7382e75f808c7381a32852a7ec49117deedb300e552b24
+    environment:
+      PGHOST: db
+      PGDATABASE: ${POSTGRES_DB:-academy}
+      PGUSER: ${POSTGRES_USER:-academy}
+      PGPASSWORD: ${POSTGRES_PASSWORD:-academy-local-change-before-deploy}
+      ACADEMY_APP_USER: ${ACADEMY_APP_USER:-academy_app}
+      ACADEMY_APP_PASSWORD: ${ACADEMY_APP_PASSWORD:-academy-app-local-change-before-deploy}
+    volumes:
+      - ./scripts/prepare_database.sql:/opt/academy/prepare.sql:ro
+    command: ["psql", "-X", "-f", "/opt/academy/prepare.sql"]
+    depends_on:
+      db:
+        condition: service_healthy
+  migrate:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    environment: &api-environment
+      DATABASE_URL: postgresql+psycopg2://${ACADEMY_APP_USER:-academy_app}:${ACADEMY_APP_PASSWORD:-academy-app-local-change-before-deploy}@db:5432/${POSTGRES_DB:-academy}
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-http://localhost:3000,http://127.0.0.1:3000}
+      SECURE_COOKIES: ${SECURE_COOKIES:-false}
+      SESSION_DAYS: ${SESSION_DAYS:-14}
+      RUNNER_URL: ${RUNNER_URL:-}
+      RUNNER_TOKEN: ${RUNNER_TOKEN:-}
+    command: ["sh", "-c", "alembic upgrade head && python -m app.seed"]
+    depends_on:
+      db-setup:
+        condition: service_completed_successfully
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    environment: *api-environment
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+      args:
+        API_INTERNAL_URL: http://api:8000
+    ports:
+      - "127.0.0.1:${WEB_PORT:-3000}:3000"
+    depends_on:
+      api:
+        condition: service_healthy
+volumes:
+  academy_data:

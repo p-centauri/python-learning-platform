@@ -1,0 +1,12 @@
+{
+  "inventory": [
+    {
+      "tenant": "alpha",
+      "sku": "book",
+      "stock": 1,
+      "unit_cents": 100,
+      "currency": "USD"
+    }
+  ],
+  "required_failure_cases": "Required: foreign tenant collision; last-unit race; conflicting request key; malformed money/quantity; rollback between writes; lost HTTP response; commit-before-ack redelivery; poisoned event; worker process exit; Redis outage; webhook signature/replay; stale cache/ACL; migration mismatch; dependency timeout; restore with dangling/duplicate effects."
+}

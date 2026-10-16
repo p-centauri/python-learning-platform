@@ -1,0 +1,197 @@
+{
+  "id": "senior-design-v1",
+  "version": "2026.10-comprehensive-v1",
+  "mode": "design",
+  "level": "Comprehensive",
+  "title": "Senior system design + applied AI exam",
+  "description": "Design a multi-tenant enterprise assistant, then adapt it to seven sequential incidents. All engineering judgments need review.",
+  "minutes": 240,
+  "questions": [],
+  "stages": [
+    {
+      "id": "baseline",
+      "title": "Baseline design",
+      "questions": [
+        {
+          "id": "requirements",
+          "kind": "short",
+          "skill": "System design",
+          "prompt": "Serve 300 companies, 2 million source documents and 5,000 daily users. Define personas, tenant/role boundaries, freshness, availability, latency, cost and explicit non-goals. Show assumptions and capacity arithmetic.",
+          "title": "Requirements and workload",
+          "min_length": 80,
+          "max_length": 2400
+        },
+        {
+          "id": "architecture",
+          "kind": "short",
+          "skill": "System design",
+          "prompt": "Describe modules, API examples, database keys/indexes, cache keys, queues, idempotency, ingestion/version replacement, hybrid retrieval/reranking and citation paths. Give the main sequence and failure boundaries.",
+          "title": "Architecture and contracts",
+          "min_length": 80,
+          "max_length": 2400
+        },
+        {
+          "id": "authority",
+          "kind": "short",
+          "skill": "System design",
+          "prompt": "Explain actor-derived scope, document ACL changes, citation rechecks, strict tool schemas, action-bound approvals, replay/reconciliation and audit records. Model and document text never acquire mutation authority.",
+          "title": "Permissions and trusted actions",
+          "min_length": 80,
+          "max_length": 2400
+        },
+        {
+          "id": "operations",
+          "kind": "short",
+          "skill": "System design",
+          "prompt": "Specify held-out retrieval/answer evaluation, human review, budgets, safe observability, rollout/rollback, scaling, backups, restore, RPO/RTO and costs. Include tests and residual risks.",
+          "title": "Quality, deployment and recovery",
+          "min_length": 80,
+          "max_length": 2400
+        }
+      ]
+    },
+    {
+      "id": "traffic",
+      "title": "Traffic increased 20×",
+      "questions": [
+        {
+          "id": "traffic",
+          "kind": "short",
+          "skill": "Incident adaptation",
+          "title": "Traffic increased 20×",
+          "prompt": "Tenant adoption grows 20× in one week. The average document is 20 KB. Your prior latency/cost budget stays fixed. Recalculate capacity, admission/backpressure, isolation and a measured scaling experiment.",
+          "min_length": 80,
+          "max_length": 2400
+        }
+      ]
+    },
+    {
+      "id": "postgres",
+      "title": "PostgreSQL is overloaded",
+      "questions": [
+        {
+          "id": "postgres",
+          "kind": "short",
+          "skill": "Incident adaptation",
+          "title": "PostgreSQL is overloaded",
+          "prompt": "p99 read latency doubles and connections saturate during ingestion. Identify measurements, query/transaction/pool changes, workload isolation and correctness risks. Explain how to verify the change.",
+          "min_length": 80,
+          "max_length": 2400
+        }
+      ]
+    },
+    {
+      "id": "redis",
+      "title": "Redis is unavailable",
+      "questions": [
+        {
+          "id": "redis",
+          "kind": "short",
+          "skill": "Incident adaptation",
+          "title": "Redis is unavailable",
+          "prompt": "The cache/broker service is unavailable for 15 minutes. Preserve authorization and prevent a retry storm. State what works, what degrades, recovery and observable acceptance criteria.",
+          "min_length": 80,
+          "max_length": 2400
+        }
+      ]
+    },
+    {
+      "id": "provider",
+      "title": "Model provider outage",
+      "questions": [
+        {
+          "id": "provider",
+          "kind": "short",
+          "skill": "Incident adaptation",
+          "title": "Model provider outage",
+          "prompt": "The model provider fails for 30 seconds while an approved action may already have committed. Explain budgets, user response, receipt reconciliation and how to avoid a duplicate mutation.",
+          "min_length": 80,
+          "max_length": 2400
+        }
+      ]
+    },
+    {
+      "id": "injection",
+      "title": "Attacker uploads instructions",
+      "questions": [
+        {
+          "id": "injection",
+          "kind": "short",
+          "skill": "Incident adaptation",
+          "title": "Attacker uploads instructions",
+          "prompt": "A permitted source includes instructions to export another tenant’s private data. Trace its trust boundary through retrieval, model output, tool proposals and citations. Provide attack tests and residual semantic risk.",
+          "min_length": 80,
+          "max_length": 2400
+        }
+      ]
+    },
+    {
+      "id": "duplicate",
+      "title": "A tool was executed twice",
+      "questions": [
+        {
+          "id": "duplicate",
+          "kind": "short",
+          "skill": "Incident adaptation",
+          "title": "A tool was executed twice",
+          "prompt": "The tool destination charged twice even though your local inbox has one row. Explain the protection boundary, evidence collection, reconciliation/compensation and a changed destination contract.",
+          "min_length": 80,
+          "max_length": 2400
+        }
+      ]
+    },
+    {
+      "id": "irrelevant",
+      "title": "Retrieval returns irrelevant documents",
+      "questions": [
+        {
+          "id": "irrelevant",
+          "kind": "short",
+          "skill": "Incident adaptation",
+          "title": "Retrieval returns irrelevant documents",
+          "prompt": "Recall on the held-out multilingual set falls after re-embedding. Diagnose model/version, labels, ACL, source freshness, chunking and reranking without tuning away the held-out evidence. Define release criteria.",
+          "min_length": 80,
+          "max_length": 2400
+        }
+      ]
+    }
+  ],
+  "review_project": "exam-design",
+  "rubric": [
+    {
+      "id": "requirements",
+      "title": "Explicit requirements and capacity",
+      "expectation": "State measurable SLOs, workload arithmetic, tenant assumptions, non-goals and changing limits."
+    },
+    {
+      "id": "architecture",
+      "title": "Data and service design",
+      "expectation": "Show full keys/indexes, API contracts, write ownership, caching/queues and justified trade-offs."
+    },
+    {
+      "id": "authority",
+      "title": "Permissions and action authority",
+      "expectation": "Enforce current ACLs at every exposure, strict tools and exact action approval; include adversarial tests."
+    },
+    {
+      "id": "reliability",
+      "title": "Failures and durable effects",
+      "expectation": "Reason about commit/ack gaps, destination cooperation, retries, fallback, duplicate receipts and uncertain outcomes."
+    },
+    {
+      "id": "retrieval",
+      "title": "Retrieval and semantic quality",
+      "expectation": "Preserve sources/versions/citations, measured hybrid retrieval and held-out labels, independent human quality checks."
+    },
+    {
+      "id": "operations",
+      "title": "Operations, recovery and cost",
+      "expectation": "Give safe traces, budgets, deploy/rollback, restore drills and concrete RPO/RTO/SLO evidence."
+    },
+    {
+      "id": "adaptation",
+      "title": "Incident adaptation",
+      "expectation": "For each incident revise earlier assumptions, choose a response, explain trade-offs and define a verification experiment."
+    }
+  ]
+}

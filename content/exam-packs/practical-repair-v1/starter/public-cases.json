@@ -1,0 +1,295 @@
+[
+  {
+    "name": "Order reservation and outbox",
+    "public": true,
+    "args": [
+      {
+        "kind": "orders",
+        "principal": "alpha",
+        "stock": 2,
+        "commands": [
+          {
+            "tenant": "alpha",
+            "key": "one",
+            "qty": 1
+          }
+        ]
+      }
+    ],
+    "expected": {
+      "results": [
+        "created"
+      ],
+      "stock": 1,
+      "orders": 1,
+      "outbox": 1
+    }
+  },
+  {
+    "name": "Atomic rollback",
+    "public": true,
+    "args": [
+      {
+        "kind": "orders",
+        "principal": "alpha",
+        "stock": 2,
+        "commands": [
+          {
+            "tenant": "alpha",
+            "key": "one",
+            "qty": 1,
+            "fail": true
+          },
+          {
+            "tenant": "alpha",
+            "key": "one",
+            "qty": 1
+          }
+        ]
+      }
+    ],
+    "expected": {
+      "results": [
+        "rolled-back",
+        "created"
+      ],
+      "stock": 1,
+      "orders": 1,
+      "outbox": 1
+    }
+  },
+  {
+    "name": "Commit then lost acknowledgment",
+    "public": true,
+    "args": [
+      {
+        "kind": "events",
+        "principal": "alpha",
+        "events": [
+          {
+            "tenant": "alpha",
+            "id": "x",
+            "value": 3,
+            "attempt": 1,
+            "lost_ack": true
+          },
+          {
+            "tenant": "alpha",
+            "id": "x",
+            "value": 3,
+            "attempt": 1
+          }
+        ]
+      }
+    ],
+    "expected": {
+      "effects": 3,
+      "acks": 1,
+      "retries": 0,
+      "quarantined": 0
+    }
+  },
+  {
+    "name": "Scoped supporting citations",
+    "public": true,
+    "args": [
+      {
+        "kind": "retrieval",
+        "principal": "alpha",
+        "query": "refund",
+        "k": 2,
+        "documents": [
+          {
+            "id": "a",
+            "tenant": "alpha",
+            "text": "refund policy",
+            "allowed": true,
+            "current": true
+          },
+          {
+            "id": "b",
+            "tenant": "beta",
+            "text": "refund policy",
+            "allowed": true,
+            "current": true
+          }
+        ]
+      }
+    ],
+    "expected": {
+      "citations": [
+        "a"
+      ],
+      "answer": "refund policy"
+    }
+  },
+  {
+    "name": "Expense replay receipt",
+    "public": true,
+    "args": [
+      {
+        "kind": "tool",
+        "principal": "alpha",
+        "proposals": [
+          {
+            "name": "add_expense",
+            "key": "p1",
+            "args": {
+              "tenant": "alpha",
+              "cents": 100,
+              "category": "food"
+            },
+            "approval": "c9c89b56728b49bec4da06dbe071f68ca1ddeaf10f967b5e599803ff03c10122"
+          },
+          {
+            "name": "add_expense",
+            "key": "p1",
+            "args": {
+              "tenant": "alpha",
+              "cents": 100,
+              "category": "food"
+            },
+            "approval": "c9c89b56728b49bec4da06dbe071f68ca1ddeaf10f967b5e599803ff03c10122"
+          }
+        ]
+      }
+    ],
+    "expected": {
+      "results": [
+        "created",
+        "replayed"
+      ],
+      "expense_cents": 100,
+      "receipts": 1
+    }
+  },
+  {
+    "name": "One query, full keys and order grain",
+    "public": true,
+    "args": [
+      {
+        "kind": "report",
+        "principal": "alpha",
+        "orders": [
+          [
+            "alpha",
+            1,
+            100
+          ],
+          [
+            "alpha",
+            2,
+            100
+          ],
+          [
+            "beta",
+            1,
+            999
+          ]
+        ],
+        "items": [
+          [
+            "alpha",
+            1,
+            2
+          ],
+          [
+            "alpha",
+            1,
+            3
+          ],
+          [
+            "beta",
+            1,
+            30
+          ]
+        ]
+      }
+    ],
+    "expected": {
+      "rows": [
+        [
+          1,
+          100,
+          5
+        ],
+        [
+          2,
+          100,
+          0
+        ]
+      ],
+      "selects": 1
+    }
+  },
+  {
+    "name": "Cache namespace and source replacement",
+    "public": true,
+    "args": [
+      {
+        "kind": "cache",
+        "principal": "alpha",
+        "requests": [
+          {
+            "tenant": "alpha",
+            "id": 1,
+            "version": 1,
+            "text": "old"
+          },
+          {
+            "tenant": "beta",
+            "id": 1,
+            "version": 1,
+            "text": "private"
+          },
+          {
+            "tenant": "alpha",
+            "id": 1,
+            "version": 2,
+            "text": "new"
+          }
+        ]
+      }
+    ],
+    "expected": [
+      "old",
+      null,
+      "new"
+    ]
+  },
+  {
+    "name": "Bounded async failure cleanup",
+    "public": true,
+    "args": [
+      {
+        "kind": "async",
+        "limit": 2,
+        "timeout": 1,
+        "jobs": [
+          {
+            "id": "a",
+            "delay": 0.01
+          },
+          {
+            "id": "b",
+            "delay": 0.01,
+            "fail": true
+          },
+          {
+            "id": "c",
+            "delay": 0.01
+          }
+        ]
+      }
+    ],
+    "expected": {
+      "results": [
+        "a",
+        "error",
+        "c"
+      ],
+      "peak": 2,
+      "live": 0
+    }
+  }
+]

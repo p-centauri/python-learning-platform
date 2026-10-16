@@ -1,0 +1,62 @@
+[
+  {
+    "id": "result-relation",
+    "code": "from academy_typed_transforms import map_rows\nout = map_rows([\"3\"], int)\nwrong: tuple[str, ...] = out\n",
+    "error_code": "assignment",
+    "reason": "The generic mapper result stays int, not Any or str."
+  },
+  {
+    "id": "keyword-only",
+    "code": "from academy_typed_transforms import watch_call\ndef label(n: int, /, *, prefix: str) -> str:\n    return prefix + str(n)\nwrapped = watch_call(label, observer=lambda event: None)\nwrapped(1, \"api\")\n",
+    "error_code": "call-arg",
+    "reason": "ParamSpec keeps the keyword-only argument."
+  },
+  {
+    "id": "argument-type",
+    "code": "from academy_typed_transforms import watch_call\ndef label(n: int) -> str:\n    return str(n)\nwrapped = watch_call(label, observer=lambda event: None)\nwrapped(\"wrong\")\n",
+    "error_code": "arg-type",
+    "reason": "ParamSpec keeps the original input type."
+  },
+  {
+    "id": "keyword-name",
+    "code": "from academy_typed_transforms import watch_call\ndef label(n: int, *, prefix: str) -> str:\n    return prefix + str(n)\nwrapped = watch_call(label, observer=lambda event: None)\nwrapped(1, prefix=\"api\", label=\"extra\")\n",
+    "error_code": "call-arg",
+    "reason": "The wrapper rejects a keyword absent from the original signature."
+  },
+  {
+    "id": "mutable-variance",
+    "code": "class Animal: pass\nclass Dog(Animal): pass\ndogs: list[Dog] = [Dog()]\nwrong: list[Animal] = dogs\n",
+    "error_code": "assignment",
+    "reason": "A writable list of dogs cannot permit callers to append an arbitrary animal."
+  },
+  {
+    "id": "producer-direction",
+    "code": "from academy_typed_transforms import Valued\nclass Animal: pass\nclass Dog(Animal): pass\nclass AnimalValue:\n    @property\n    def value(self) -> Animal: return Animal()\nanimals: Valued[Animal] = AnimalValue()\nwrong: Valued[Dog] = animals\n",
+    "error_code": "assignment",
+    "reason": "A producer of arbitrary animals does not promise dogs."
+  },
+  {
+    "id": "consumer-direction",
+    "code": "from academy_typed_transforms import Consumer\nclass Animal: pass\nclass Dog(Animal): pass\ndef dogs_only(value: Dog, /) -> None: pass\ndog_consumer: Consumer[Dog] = dogs_only\nwrong: Consumer[Animal] = dog_consumer\n",
+    "error_code": "assignment",
+    "reason": "A dog-only consumer cannot accept every animal."
+  },
+  {
+    "id": "optional-result",
+    "code": "from academy_typed_transforms import first\nout = first([1])\nwrong: int = out\n",
+    "error_code": "assignment",
+    "reason": "The no-default overload includes the empty-input None case."
+  },
+  {
+    "id": "unknown-object",
+    "code": "def inspect(payload: object) -> None:\n    _ = payload[\"id\"]\n",
+    "error_code": "index",
+    "reason": "Unknown input must be narrowed before dictionary access."
+  },
+  {
+    "id": "invalid-typeis",
+    "code": "from typing import TypeIs\ndef is_number(value: str) -> TypeIs[int]:\n    return isinstance(value, int)\n",
+    "error_code": "narrowed-type-not-subtype",
+    "reason": "TypeIs requires its narrowed type to be compatible with the input type."
+  }
+]

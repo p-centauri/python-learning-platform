@@ -1,0 +1,491 @@
+{
+  "id": "python-advanced-v1",
+  "version": "2026.09.20-v2",
+  "title": "Python · Advanced evaluation",
+  "level": "Advanced",
+  "description": "An advanced Python 3.13+ knowledge evaluation: 28 questions on object protocols, typing contracts, resource lifetime, concurrency, performance and packaging. Assumes intermediate fluency. Feedback appears after submission; practical implementation requires separate review.",
+  "minutes": 75,
+  "questions": [
+    {
+      "id": "pa-01",
+      "skill": "Object model & protocols",
+      "prompt": "A framework uses a data descriptor to validate an attribute. What is printed despite writing directly to the instance dictionary?",
+      "options": [
+        "AttributeError",
+        "descriptor",
+        "instance",
+        "None"
+      ],
+      "answer": 1,
+      "explanation": "This prints \"descriptor\". A descriptor is an object that controls access to an attribute. Because this one defines __set__, Python checks it before the instance dictionary. Adding \"value\" directly to that dictionary therefore does not change what r.value returns.",
+      "code": "class Field:\n    def __get__(self, obj, owner=None):\n        return \"descriptor\"\n    def __set__(self, obj, value):\n        obj.__dict__[\"stored\"] = value\nclass Record:\n    value = Field()\nr = Record()\nr.__dict__[\"value\"] = \"instance\"\nprint(r.value)",
+      "validation_output": "descriptor"
+    },
+    {
+      "id": "pa-02",
+      "skill": "Object model & protocols",
+      "prompt": "This plugin uses a descriptor that only defines __get__. What is printed?",
+      "options": [
+        "None",
+        "descriptor",
+        "AttributeError",
+        "instance"
+      ],
+      "answer": 3,
+      "explanation": "This prints \"instance\". This descriptor only defines __get__, so Python allows an instance attribute with the same name to take priority. Adding __set__ or __delete__ would change that rule.",
+      "code": "class Field:\n    def __get__(self, obj, owner=None):\n        return \"descriptor\"\nclass Record:\n    value = Field()\nr = Record()\nr.value = \"instance\"\nprint(r.value)",
+      "validation_output": "instance"
+    },
+    {
+      "id": "pa-03",
+      "skill": "Object model & protocols",
+      "prompt": "In this cooperative diamond, which order is printed? Assume each override calls super exactly as shown.",
+      "options": [
+        "D C B A",
+        "D B C A",
+        "D B A C A",
+        "D B A"
+      ],
+      "answer": 1,
+      "explanation": "This prints D B C A. `super()` moves to the next class in this object's method lookup order. It does not always jump straight to the parent written beside the current class. Each method must accept the arguments passed along the chain.",
+      "code": "class A:\n    def run(self): return [\"A\"]\nclass B(A):\n    def run(self): return [\"B\"] + super().run()\nclass C(A):\n    def run(self): return [\"C\"] + super().run()\nclass D(B, C):\n    def run(self): return [\"D\"] + super().run()\nprint(\" \".join(D().run()))",
+      "validation_output": "D B C A"
+    },
+    {
+      "id": "pa-04",
+      "skill": "Object model & protocols",
+      "prompt": "A value class implements __eq__ using a mutable customer_id. You want instances to be dictionary keys. Which contract is sound?",
+      "options": [
+        "Use id(self) as the hash even when distinct instances compare equal",
+        "Return a new random hash for each lookup",
+        "Keep equality-relevant state immutable and ensure equal objects have equal, stable hashes",
+        "Hash customer_id and let it change after insertion"
+      ],
+      "answer": 2,
+      "explanation": "A dictionary uses a key's hash to help find it. That hash must stay stable while the key is stored, and equal keys must have equal hashes. If customer_id determines equality, keep it fixed or make the object unusable as a key."
+    },
+    {
+      "id": "pa-05",
+      "skill": "Typing & API contracts",
+      "prompt": "A synchronous decorator must preserve the wrapped callable’s parameter types for static checking while returning the same result type. Which typing approach fits?",
+      "options": [
+        "cast(Any, wrapper) to prove every call is valid",
+        "Callable[..., object] for all wrappers",
+        "ParamSpec for arguments and a return TypeVar, forwarding P.args and P.kwargs",
+        "TypedDict for the function’s positional parameters"
+      ],
+      "answer": 2,
+      "explanation": "ParamSpec carries the original function's argument types through the decorator. A TypeVar connects the original return type to the wrapper's return type. This lets a checker catch bad calls. `wraps` keeps names and documentation, but does not express these type relationships by itself."
+    },
+    {
+      "id": "pa-06",
+      "skill": "Typing & API contracts",
+      "prompt": "Animal has subclass Dog. A function accepts list[Animal] and may append a Cat. Why should a checker reject passing list[Dog]?",
+      "options": [
+        "All read-only interfaces are invariant",
+        "Type annotations automatically copy the list",
+        "Mutable lists are invariant; accepting the Dog list would allow inserting a non-Dog",
+        "Python cannot subclass Animal more than once"
+      ],
+      "answer": 2,
+      "explanation": "Imagine handing your list of dogs to code allowed to add a cat. It would no longer be a list containing only dogs. That is why list[Dog] cannot safely stand in for a writable list[Animal]. If the code only reads, use a read-only interface such as Sequence."
+    },
+    {
+      "id": "pa-07",
+      "skill": "Typing & API contracts",
+      "prompt": "A runtime_checkable Protocol declares send(payload: bytes) -> int. An object has a send attribute with an incompatible signature. What can isinstance(obj, ProtocolType) establish?",
+      "options": [
+        "That a static checker accepts all uses",
+        "That every future send call returns an int",
+        "Only the required runtime attribute presence check, not full signature or return-type compatibility",
+        "That the object is safe to deserialize"
+      ],
+      "answer": 2,
+      "explanation": "The check looks for the required attributes; it does not fully check the method's argument and return types. An object can pass and still have an unusable send method. Use type checking and tests, and validate external data separately."
+    },
+    {
+      "id": "pa-08",
+      "skill": "Typing & API contracts",
+      "prompt": "An API response is decoded into an ordinary dict. What does cast(UserPayload, decoded), where UserPayload is a TypedDict, do at runtime?",
+      "options": [
+        "Returns the object without validating its schema",
+        "Rejects missing required keys",
+        "Converts all values to the declared field types",
+        "Freezes the dictionary against mutation"
+      ],
+      "answer": 0,
+      "explanation": "`cast` tells the type checker \"treat this value as UserPayload.\" It does not check or change the dictionary while the program runs. Check the incoming data first; a type hint cannot make missing or invalid fields disappear."
+    },
+    {
+      "id": "pa-09",
+      "skill": "Resource lifetime & isolation",
+      "prompt": "A request conditionally opens several resources, but opening the third can fail. Which structure closes the resources already acquired?",
+      "options": [
+        "Collect them in a list and close only after every open succeeds",
+        "Register each successful acquisition with an ExitStack inside a with block",
+        "Suppress all acquisition errors and continue with partially initialized resources",
+        "Use a module-global list and let process shutdown close them"
+      ],
+      "answer": 1,
+      "explanation": "Think of ExitStack as a cleanup list. Register each resource as soon as you open it. If opening a later resource fails, leaving the with block still cleans up the resources already registered."
+    },
+    {
+      "id": "pa-10",
+      "skill": "Resource lifetime & isolation",
+      "prompt": "Two cleanup callbacks are registered on an ExitStack. What is their execution order on leaving the with block?",
+      "options": [
+        "second first",
+        "first second",
+        "Neither executes unless an exception occurs",
+        "The order is unspecified"
+      ],
+      "answer": 0,
+      "explanation": "This prints \"second\" and then \"first\". ExitStack runs cleanup in reverse order: the last callback added runs first. This is useful when the later resource depends on an earlier one that must stay open until later cleanup finishes.",
+      "code": "from contextlib import ExitStack\nwith ExitStack() as stack:\n    stack.callback(print, \"first\")\n    stack.callback(print, \"second\")",
+      "validation_output": "second\nfirst"
+    },
+    {
+      "id": "pa-11",
+      "skill": "Resource lifetime & isolation",
+      "prompt": "A context manager acquires a connection and its __exit__ returns True after an unexpected processing exception. What consequence should a reviewer flag?",
+      "options": [
+        "The exception is always raised twice",
+        "The exception is suppressed, so the caller can proceed as if the block completed normally",
+        "The connection automatically commits and rolls back",
+        "Returning True forces interpreter shutdown"
+      ],
+      "answer": 1,
+      "explanation": "Returning True tells the with statement to hide the error. Code after the block then continues without receiving it. Closing a connection is sensible, but hiding an unexpected processing error can make failed work look successful."
+    },
+    {
+      "id": "pa-12",
+      "skill": "Resource lifetime & isolation",
+      "prompt": "A request temporarily overrides a ContextVar for tracing. What is printed after resetting with the token?",
+      "options": [
+        "default",
+        "None",
+        "TokenError",
+        "request"
+      ],
+      "answer": 0,
+      "explanation": "This prints \"default\". Setting the variable gives you a token that remembers the previous value. Resetting with that token restores the old value in this context. Use finally so restoration happens even when the request fails.",
+      "code": "from contextvars import ContextVar\ntrace = ContextVar(\"trace\", default=\"default\")\ntoken = trace.set(\"request\")\ntry:\n    pass\nfinally:\n    trace.reset(token)\nprint(trace.get())",
+      "validation_output": "default"
+    },
+    {
+      "id": "pa-13",
+      "skill": "Async failure & cancellation",
+      "prompt": "Inside asyncio.TaskGroup, one child raises ValueError while other children are awaiting network I/O. With no special BaseException involved, what does the group normally do?",
+      "options": [
+        "Cancel remaining children, wait for them to finish, and raise grouped non-cancellation failures",
+        "Return immediately and leave all siblings detached",
+        "Silently retry the failed child until success",
+        "Replace all failures with successful None results"
+      ],
+      "answer": 0,
+      "explanation": "The group asks the other tasks to stop, waits for them to finish their cleanup, and reports the failures together. The combined error is called an ExceptionGroup. This works properly when the tasks respond to cancellation rather than ignoring it."
+    },
+    {
+      "id": "pa-14",
+      "skill": "Async failure & cancellation",
+      "prompt": "A coroutine catches asyncio.CancelledError while closing a stream. After cleanup, what is the normal behavior for a reusable worker?",
+      "options": [
+        "Re-raise cancellation unless deliberately implementing a documented suppression policy",
+        "Return success so its TaskGroup cannot see cancellation",
+        "Start the same operation again indefinitely",
+        "Convert cancellation into an empty result"
+      ],
+      "answer": 0,
+      "explanation": "Clean up, then normally raise CancelledError again. This tells the parent that the task was stopped. Returning a normal result instead can make cancelled work look successful and can interfere with task groups or timeouts."
+    },
+    {
+      "id": "pa-15",
+      "skill": "Async failure & cancellation",
+      "prompt": "asyncio.gather is called with default return_exceptions=False. One awaitable raises an ordinary exception while siblings remain active. What must the caller avoid assuming?",
+      "options": [
+        "That all awaitables were scheduled",
+        "That siblings may need explicit lifetime management",
+        "That gather automatically cancels all remaining siblings when it propagates that exception",
+        "That the exception can be caught by the caller"
+      ],
+      "answer": 2,
+      "explanation": "With its default settings, gather reports the first error but does not automatically stop the other tasks because of that error. They may keep running. Use TaskGroup if one failure should stop the rest, or explicitly manage their cleanup. Cancelling gather itself is a separate case."
+    },
+    {
+      "id": "pa-16",
+      "skill": "Async failure & cancellation",
+      "prompt": "A loader limits HTTP requests with a semaphore but first creates a task for each of ten million records. Memory still grows. Which redesign addresses the task backlog?",
+      "options": [
+        "Wrap all tasks in shield so they finish faster",
+        "Increase the semaphore capacity to ten million",
+        "Use a bounded queue and a fixed number of workers with an explicit shutdown/error policy",
+        "Call garbage collection after creating the tasks"
+      ],
+      "answer": 2,
+      "explanation": "The semaphore limits how many tasks enter the HTTP section, but all ten million waiting tasks still exist in memory. Use a fixed number of workers and a queue with a size limit. When the queue fills, the producer must wait before adding more work."
+    },
+    {
+      "id": "pa-17",
+      "skill": "Concurrency & process boundaries",
+      "prompt": "On a conventional GIL-enabled CPython build, a pure-Python CPU loop does not speed up in a thread pool. Which next step is best justified?",
+      "options": [
+        "Use asyncio tasks to guarantee parallel execution of the loop",
+        "Measure process-based parallelism or native code that releases the GIL, accounting for transfer/startup costs",
+        "Remove all synchronization because the GIL makes application invariants atomic",
+        "Add more threads because the GIL is released on every addition"
+      ],
+      "answer": 1,
+      "explanation": "On the GIL-enabled build named in the question, threads do not normally run pure-Python CPU work at the same time. Try processes or suitable native code, then measure the result. Starting workers and moving data also cost time. Free-threaded Python builds have different behavior."
+    },
+    {
+      "id": "pa-18",
+      "skill": "Concurrency & process boundaries",
+      "prompt": "A spawn-based ProcessPoolExecutor fails when submitting a lambda that captures a live database connection. Which boundary is appropriate?",
+      "options": [
+        "Pass the connection as an extra lambda argument",
+        "Submit an importable top-level function with serializable data, initialize resources in workers, and guard the script entry point",
+        "Convert the connection to its repr and eval it in the worker",
+        "Share the connection via a global and assume spawn inherits it"
+      ],
+      "answer": 1,
+      "explanation": "A spawned worker is a separate process. Give it a function it can import and data it can serialize, meaning data it can turn into a transferable form. Open database connections inside the worker. Protect the script's starting code with the main guard."
+    },
+    {
+      "id": "pa-19",
+      "skill": "Concurrency & process boundaries",
+      "prompt": "An async request times out while awaiting asyncio.to_thread for a blocking write. What should the application assume about that running thread?",
+      "options": [
+        "Every external write is automatically rolled back",
+        "The thread is immediately killed at a safe instruction",
+        "The blocking function may continue; cancellation does not forcibly stop a running thread or undo its side effects",
+        "Timeout handling guarantees the function never started"
+      ],
+      "answer": 2,
+      "explanation": "The waiting coroutine may stop, but the blocking function can keep running in its thread. A timeout cannot undo a write already made. Use time limits inside the operation where possible, and make repeated requests safe or check what actually happened afterward."
+    },
+    {
+      "id": "pa-20",
+      "skill": "Concurrency & process boundaries",
+      "prompt": "Two coroutines on one event loop read a shared counter, await, then write an incremented value. Can updates be lost?",
+      "options": [
+        "No, a single OS thread prevents every race",
+        "Only if the counter exceeds the maximum integer size",
+        "No, await holds an implicit lock",
+        "Yes; the read-modify-write spans a suspension point and needs serialization or a different ownership model"
+      ],
+      "answer": 3,
+      "explanation": "Yes. At await, another task can run between reading the old counter and writing the new one. Both tasks might then write the same increased value. Use a shared asyncio lock for the whole update or let one task own the counter. That lock does not protect other processes."
+    },
+    {
+      "id": "pa-21",
+      "skill": "Performance & memory",
+      "prompt": "RSS keeps rising, but comparable tracemalloc snapshots show little growth. Which conclusion is defensible?",
+      "options": [
+        "Calling gc.collect always returns all RSS to the OS",
+        "Investigate allocations outside traced Python blocks, allocator retention and workload behavior; the snapshots alone do not explain all RSS",
+        "tracemalloc measures every native allocation and GPU buffer",
+        "There cannot be a memory problem"
+      ],
+      "answer": 1,
+      "explanation": "RSS is memory currently held in RAM for the process. tracemalloc tracks Python allocation blocks, which do not explain every part of RSS. Native libraries or memory kept for reuse may matter. Compare repeated workloads and other memory measurements before blaming one cause."
+    },
+    {
+      "id": "pa-22",
+      "skill": "Performance & memory",
+      "prompt": "A long-lived service caches calls keyed by unique request IDs using lru_cache(maxsize=None). What resource risk should be addressed?",
+      "options": [
+        "Cached results are always stored as weak references",
+        "Only the function bytecode is retained",
+        "Entries are automatically evicted after one minute",
+        "Arguments and results remain referenced until clearing; bound the cache and define invalidation based on workload"
+      ],
+      "answer": 3,
+      "explanation": "With no size limit, the cache can keep growing as new request IDs arrive. It keeps references to arguments and results until entries are removed or the cache is cleared. Limit its size and decide when old results should expire or be cleared."
+    },
+    {
+      "id": "pa-23",
+      "skill": "Performance & memory",
+      "prompt": "A developer calls list(stream_rows()) before processing a huge file and claims the generator guarantees bounded memory. What is wrong?",
+      "options": [
+        "Generators cannot read files",
+        "list eagerly consumes and retains the generated rows; preserve streaming and bound downstream buffers",
+        "list stores only the most recent row",
+        "Using yield disables all allocations"
+      ],
+      "answer": 1,
+      "explanation": "`list(stream_rows())` reads all the rows and stores them at once. The generator no longer gives you a small-memory pipeline. Process items as they arrive, and keep later batches, queues and caches bounded too."
+    },
+    {
+      "id": "pa-24",
+      "skill": "Performance & memory",
+      "prompt": "A proposed micro-optimization makes a five-line benchmark faster but the production endpoint remains slow. What should guide the next change?",
+      "options": [
+        "Disable validation and tests to remove overhead",
+        "Apply it everywhere because microbenchmarks prove system impact",
+        "Increase the recursion limit until latency falls",
+        "Profile representative workloads, separate I/O waits from CPU cost, then benchmark the actual bottleneck with correctness checks"
+      ],
+      "answer": 3,
+      "explanation": "Find where the real request spends its time. It may be waiting for the database rather than running Python. Profile realistic workloads, improve the expensive part, and measure again while checking correctness. Faster code on an insignificant path may not help the endpoint."
+    },
+    {
+      "id": "pa-25",
+      "skill": "Packaging & verification",
+      "prompt": "Tests pass after an editable install in the repository, but users of the wheel see missing resource files. Which release check catches this boundary?",
+      "options": [
+        "Copy the local virtual environment into every wheel",
+        "Run tests only with the repository root on PYTHONPATH",
+        "Assume editable installs and wheels always contain identical files",
+        "Build the wheel, install it in a clean environment, and test resource access outside the checkout"
+      ],
+      "answer": 3,
+      "explanation": "An editable install can read files straight from your checkout, hiding missing package files. Build a wheel, install it in a clean environment, and run checks outside the checkout. Use package-resource access instead of assuming a particular working directory."
+    },
+    {
+      "id": "pa-26",
+      "skill": "Packaging & verification",
+      "prompt": "A library supports multiple Python versions and platforms. Which dependency policy separates reusable metadata from reproducible application environments?",
+      "options": [
+        "Publish no dependencies and rely on imports to install packages",
+        "Treat an environment lock as proof that all supported runtimes work",
+        "Put every transitive exact version from one workstation into every library requirement",
+        "Declare compatible direct requirements and Python support in project metadata; lock tested application environments and verify a support matrix"
+      ],
+      "answer": 3,
+      "explanation": "A library should declare the dependency versions and Python versions it supports. An application lock records specific versions chosen for an environment. These serve different purposes. Test the Python versions and platforms you promise to support rather than assuming one working install proves them all."
+    },
+    {
+      "id": "pa-27",
+      "skill": "Packaging & verification",
+      "prompt": "A retry routine appears correct in success-only tests. Which additional test design gives stronger evidence without depending on real network timing?",
+      "options": [
+        "Only check that no exception reaches the test runner",
+        "Mock the retry routine itself to always succeed",
+        "Use arbitrary sleep calls and hope a race happens",
+        "Use scripted fakes for transient/permanent failures and controlled clocks; assert retry bounds, cancellation and duplicate-side-effect behavior"
+      ],
+      "answer": 3,
+      "explanation": "Keep the real retry code, but give it predictable fake network responses and a clock you control. Check that it stops retrying, respects cancellation, and handles uncertain side effects safely. Replacing the retry code itself would skip the behavior you need to test."
+    },
+    {
+      "id": "pa-28",
+      "skill": "Packaging & verification",
+      "prompt": "Several tasks can fail independently. What does this except* handler leave for the caller?",
+      "options": [
+        "The unmatched TypeError subgroup propagates",
+        "Only the ValueError subgroup",
+        "No exception, because all members are suppressed",
+        "A SyntaxError, because except* cannot match ValueError"
+      ],
+      "answer": 0,
+      "explanation": "The handler deals with the ValueError part only. The TypeError part is still raised to the caller. `except*` lets you handle selected errors from a group without silently losing the failures you did not handle.",
+      "code": "try:\n    raise ExceptionGroup(\"batch\", [ValueError(\"bad input\"), TypeError(\"bug\")])\nexcept* ValueError:\n    pass"
+    }
+  ],
+  "library_note": "These are working-proficiency targets for this academy, not a universal list required by every employer. Built-ins are language fundamentals; the standard library ships with Python. Third-party packages and tools are labeled separately. The test samples knowledge and does not assess every library listed.",
+  "libraries": [
+    {
+      "name": "typing",
+      "kind": "Core standard library",
+      "expectation": "Use ParamSpec, TypeVar, Protocol and variance deliberately; distinguish static assumptions from runtime validation.",
+      "url": "https://docs.python.org/3.13/library/typing.html"
+    },
+    {
+      "name": "contextlib and contextvars",
+      "kind": "Core standard library",
+      "expectation": "Manage dynamic sync/async cleanup and scoped context bindings; reason about propagation and restoration.",
+      "url": "https://docs.python.org/3.13/library/contextlib.html"
+    },
+    {
+      "name": "asyncio",
+      "kind": "Core for this backend path",
+      "expectation": "Design structured task lifetimes, cancellation, timeouts and bounded producer/consumer flows.",
+      "url": "https://docs.python.org/3.13/library/asyncio-task.html"
+    },
+    {
+      "name": "concurrent.futures, multiprocessing and threading",
+      "kind": "Core concurrency boundaries",
+      "expectation": "Choose execution models with measured costs, resource ownership, serialization and shutdown contracts.",
+      "url": "https://docs.python.org/3.13/library/concurrent.futures.html"
+    },
+    {
+      "name": "functools and weakref",
+      "kind": "Core lifetime reasoning",
+      "expectation": "Understand cache retention, invalidation, decorator metadata and when weak references are appropriate.",
+      "url": "https://docs.python.org/3.13/library/functools.html"
+    },
+    {
+      "name": "cProfile, pstats, timeit and tracemalloc",
+      "kind": "Standard-library measurement tools",
+      "expectation": "Profile representative CPU workloads and Python allocations; explain limits of microbenchmarks and RSS attribution.",
+      "url": "https://docs.python.org/3.13/library/profile.html"
+    },
+    {
+      "name": "importlib.resources and importlib.metadata",
+      "kind": "Core packaging boundaries",
+      "expectation": "Load package resources and distribution metadata without assumptions about the working directory.",
+      "url": "https://docs.python.org/3.13/library/importlib.resources.html"
+    },
+    {
+      "name": "pytest, unittest.mock and Hypothesis",
+      "kind": "Testing recommendation",
+      "expectation": "Test failure paths with controlled fakes and clocks; use property-based tests for invariants when useful. Hypothesis is optional.",
+      "url": "https://docs.pytest.org/en/stable/"
+    },
+    {
+      "name": "build, pip/uv, Ruff and mypy/Pyright",
+      "kind": "Development tools",
+      "expectation": "Verify built artifacts in clean environments, reproduce dependencies and run lint plus static checks. These are tools, not runtime proficiency gates.",
+      "url": "https://packaging.python.org/en/latest/tutorials/packaging-projects/"
+    },
+    {
+      "name": "HTTPX, Pydantic, SQLAlchemy and Alembic",
+      "kind": "Backend specialization",
+      "expectation": "Apply connection/session lifetimes, validated boundaries and migration discipline in realistic projects. Framework knowledge alone does not establish advanced Python skill.",
+      "url": "https://www.python-httpx.org/advanced/clients/"
+    }
+  ],
+  "practical_followup": "Build and package a bounded async ingestion service. Submit an installable wheel, typed extension interface, failure/cancellation tests and a profiling report. Have a reviewer check cleanup after partial acquisition, task shutdown, bounded queues/cache growth, process-owned resources, reproducible installation and duplicate-side-effect handling. Include measured tradeoffs and failure evidence. This follow-up is not submitted or automatically graded in the app.",
+  "study_resources": [
+    {
+      "skill": "Object model & protocols",
+      "title": "Descriptors, special methods and the data model",
+      "url": "https://docs.python.org/3.13/reference/datamodel.html"
+    },
+    {
+      "skill": "Typing & API contracts",
+      "title": "ParamSpec, protocols, generics and casts",
+      "url": "https://docs.python.org/3.13/library/typing.html"
+    },
+    {
+      "skill": "Resource lifetime & isolation",
+      "title": "ExitStack and cleanup contracts",
+      "url": "https://docs.python.org/3.13/library/contextlib.html"
+    },
+    {
+      "skill": "Async failure & cancellation",
+      "title": "Task groups, cancellation and gather",
+      "url": "https://docs.python.org/3.13/library/asyncio-task.html"
+    },
+    {
+      "skill": "Concurrency & process boundaries",
+      "title": "Executor and process boundaries",
+      "url": "https://docs.python.org/3.13/library/concurrent.futures.html"
+    },
+    {
+      "skill": "Performance & memory",
+      "title": "Allocation snapshots and their limits",
+      "url": "https://docs.python.org/3.13/library/tracemalloc.html"
+    },
+    {
+      "skill": "Packaging & verification",
+      "title": "Building and distributing Python packages",
+      "url": "https://packaging.python.org/en/latest/tutorials/packaging-projects/"
+    }
+  ],
+  "evaluation_policy": {
+    "overall_target": 80,
+    "category_target": 60,
+    "note": "Provisional learning target: at least 80% overall and 60% in every category. These small question banks are not psychometrically calibrated and do not establish practical competence."
+  }
+}

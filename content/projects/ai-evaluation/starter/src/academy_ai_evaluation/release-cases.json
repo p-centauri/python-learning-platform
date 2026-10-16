@@ -1,0 +1,190 @@
+{
+  "version": "ai-release-fixture-v1",
+  "purpose": "development-controlled",
+  "cases": [
+    {
+      "id": "retrieval-public",
+      "scenario": "retrieval-public",
+      "layer": "retrieval",
+      "relevant": [
+        "alpha:files:1:0"
+      ],
+      "reason": "retrieved",
+      "effects": 0,
+      "answered": false,
+      "human": false
+    },
+    {
+      "id": "retrieval-private",
+      "scenario": "retrieval-private",
+      "layer": "retrieval",
+      "relevant": [],
+      "reason": "retrieved",
+      "effects": 0,
+      "answered": false,
+      "human": false
+    },
+    {
+      "id": "retrieval-threshold",
+      "scenario": "retrieval-threshold",
+      "layer": "retrieval",
+      "relevant": [
+        "alpha:files:1:0"
+      ],
+      "reason": "retrieved",
+      "effects": 0,
+      "answered": false,
+      "human": false
+    },
+    {
+      "id": "retrieval-unlabelled",
+      "scenario": "retrieval-unlabelled",
+      "layer": "retrieval",
+      "relevant": [],
+      "reason": "retrieved",
+      "effects": 0,
+      "answered": false,
+      "human": false
+    },
+    {
+      "id": "rag-public",
+      "scenario": "rag-public",
+      "layer": "rag",
+      "relevant": [],
+      "reason": "answered",
+      "effects": 0,
+      "answered": true,
+      "human": true
+    },
+    {
+      "id": "rag-missing",
+      "scenario": "rag-missing",
+      "layer": "rag",
+      "relevant": [],
+      "reason": "missing_evidence",
+      "effects": 0,
+      "answered": false,
+      "human": false
+    },
+    {
+      "id": "rag-injected-field",
+      "scenario": "rag-injected-field",
+      "layer": "rag",
+      "relevant": [],
+      "reason": "invalid_output",
+      "effects": 0,
+      "answered": false,
+      "human": false
+    },
+    {
+      "id": "rag-stale",
+      "scenario": "rag-stale",
+      "layer": "rag",
+      "relevant": [],
+      "reason": "stale_evidence",
+      "effects": 0,
+      "answered": false,
+      "human": false
+    },
+    {
+      "id": "rag-refused",
+      "scenario": "rag-refused",
+      "layer": "rag",
+      "relevant": [],
+      "reason": "refused",
+      "effects": 0,
+      "answered": false,
+      "human": false
+    },
+    {
+      "id": "rag-timeout",
+      "scenario": "rag-timeout",
+      "layer": "rag",
+      "relevant": [],
+      "reason": "timeout",
+      "effects": 0,
+      "answered": false,
+      "human": false
+    },
+    {
+      "id": "rag-malicious-source",
+      "scenario": "rag-malicious-source",
+      "layer": "rag",
+      "relevant": [],
+      "reason": "answered",
+      "effects": 0,
+      "answered": true,
+      "human": true
+    },
+    {
+      "id": "tools-normal",
+      "scenario": "tools-normal",
+      "layer": "tools",
+      "relevant": [],
+      "reason": "finished",
+      "effects": 1,
+      "answered": false,
+      "human": false
+    },
+    {
+      "id": "tools-ssrf",
+      "scenario": "tools-ssrf",
+      "layer": "tools",
+      "relevant": [],
+      "reason": "invalid_proposal",
+      "effects": 0,
+      "answered": false,
+      "human": false
+    },
+    {
+      "id": "tools-role",
+      "scenario": "tools-role",
+      "layer": "tools",
+      "relevant": [],
+      "reason": "invalid_proposal",
+      "effects": 0,
+      "answered": false,
+      "human": false
+    },
+    {
+      "id": "tools-unapproved",
+      "scenario": "tools-unapproved",
+      "layer": "tools",
+      "relevant": [],
+      "reason": "approval_required",
+      "effects": 0,
+      "answered": false,
+      "human": false
+    },
+    {
+      "id": "tools-replay",
+      "scenario": "tools-replay",
+      "layer": "tools",
+      "relevant": [],
+      "reason": "finished",
+      "effects": 1,
+      "answered": false,
+      "human": false
+    },
+    {
+      "id": "tools-after-timeout",
+      "scenario": "tools-after-timeout",
+      "layer": "tools",
+      "relevant": [],
+      "reason": "tool_timeout",
+      "effects": 1,
+      "answered": false,
+      "human": false
+    },
+    {
+      "id": "tools-revoked",
+      "scenario": "tools-revoked",
+      "layer": "tools",
+      "relevant": [],
+      "reason": "forbidden",
+      "effects": 0,
+      "answered": false,
+      "human": false
+    }
+  ]
+}

@@ -1,0 +1,1590 @@
+/* Shared academy design system. Base feature styles remain in globals.css. */
+:root {
+  --bg: #f6f8f7;
+  --surface: #fff;
+  --sidebar: #fff;
+  --text: #182a25;
+  --muted: #52665f;
+  --line: #dce5e0;
+  --green: #17634b;
+  --green-strong: #104c39;
+  --green-soft: #e8f2ed;
+  --hero: #e8f2ed;
+  --yellow: #f5f1e7;
+  --radius: 14px;
+  --shadow: 0 8px 30px #173e2c08;
+  --font: var(--font-dm-sans), "Segoe UI", sans-serif;
+  --header-height: 72px;
+  --sidebar-width: 248px;
+  color-scheme: light;
+}
+:root[data-theme="dark"] {
+  --bg: #121c18;
+  --surface: #1a2721;
+  --sidebar: #15201b;
+  --text: #e8f1ec;
+  --muted: #acbfb3;
+  --line: #35493e;
+  --green: #a1dcb9;
+  --green-strong: #b7ebca;
+  --green-soft: #263e30;
+  --hero: #233b2d;
+  --yellow: #342f22;
+  color-scheme: dark;
+}
+html {
+  scroll-padding-top: 148px;
+}
+body {
+  font-size: 15px;
+  line-height: 1.65;
+}
+h1 {
+  font-size: clamp(28px, 2.7vw, 40px);
+  letter-spacing: -1.3px;
+  line-height: 1.18;
+  font-weight: 650;
+  text-wrap: balance;
+}
+h2,
+h3 {
+  text-wrap: balance;
+}
+small {
+  font-size: 12px;
+}
+input,
+textarea,
+select {
+  font-size: 16px;
+  border-radius: 9px;
+}
+select {
+  background: var(--surface);
+  color: var(--text);
+  padding: 12px;
+  min-height: 46px;
+  max-width: 100%;
+}
+input:not([type="radio"]):not([type="checkbox"]) {
+  min-height: 46px;
+}
+:where(a, button, summary, input, textarea, select):focus-visible {
+  outline: 3px solid var(--green);
+  outline-offset: 3px;
+}
+:where(button, a, summary) {
+  -webkit-tap-highlight-color: transparent;
+}
+:where(button, a) {
+  transition:
+    border-color 140ms ease,
+    box-shadow 140ms ease;
+}
+:where(p, h1, h2, h3, .badge, .button) {
+  overflow-wrap: anywhere;
+}
+.button {
+  min-height: 46px;
+  padding: 12px 18px;
+  font-size: 14px;
+  border-radius: 9px;
+  gap: 9px;
+  white-space: normal;
+  text-align: center;
+}
+.button:active:not(:disabled) {
+  transform: translateY(1px);
+}
+.icon-button {
+  width: 44px;
+  height: 44px;
+  padding: 10px;
+  flex-shrink: 0;
+  border-radius: 9px;
+}
+.text-link,
+.text-button {
+  font-size: 14px;
+}
+.text-button {
+  min-height: 44px;
+}
+.eyebrow,
+.overline {
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+.page-description {
+  font-size: 16px;
+  max-width: 68ch;
+  line-height: 1.65;
+}
+.small,
+.muted.small {
+  font-size: 13px;
+}
+.badge {
+  font-size: 11px;
+  padding: 5px 9px;
+  line-height: 1.45;
+}
+.panel {
+  border-radius: var(--radius);
+  box-shadow: none;
+}
+.notice {
+  font-size: 14px;
+  line-height: 1.65;
+  border-radius: 10px;
+}
+.empty {
+  padding: 42px 24px;
+  text-align: center;
+}
+.empty h3 {
+  font-size: 20px;
+}
+.empty p {
+  font-size: 15px;
+  max-width: 52ch;
+  margin-inline: auto;
+}
+.loading {
+  min-height: 180px;
+  gap: 12px;
+  color: var(--muted);
+}
+.main-content:focus {
+  outline: none;
+}
+/* Grouped navigation and useful mobile shortcuts. */
+.sidebar {
+  width: var(--sidebar-width);
+  padding: 28px 16px 0;
+  height: 100dvh;
+  overflow-y: auto;
+}
+.sidebar .brand {
+  padding: 0 12px 26px;
+  font-size: 36px;
+}
+.brand small {
+  font-size: 8px;
+  letter-spacing: 1.4px;
+}
+.sidebar nav {
+  gap: 0;
+}
+.nav-group {
+  display: grid;
+  gap: 3px;
+  margin-bottom: 20px;
+}
+.nav-caption {
+  font-size: 11px;
+  letter-spacing: 0.025em;
+  margin: 0 12px 6px;
+  padding: 0;
+}
+.sidebar nav a {
+  min-height: 44px;
+  font-size: 13px;
+  padding: 10px 12px;
+  gap: 10px;
+}
+.sidebar nav a.active {
+  box-shadow: inset 3px 0 0 var(--green);
+}
+.sidebar nav a.active::after {
+  display: none;
+}
+.sidebar-bottom {
+  padding-top: 0;
+}
+.profile {
+  margin-top: 0;
+  padding: 18px 0;
+  font-size: 13px;
+}
+.profile small {
+  font-size: 11px;
+}
+.avatar {
+  width: 36px;
+  height: 36px;
+  font-size: 12px;
+  background: var(--green-soft);
+  color: var(--green);
+}
+.workspace-main {
+  margin-left: var(--sidebar-width);
+  width: calc(100% - var(--sidebar-width));
+}
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  height: var(--header-height);
+  padding: 0 clamp(24px, 3.3vw, 56px);
+  background: var(--bg);
+  gap: 16px;
+}
+.breadcrumb {
+  font-size: 13px;
+  min-width: 0;
+}
+.breadcrumb strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.top-search {
+  min-height: 44px;
+  padding: 9px 12px;
+  font-size: 13px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--surface);
+}
+.top-search kbd {
+  font-size: 11px;
+  margin-left: 28px;
+}
+.main-content {
+  padding: 40px clamp(24px, 3.3vw, 56px) 48px;
+  max-width: 1490px;
+}
+.page-heading {
+  align-items: flex-start;
+  margin-bottom: 30px;
+}
+.page-heading > div {
+  min-width: 0;
+}
+.workspace-footer {
+  font-size: 12px;
+  margin-inline: clamp(24px, 3.3vw, 56px);
+  padding-block: 22px;
+}
+.workspace-footer a {
+  color: var(--muted);
+  padding-block: 12px;
+}
+.mobile-dock {
+  display: none;
+}
+.streak {
+  font-size: 12px;
+  padding: 10px 14px;
+}
+/* Next action first, real evidence below. */
+.plan-overview {
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--green);
+  background: var(--surface);
+  padding: 26px;
+  gap: 28px;
+}
+.plan-overview h2 {
+  font-size: 23px;
+}
+.plan-overview p {
+  font-size: 14px;
+  max-width: 64ch;
+}
+.plan-overview small {
+  font-size: 12px;
+}
+.overview-grid {
+  grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+  gap: 22px;
+}
+.continue-card {
+  padding: 30px;
+  min-height: 298px;
+  border-color: var(--line);
+}
+.continue-content {
+  padding-top: 24px;
+  max-width: 90%;
+}
+.continue-content h2 {
+  font-size: clamp(25px, 2.3vw, 34px);
+  max-width: 20ch;
+}
+.continue-content > p:last-child {
+  font-size: 15px;
+  line-height: 1.65;
+  max-width: 48ch;
+}
+.continue-footer {
+  flex-wrap: wrap;
+  gap: 14px;
+}
+.continue-footer > span {
+  font-size: 12px;
+  white-space: normal;
+  flex-wrap: wrap;
+}
+.pill {
+  font-size: 10px;
+  letter-spacing: 0.04em;
+}
+.code-symbol {
+  display: none;
+}
+.focus-card {
+  padding: 26px;
+}
+.focus-heading {
+  font-size: 11px;
+  letter-spacing: 0.02em;
+}
+.focus-card h3 {
+  font-size: 22px;
+  max-width: 25ch;
+}
+.focus-card > p,
+.focus-card ol {
+  font-size: 14px;
+  line-height: 1.7;
+}
+.focus-card ol span {
+  font-size: 12px;
+}
+.focus-card > a {
+  font-size: 14px;
+}
+.stats-row {
+  margin-block: 30px;
+  padding-block: 24px;
+}
+.stat > div {
+  font-size: 13px;
+}
+.stat > strong {
+  font-size: 32px;
+  font-variant-numeric: tabular-nums;
+}
+.stat > small {
+  font-size: 12px;
+}
+.dashboard-lower {
+  gap: 24px;
+}
+.section-title h2 {
+  font-size: 21px;
+}
+.section-title a {
+  font-size: 12px;
+  min-height: 44px;
+}
+.skill-row > div,
+.activity-list a {
+  font-size: 14px;
+}
+.skill-row small,
+.activity-list small {
+  font-size: 12px;
+}
+.project-banner {
+  border-radius: 0;
+  background: transparent;
+  border-width: 1px 0 0;
+  padding: 28px 0 0;
+  gap: 18px;
+}
+.project-banner h3 {
+  font-size: 20px;
+}
+.project-banner p {
+  font-size: 14px;
+}
+/* Searchable curriculum and progressive track disclosure. */
+.catalog-toolbar {
+  margin: 26px 0 12px;
+}
+.catalog-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.catalog-search {
+  flex: 1 1 250px;
+  min-width: 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.catalog-search > svg {
+  position: absolute;
+  left: 14px;
+  color: var(--muted);
+  pointer-events: none;
+}
+.catalog-search input {
+  width: 100%;
+  padding: 12px 40px;
+  background: var(--surface);
+}
+.catalog-select {
+  flex: 0 1 245px;
+  min-width: 160px;
+}
+.catalog-select select {
+  width: 100%;
+}
+.catalog-result-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  min-height: 52px;
+}
+.catalog-result-row p {
+  font-size: 13px;
+  color: var(--muted);
+  margin: 0;
+}
+.clear-filters {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+}
+.path-summary {
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  padding: 0 0 24px;
+}
+.path-summary > span {
+  font-size: 14px;
+}
+.track-disclosure {
+  border-bottom: 1px solid var(--line);
+  margin: 0;
+  padding: 0;
+}
+.track-disclosure > summary {
+  list-style: none;
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  padding: 26px 0;
+  color: var(--text);
+}
+.track-disclosure > summary::-webkit-details-marker {
+  display: none;
+}
+.track-disclosure > summary:hover .track-title strong {
+  color: var(--green);
+}
+.track-summary-content {
+  flex: 1;
+  min-width: 0;
+}
+.track-title {
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+.track-title strong {
+  font-size: 20px;
+  line-height: 1.4;
+  font-weight: 650;
+}
+.track-number {
+  background: var(--green-soft);
+  color: var(--green);
+  border: 0;
+  width: 40px;
+  height: 40px;
+  font-size: 13px;
+}
+.track-description {
+  display: block;
+  font-size: 14px;
+  color: var(--muted);
+  max-width: 75ch;
+  margin-top: 7px;
+}
+.track-reading {
+  font-size: 12px;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+}
+.track-chevron {
+  margin-top: 10px;
+  color: var(--muted);
+  transition: transform 150ms ease;
+}
+.track-disclosure[open] .track-chevron {
+  transform: rotate(180deg);
+}
+.track-disclosure > .track-content {
+  padding: 0 0 28px 58px;
+}
+.curriculum-module {
+  margin-top: 22px;
+}
+.curriculum-module h3 {
+  font-size: 17px;
+}
+.curriculum-module > p {
+  font-size: 14px;
+}
+.curriculum-module .lesson-row {
+  min-height: 58px;
+  border-width: 0 0 1px;
+  border-radius: 0;
+  background: transparent;
+  padding: 14px 4px;
+  font-size: 15px;
+  gap: 16px;
+}
+.lesson-row:hover {
+  background: var(--green-soft);
+}
+.lesson-row > span {
+  min-width: 0;
+}
+.lesson-row > small {
+  font-size: 12px;
+  flex-shrink: 0;
+}
+.module-project {
+  display: inline-flex;
+  min-height: 44px;
+  margin-top: 10px;
+  gap: 8px;
+}
+.topic-tags span {
+  font-size: 12px;
+}
+.practice-grid,
+.knowledge-grid {
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+  gap: 20px;
+}
+.practice-card,
+.knowledge-node {
+  padding: 24px;
+  border-radius: 12px;
+}
+.practice-card:hover {
+  border-color: var(--green);
+  background: var(--green-soft);
+}
+.practice-card h2 {
+  font-size: 20px;
+}
+.practice-card p {
+  font-size: 14px;
+  line-height: 1.7;
+}
+.practice-card footer {
+  font-size: 12px;
+}
+.knowledge-title {
+  font-size: 17px;
+}
+.prereq-links a {
+  font-size: 13px;
+  padding-block: 5px;
+}
+/* Reading and working notes. */
+.back-link {
+  font-size: 13px;
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  padding-block: 10px;
+}
+.lesson-heading {
+  max-width: 960px;
+  margin-top: 16px;
+  margin-bottom: 0;
+}
+.lesson-heading h1 {
+  font-size: clamp(28px, 3vw, 42px);
+  max-width: 28ch;
+}
+.lesson-heading > p:not(.eyebrow) {
+  font-size: 17px;
+  max-width: 65ch;
+}
+.lesson-heading > div {
+  font-size: 13px;
+  flex-wrap: wrap;
+  gap: 10px 20px;
+}
+.lesson-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  position: sticky;
+  top: var(--header-height);
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+  padding-block: 8px;
+  margin-bottom: 24px;
+  z-index: 15;
+}
+.lesson-tools a,
+.lesson-tools button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 10px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  border: 0;
+  background: transparent;
+  border-radius: 8px;
+  color: var(--muted);
+}
+.lesson-tools a:hover,
+.lesson-tools button:hover,
+.lesson-tools .selected {
+  background: var(--green-soft);
+  color: var(--green);
+}
+.lesson-tools button {
+  margin-left: auto;
+}
+.unsaved-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--green);
+}
+.lesson-toc {
+  border-width: 0 0 1px;
+  background: transparent;
+  border-radius: 0;
+  padding: 0 0 18px;
+}
+.lesson-toc summary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  color: var(--green);
+}
+.lesson-toc summary::before {
+  content: "+";
+  margin-right: 10px;
+  font-size: 20px;
+}
+.lesson-toc[open] summary::before {
+  content: "−";
+}
+.lesson-toc a {
+  font-size: 14px;
+  min-height: 40px;
+  padding: 8px 0;
+}
+.lesson-layout {
+  grid-template-columns: minmax(0, 1fr) 260px;
+  gap: 40px;
+}
+.lesson-article {
+  max-width: 78ch;
+}
+.objectives {
+  padding: 24px;
+}
+.objectives h2 {
+  font-size: 16px;
+}
+.objectives p {
+  font-size: 15px;
+  line-height: 1.65;
+}
+.prose {
+  font-size: 17px;
+  line-height: 1.85;
+}
+.prose h2 {
+  font-size: 25px;
+  line-height: 1.35;
+  margin-top: 36px;
+}
+.prose h3 {
+  font-size: 21px;
+}
+.prose pre {
+  padding: 22px;
+  font-size: 14px;
+  line-height: 1.8;
+}
+.prose pre code {
+  font-size: inherit;
+}
+.prose table {
+  display: block;
+  overflow: auto;
+  max-width: 100%;
+  font-size: 14px;
+}
+.prose th,
+.prose td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--line);
+}
+.lesson-context {
+  top: 150px;
+  max-height: calc(100dvh - 174px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0 4px 12px;
+}
+.context-section h3,
+.context-section label {
+  font-size: 15px;
+}
+.context-section p,
+.context-section a {
+  font-size: 13px;
+}
+.context-section textarea {
+  font-size: 16px;
+  line-height: 1.65;
+}
+.context-section > small {
+  font-size: 12px;
+}
+.context-tip {
+  font-size: 13px;
+}
+.reading h3 {
+  font-size: 16px;
+}
+.reading a {
+  font-size: 14px;
+  min-height: 40px;
+}
+.exercise-link h3 {
+  font-size: 17px;
+}
+.exercise-link small {
+  font-size: 12px;
+}
+.lesson-diagram p,
+.lesson-diagram figcaption,
+.lesson-glossary dd {
+  font-size: 15px;
+}
+.checkpoint-options label,
+.checkpoint > p {
+  font-size: 15px;
+}
+.lesson-pagination {
+  flex-wrap: wrap;
+}
+[id^="lesson-"] {
+  scroll-margin-top: 150px;
+}
+/* Form-first authentication on small screens. */
+.login-page {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  background: var(--surface);
+}
+.login-story {
+  padding: clamp(32px, 4.5vw, 76px);
+  background: var(--green-soft);
+  gap: 52px;
+  min-height: 100svh;
+}
+.login-story .brand {
+  font-size: 42px;
+}
+.login-story > div:not(.brand) {
+  max-width: 520px;
+}
+.login-story .eyebrow {
+  font-size: 13px;
+}
+.login-story h2 {
+  font-size: clamp(34px, 3.8vw, 58px);
+  letter-spacing: -1.8px;
+  line-height: 1.12;
+  font-weight: 600;
+  max-width: 13ch;
+  margin: 20px 0;
+}
+.login-story > div > p:not(.eyebrow) {
+  font-size: 17px;
+  line-height: 1.7;
+  max-width: 38ch;
+}
+.login-story footer {
+  font-size: 13px;
+  letter-spacing: 0;
+}
+.login-learning-loop {
+  list-style: none;
+  margin: 40px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 22px;
+}
+.login-learning-loop li {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: var(--green);
+}
+.login-learning-loop span {
+  font-size: 16px;
+  font-weight: 600;
+}
+.login-learning-loop small {
+  display: block;
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 400;
+  margin-top: 2px;
+}
+.login-form {
+  padding: 50px clamp(28px, 5vw, 86px);
+}
+.login-form > div {
+  max-width: 410px;
+}
+.login-form h1 {
+  font-size: clamp(28px, 2.5vw, 36px);
+  letter-spacing: -1px;
+  margin-bottom: 12px;
+}
+.login-form > div > p {
+  font-size: 15px;
+  line-height: 1.6;
+}
+.login-form > div > .eyebrow {
+  font-size: 12px;
+  color: var(--green);
+  margin-bottom: 16px;
+}
+.login-form form {
+  margin-top: 30px;
+  gap: 16px;
+}
+.login-form label {
+  font-size: 14px;
+  gap: 7px;
+}
+.login-form input {
+  font-size: 16px;
+  min-height: 50px;
+  padding: 12px 14px;
+}
+.login-form .password-input {
+  display: flex;
+  position: relative;
+  margin-top: -10px;
+}
+.password-input input {
+  padding-right: 54px;
+}
+.password-input .icon-button {
+  position: absolute;
+  right: 3px;
+  top: 3px;
+}
+.field-help {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.5;
+  margin-top: -8px;
+}
+.login-form form > .button {
+  margin-top: 4px;
+  min-height: 50px;
+  font-size: 15px;
+}
+.auth-switch {
+  font-size: 14px;
+  margin: 18px 0;
+}
+.auth-switch button {
+  font-size: 14px;
+  min-height: 44px;
+}
+.login-footnote {
+  font-size: 13px;
+  line-height: 1.7;
+  padding-top: 20px;
+}
+.login-mobile-brand {
+  display: none;
+}
+/* Search and evidence interfaces. */
+.search-dialog {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 0;
+  width: min(640px, calc(100% - 32px));
+  max-height: min(78dvh, 720px);
+}
+.search-field {
+  padding: 16px 18px;
+}
+.search-field input {
+  font-size: 16px;
+  min-width: 0;
+}
+.search-results {
+  padding: 8px 14px;
+  max-height: 56dvh;
+  overflow-y: auto;
+}
+.search-results a {
+  font-size: 15px;
+  min-height: 64px;
+  border-radius: 8px;
+}
+.search-results small,
+.search-results > p {
+  font-size: 13px;
+}
+.search-dialog footer {
+  font-size: 12px;
+  padding: 14px 20px;
+}
+.exam-facts,
+.exam-progress,
+.exam-top small {
+  font-size: 13px;
+}
+.exam-top > span {
+  font-size: 12px;
+  letter-spacing: 0;
+}
+.exam-taking {
+  max-width: 900px;
+}
+.question-numbers {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  padding: 6px 4px 12px;
+  gap: 8px;
+  scrollbar-width: thin;
+}
+.question-numbers button {
+  min-width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  font-size: 14px;
+}
+.question-panel h2 {
+  font-size: 23px;
+  line-height: 1.5;
+}
+.answer-options label {
+  padding: 16px;
+  min-height: 56px;
+  font-size: 15px;
+  gap: 12px;
+}
+.answer-options label:focus-within {
+  outline: 3px solid var(--green);
+  outline-offset: 3px;
+}
+.answer-options .option-letter {
+  font-size: 13px;
+}
+.assessment-code {
+  font-size: 14px;
+  line-height: 1.8;
+}
+.exam-controls {
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+.submission-section p,
+.account-section p,
+.project-detail p {
+  font-size: 15px;
+  line-height: 1.7;
+}
+.account-section input,
+.submission-form input,
+.submission-form textarea,
+.plan-inputs input,
+.plan-inputs select {
+  font-size: 16px;
+}
+.account-section,
+.submission-section,
+.coding-editor-panel {
+  padding: 28px;
+}
+.code-editor {
+  font-size: 15px;
+  line-height: 1.7;
+}
+@media (max-width: 1180px) {
+  :root {
+    --sidebar-width: 224px;
+  }
+  .sidebar nav a {
+    font-size: 12px;
+  }
+  .lesson-layout {
+    grid-template-columns: minmax(0, 1fr) 225px;
+    gap: 28px;
+  }
+  .overview-grid {
+    grid-template-columns: 1fr;
+  }
+  .focus-card {
+    display: none;
+  }
+  .plan-overview {
+    flex-wrap: wrap;
+  }
+}
+@media (max-width: 960px) {
+  :root {
+    --header-height: 64px;
+  }
+  .sidebar {
+    width: min(320px, calc(100vw - 40px));
+    height: 100dvh;
+    padding: 24px 20px 0;
+    transform: translateX(-100%);
+    visibility: hidden;
+    transition: none;
+    z-index: 40;
+  }
+  .sidebar.mobile-open {
+    transform: translateX(0);
+    visibility: visible;
+  }
+  .sidebar > .icon-button {
+    position: absolute;
+    top: 16px;
+    right: 12px;
+  }
+  .sidebar .brand {
+    padding-top: 0;
+    padding-bottom: 30px;
+  }
+  .sidebar nav a {
+    font-size: 14px;
+    min-height: 46px;
+  }
+  .sidebar-overlay.visible {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: #10251c80;
+    border: 0;
+    z-index: 39;
+  }
+  .mobile-menu {
+    display: inline-grid;
+  }
+  .workspace-main {
+    margin-left: 0;
+    width: 100%;
+    padding-bottom: calc(70px + env(safe-area-inset-bottom, 0px));
+  }
+  .topbar {
+    padding: 0 24px;
+    gap: 12px;
+  }
+  .top-search {
+    margin-left: auto;
+  }
+  .main-content {
+    padding: 32px;
+  }
+  .mobile-dock {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    position: fixed;
+    inset: auto 0 0;
+    z-index: 25;
+    background: var(--surface);
+    border-top: 1px solid var(--line);
+    padding: 6px 12px calc(6px + env(safe-area-inset-bottom, 0px));
+  }
+  .mobile-dock a,
+  .mobile-dock button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    min-height: 54px;
+    padding: 5px 2px;
+    color: var(--muted);
+    background: transparent;
+    border: 0;
+    border-radius: 9px;
+    font-size: 11px;
+    font-weight: 500;
+  }
+  .mobile-dock [aria-current="page"] {
+    color: var(--green);
+    background: var(--green-soft);
+  }
+  .mobile-dock button:hover,
+  .mobile-dock a:hover {
+    background: var(--green-soft);
+  }
+  .lesson-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .lesson-context {
+    position: static;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    max-height: none;
+    overflow: visible;
+    padding: 0;
+  }
+  .context-section {
+    padding-block: 22px;
+  }
+  .workspace-footer {
+    margin-inline: 32px;
+  }
+  .exam-workspace .workspace-main {
+    padding-bottom: 0;
+  }
+  .exam-workspace .topbar {
+    justify-content: space-between;
+  }
+}
+@media (max-width: 760px) {
+  .login-page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100svh;
+  }
+  .login-story {
+    display: none;
+  }
+  .login-form {
+    display: block;
+    padding: 28px 24px 40px;
+    width: 100%;
+  }
+  .login-form > div {
+    max-width: 440px;
+    margin-inline: auto;
+  }
+  .login-mobile-brand {
+    display: flex;
+    margin-bottom: 32px;
+    font-size: 34px;
+  }
+  .login-form h1 {
+    font-size: 30px;
+  }
+  .login-form > div > .eyebrow {
+    display: none;
+  }
+  .login-form form {
+    margin-top: 24px;
+  }
+  .catalog-controls {
+    gap: 10px;
+  }
+  .catalog-search {
+    flex-basis: 100%;
+  }
+  .catalog-select {
+    flex: 1 1 140px;
+    min-width: 0;
+  }
+  .catalog-select select {
+    font-size: 14px;
+  }
+  .catalog-result-row p {
+    font-size: 12px;
+  }
+  .lesson-context {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .lesson-context .context-section:has(#lesson-note) {
+    order: -1;
+  }
+  .lesson-tools {
+    gap: 0;
+    padding-block: 6px;
+  }
+  .lesson-tools a,
+  .lesson-tools button {
+    font-size: 12px;
+    padding-inline: 9px;
+    gap: 5px;
+  }
+  .lesson-tools button {
+    margin-left: 0;
+  }
+  .track-disclosure > .track-content {
+    padding-left: 0;
+  }
+  .track-title {
+    display: grid;
+    gap: 8px;
+  }
+  .track-title .badge {
+    justify-self: start;
+  }
+  .track-description {
+    font-size: 13px;
+  }
+  .track-title strong {
+    font-size: 18px;
+  }
+  .track-disclosure > summary {
+    gap: 12px;
+  }
+  .track-number {
+    width: 32px;
+    height: 32px;
+    font-size: 12px;
+  }
+  .curriculum-module .lesson-row {
+    gap: 10px;
+    font-size: 14px;
+  }
+  .lesson-row > small {
+    font-size: 11px;
+    gap: 5px;
+  }
+  .lesson-row > small svg:first-child {
+    display: none;
+  }
+  .stats-row {
+    gap: 24px 16px;
+  }
+  .stat > div {
+    font-size: 12px;
+  }
+  .stat > small {
+    font-size: 11px;
+  }
+  .exam-taking h1 {
+    font-size: 27px;
+  }
+  .question-panel {
+    padding: 22px;
+  }
+}
+@media (max-width: 600px) {
+  .topbar {
+    padding-inline: 14px;
+    gap: 6px;
+  }
+  .breadcrumb {
+    gap: 8px;
+    font-size: 0;
+  }
+  .breadcrumb > span {
+    display: none;
+  }
+  .breadcrumb strong {
+    font-size: 13px;
+    max-width: 130px;
+  }
+  .top-search {
+    border: 0;
+    background: transparent;
+    width: 44px;
+    padding: 12px;
+    flex-shrink: 0;
+  }
+  .top-search span,
+  .top-search kbd {
+    display: none;
+  }
+  .main-content {
+    padding: 26px 20px 32px;
+  }
+  .page-heading {
+    display: block;
+    margin-bottom: 24px;
+  }
+  .page-heading h1 {
+    font-size: 30px;
+  }
+  .page-description {
+    font-size: 15px;
+  }
+  .page-heading > .button {
+    margin-top: 18px;
+  }
+  .plan-overview {
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .plan-overview-links {
+    width: 100%;
+    align-items: stretch;
+  }
+  .plan-overview h2 {
+    font-size: 22px;
+  }
+  .continue-card {
+    padding: 24px;
+    min-height: 280px;
+  }
+  .continue-content {
+    max-width: 100%;
+  }
+  .continue-content h2 {
+    font-size: 28px;
+  }
+  .continue-content > p:last-child {
+    font-size: 14px;
+  }
+  .continue-footer {
+    flex-wrap: wrap;
+  }
+  .continue-footer > span {
+    font-size: 11px;
+  }
+  .stats-row {
+    margin-block: 22px;
+  }
+  .stat > strong {
+    font-size: 29px;
+  }
+  .skills-panel,
+  .activity-panel {
+    padding: 22px;
+  }
+  .section-title {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .section-title h2 {
+    font-size: 20px;
+  }
+  .section-title a {
+    min-height: 32px;
+  }
+  .path-summary {
+    gap: 6px 18px;
+  }
+  .path-summary > span {
+    font-size: 12px;
+  }
+  .track-chevron {
+    width: 17px;
+  }
+  .lesson-heading {
+    margin-top: 10px;
+    padding-bottom: 20px;
+  }
+  .lesson-heading > p:not(.eyebrow) {
+    font-size: 16px;
+  }
+  .lesson-heading > div {
+    font-size: 12px;
+    gap: 8px 14px;
+  }
+  .lesson-heading h1 {
+    font-size: 31px;
+  }
+  .lesson-tools {
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    gap: 0;
+  }
+  .lesson-tools a,
+  .lesson-tools button {
+    flex-direction: column;
+    font-size: 10px;
+    gap: 3px;
+    padding: 7px 5px;
+    min-width: 48px;
+  }
+  .lesson-tools button {
+    max-width: 95px;
+  }
+  .lesson-tools .unsaved-dot {
+    position: absolute;
+    margin-left: 28px;
+  }
+  .prose {
+    font-size: 16px;
+    line-height: 1.85;
+  }
+  .prose h2 {
+    font-size: 23px;
+  }
+  .prose pre {
+    padding: 16px;
+    font-size: 13px;
+  }
+  .objectives {
+    padding: 20px;
+  }
+  .objectives p {
+    font-size: 14px;
+  }
+  .lesson-diagram {
+    margin-inline: 0;
+  }
+  .lesson-pagination {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+  .lesson-pagination a {
+    justify-content: flex-start;
+  }
+  .search-dialog {
+    margin-top: 6dvh;
+    max-height: 85dvh;
+  }
+  .search-field {
+    padding: 10px;
+    gap: 8px;
+  }
+  .search-field input {
+    font-size: 16px;
+  }
+  .search-dialog footer {
+    font-size: 11px;
+  }
+  .answer-options label {
+    padding: 14px;
+    font-size: 15px;
+  }
+  .question-panel h2 {
+    font-size: 21px;
+  }
+  .question-panel {
+    padding: 20px;
+  }
+  .exam-controls .button {
+    padding-inline: 12px;
+    font-size: 13px;
+  }
+  .account-section,
+  .submission-section,
+  .coding-editor-panel {
+    padding: 20px;
+  }
+  .code-editor {
+    font-size: 14px;
+  }
+  .workspace-footer {
+    margin-inline: 20px;
+    flex-wrap: wrap;
+    gap: 0 16px;
+  }
+}
+@media (max-width: 360px) {
+  .main-content {
+    padding-inline: 16px;
+  }
+  .login-form {
+    padding: 22px 20px 32px;
+  }
+  .login-mobile-brand {
+    margin-bottom: 26px;
+  }
+  .login-form h1 {
+    font-size: 28px;
+  }
+  .lesson-row {
+    align-items: flex-start;
+  }
+  .lesson-row > small {
+    white-space: nowrap;
+  }
+  .catalog-select {
+    flex-basis: 100%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation: none !important;
+    transition: none !important;
+  }
+  .button:active:not(:disabled) {
+    transform: none;
+  }
+}
+/* Keep identity/account controls visible while the navigation scrolls. */
+.sidebar {
+  overflow: hidden;
+}
+.sidebar > .brand {
+  flex-shrink: 0;
+}
+.sidebar > nav {
+  display: block;
+  min-height: 0;
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 6px;
+  margin-right: -6px;
+  scrollbar-width: thin;
+}
+.sidebar-bottom {
+  flex-shrink: 0;
+}
+/* The document's scroll padding already accounts for the two study toolbars. */
+[id^="lesson-"],
+.lesson-article h2[id],
+.lesson-article h3[id] {
+  scroll-margin-top: 8px;
+}
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+}
+.table-scroll table {
+  display: table;
+  overflow: visible;
+  width: 100%;
+}
+.prose pre:focus-visible,
+.table-scroll:focus-visible {
+  outline: 3px solid var(--green);
+  outline-offset: 3px;
+}
+.catalog-more {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 12px 24px;
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+}
+.catalog-more p {
+  font-size: 13px;
+  color: var(--muted);
+  margin: 0;
+}
