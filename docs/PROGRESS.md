@@ -1365,4 +1365,8 @@ The first CI run after pushing the earlier 2026-10-26 commits failed only at `np
 - Server: package files identical to the pre-bump commit first; previous image tagged `engineering-academy-web:before-next-1643`, files saved in `.local/next-1643-20261026-142259/`; `build web` (Next.js 16.4.3 compiled) and `up -d --no-deps web`: healthy in 24 s; API and database untouched. Container reports next 16.4.3. Security headers present; API login 401 for bad credentials; dso and carwash 200.
 - Rollback: `docker tag engineering-academy-web:before-next-1643 engineering-academy-web:latest` then the same `up -d --no-deps web` (source files from the saved folder).
 - Noticed, not changed: responses carry `X-Powered-By: Next.js` (`poweredByHeader: false` in next.config would drop it).
+- CI: run 40329971506 (0b589a3) passed frontend (audit clean) and backend; isolated-runner failed once on a
+  sandbox time limit while starting a container (`SandboxFailure: timeout`), not a wrong result. Runner code was
+  unchanged; run 40332252328 (3e67887, same code) passed all three jobs. Timing-sensitive on slow CI hosts; watch
+  for repeats.
 
