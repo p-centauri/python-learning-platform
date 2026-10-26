@@ -7,7 +7,7 @@ The academy core also has a verified first hosted deployment (2026-10-16, ADR 00
 - Opaque 256-bit random sessions, stored as SHA-256 digests. HttpOnly, SameSite=Lax cookies; expiration and sign-out revocation are checked server-side.
 - `SECURE_COOKIES=true` enables Secure cookies for HTTPS deployments. Local HTTP uses false.
 - Mutations require a custom `X-Academy-Request: 1` header. Browser Origin values must match `ALLOWED_ORIGINS`. The API does not enable cross-origin credential access.
-- Login, registration and password/recovery operations share a bounded, per-process/IP throttle. Do not trust forwarded client headers without a defined proxy trust boundary.
+- Login, registration and password/recovery operations share a bounded, per-process/IP throttle. Failed logins are also limited per account (five in fifteen minutes, unknown emails alike). Forwarded client addresses are trusted only from the web tier's exact address on the server (`FORWARDED_ALLOW_IPS`); see ADR 0045.
 - Every learner-owned operation uses the authenticated user ID. PostgreSQL mutations lock that learner's user row and recheck the session afterward, preventing a queued operation from using a revoked session. Actual PostgreSQL recovery races and this lock/revocation ordering are verified; SQLite does not provide the same row-lock semantics.
 - SQLAlchemy parameter binding, Pydantic field limits, strict answer indices and stable content identifiers.
 - Database transaction completion occurs before the success response is sent using function-scoped dependencies.
@@ -25,7 +25,7 @@ The academy core also has a verified first hosted deployment (2026-10-16, ADR 00
 
 ## Before public deployment
 - Use HTTPS, unique credentials, Secure cookies and explicit public allowed Origins. Replace all local defaults.
-- Add ingress request-body/rate limits, shared multi-instance throttling, abuse controls for public registration and a tested proxy trust configuration. Password hashing intentionally consumes memory; hash work now has a per-process two-slot bound, but service/ingress resource limits remain necessary.
+- Add ingress request-body/rate limits, shared multi-instance throttling and abuse controls for public registration (the proxy trust configuration is tested: ADR 0045). Password hashing intentionally consumes memory; hash work now has a per-process two-slot bound, but service/ingress resource limits remain necessary.
 - Offline recovery and session/password controls are implemented and verified locally. Add verified email ownership, a reviewed email recovery path if required, shared abuse controls and periodic expired-session cleanup.
 - Review assignments currently target normalized registered-account emails; confirm stronger identity and reviewer trust before public use. Existing account creation does not verify email ownership. Reviewer qualifications are not checked.
 - Pin/hash all Python dependencies and container images, automate recurring dependency review, and assess a suitable CSP.

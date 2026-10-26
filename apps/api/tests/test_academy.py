@@ -1,11 +1,13 @@
+import time
 import unittest
 from datetime import timedelta
 from types import SimpleNamespace
+from unittest.mock import patch
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine, event, select
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
-from app.auth import hash_password, verify_password
+from app.auth import FAILURE_WINDOW_SECONDS, hash_password, login_failures, verify_password
 from app.content import catalog, lessons
 from app.config import settings
 from app.database import Base, get_db
@@ -13,6 +15,7 @@ from app.main import app, auth_requests
 from app.mastery import mastery_scores
 from app.models import LoginSession, ReviewItem, utcnow
 from app.seed import seed
+from uvicorn.middleware.proxy_headers import ProxyHeadersMiddleware
 
 
 class AcademyTests(unittest.TestCase):
@@ -41,6 +44,7 @@ class AcademyTests(unittest.TestCase):
 
         app.dependency_overrides[get_db] = database_override
         auth_requests.clear()
+        login_failures.clear()
         self.client = TestClient(app, headers={"X-Academy-Request": "1"})
         self.register(self.client, "learner@example.com")
 
@@ -122,6 +126,68 @@ class AcademyTests(unittest.TestCase):
         for _ in range(19):
             self.client.post("/api/auth/login", json={"email": "invalid", "password": "short"})
         self.assertEqual(self.client.post("/api/auth/login", json={}).status_code, 429)
+
+    def sign_in(self, client, email, password):
+        return client.post("/api/auth/login", json={"email": email, "password": password})
+
+    def test_failed_sign_ins_lock_the_account_not_others(self):
+        for _ in range(5):
+            self.assertEqual(
+                self.sign_in(self.client, "learner@example.com", "wrong-passphrase").status_code, 401
+            )
+        # Even the right password waits once the account is locked: the guesses may have found it.
+        locked = self.sign_in(self.client, "LEARNER@example.com", "a-long-test-passphrase")
+        self.assertEqual(locked.status_code, 429)
+        self.assertGreater(int(locked.headers["Retry-After"]), 0)
+        self.register(self.client, "other@example.com")
+        self.assertEqual(
+            self.sign_in(self.client, "other@example.com", "a-long-test-passphrase").status_code, 200
+        )
+
+    def test_unknown_emails_lock_the_same_way(self):
+        for _ in range(5):
+            self.assertEqual(
+                self.sign_in(self.client, "nobody@example.com", "wrong-passphrase").status_code, 401
+            )
+        self.assertEqual(self.sign_in(self.client, "nobody@example.com", "wrong-passphrase").status_code, 429)
+
+    def test_successful_sign_ins_do_not_count_and_locks_expire(self):
+        for _ in range(6):
+            self.assertEqual(
+                self.sign_in(self.client, "learner@example.com", "a-long-test-passphrase").status_code, 200
+            )
+        for _ in range(5):
+            self.sign_in(self.client, "learner@example.com", "wrong-passphrase")
+        later = time.monotonic() + FAILURE_WINDOW_SECONDS + 1
+        with patch("app.auth.time.monotonic", return_value=later):
+            self.assertEqual(
+                self.sign_in(self.client, "learner@example.com", "a-long-test-passphrase").status_code, 200
+            )
+
+    def proxied_client(self, peer):
+        """The API as the server runs it: uvicorn trusts X-Forwarded-For only from web's address."""
+        wrapped = ProxyHeadersMiddleware(app, trusted_hosts="10.89.30.251")
+        return TestClient(wrapped, headers={"X-Academy-Request": "1"}, client=(peer, 40000))
+
+    def test_each_visitor_behind_the_trusted_web_tier_has_its_own_limit(self):
+        with self.proxied_client("10.89.30.251") as client:
+            for _ in range(20):
+                client.post("/api/auth/login", json={}, headers={"X-Forwarded-For": "203.0.113.5"})
+            self.assertEqual(
+                client.post(
+                    "/api/auth/login", json={}, headers={"X-Forwarded-For": "203.0.113.5"}
+                ).status_code,
+                429,
+            )
+            other = client.post("/api/auth/login", json={}, headers={"X-Forwarded-For": "198.51.100.9"})
+            self.assertNotEqual(other.status_code, 429)
+
+    def test_forwarded_header_from_an_untrusted_peer_cannot_dodge_the_limit(self):
+        with self.proxied_client("10.89.30.7") as client:
+            for i in range(20):
+                client.post("/api/auth/login", json={}, headers={"X-Forwarded-For": f"203.0.113.{i + 1}"})
+            spoofed = client.post("/api/auth/login", json={}, headers={"X-Forwarded-For": "198.51.100.77"})
+            self.assertEqual(spoofed.status_code, 429)
 
     def test_duplicate_email_and_invalid_values(self):
         result = self.client.post(

@@ -25,6 +25,12 @@ services:
       SECURE_COOKIES: "true"
       RUNNER_URL: ""
       RUNNER_TOKEN: ""
+      # The client address for the per-address auth limit: trusted only from web's fixed address.
+      # web passes on the proxy's X-Forwarded-For unchanged (Next.js rewrites add none).
+      FORWARDED_ALLOW_IPS: 10.89.30.251
+    networks:
+      default: {}
+      api_link: {}
   web:
     restart: unless-stopped
     mem_limit: 768m
@@ -35,7 +41,9 @@ services:
     cap_drop: [ALL]
     logging: *bounded-logs
     networks:
-      default: {}
+      # Not on default: web reaches the API only over api_link, so the API always sees .251.
+      api_link:
+        ipv4_address: 10.89.30.251
       existing_proxy:
         aliases: [engineering-academy-web]
     healthcheck:
@@ -44,6 +52,11 @@ services:
       timeout: 5s
       retries: 5
 networks:
+  api_link:
+    internal: true
+    ipam:
+      # Docker assigns from the lower half only, so no other container can take .251.
+      config: [{ subnet: 10.89.30.0/24, ip_range: 10.89.30.0/25 }]
   existing_proxy:
     external: true
     name: ${ACADEMY_PROXY_NETWORK:?Set the existing HTTPS proxy network}
