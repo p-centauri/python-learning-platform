@@ -1,11 +1,19 @@
 # Implementation roadmap
 
-Operational state (2026-10-16): user-authorized academy deployment is running at https://academy.45-141-22-101.sslip.io with fresh accounts, a separate PostgreSQL volume and preserved carwash app. Local services/data remain stopped/preserved. Hosted execution is unavailable pending a separately isolated worker; broader public acceptance remains open. See SERVER_DEPLOYMENT and STATUS.
+Operational state (2026-10-19): academy public HTTPS is restored after the shared proxy lost its academy routes. Web/API/PostgreSQL remain healthy; nine container lifecycles and current Carwash configuration are preserved. Deployment runs at https://academy.45-141-22-101.sslip.io with its separate PostgreSQL volume. Local services/data remain stopped/preserved. Hosted execution is unavailable pending a separately isolated worker; broader public acceptance remains open. See SERVER_DEPLOYMENT and STATUS.
+
+## Contabo PHP advisory triage (2026-10-22)
+
+- [x] Verify official PHP advisories and inspect live host packages/services/processes, all nine running containers and active Caddy routes. No PHP exposure found in the checked deployment; trusted public health/login pass without server updates/restarts. Record finite search/access limits in SERVER_INSPECTION; broader security acceptance remains open.
+
+## Shared-proxy recovery (2026-10-19)
+
+- [x] Diagnose missing academy routes, preserve current Carwash config, validate the restored candidate, detect stale read-only file binding and gracefully reload the verified candidate. Verify trusted public HTTPS/browser/API health and unchanged lifecycles for all nine running containers; document safe reload and future shared-proxy release checks.
 
 ## Source publication (2026-10-16)
 
 - [x] Publish source and durable project history to the user-selected public [p-centauri/python-learning-platform](https://github.com/p-centauri/python-learning-platform) repository on `main`; verify remote SHA, exclude local data/credentials/generated files, scan staged content and pass Ruff/TypeScript.
-- [ ] Observe a complete successful GitHub Actions run. The first source publication triggered the workflow; queued status alone does not verify CI.
+- [x] Observe complete successful GitHub Actions runs for initial source and published-main commits: runs 38904739669 and 38904902826 both completed successfully, confirmed 2026-10-19.
 
 ## Design tooling (2026-10-16)
 

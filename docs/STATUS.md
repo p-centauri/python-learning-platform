@@ -1,6 +1,6 @@
 # Current project status
 
-Last updated: 2026-10-16
+Last updated: 2026-10-22
 
 ## Current milestone and exact next action
 
@@ -8,14 +8,27 @@ Last updated: 2026-10-16
 
 **The user subsequently authorized server deployment (2026-10-16), with fresh accounts.** The academy is now available at **https://academy.45-141-22-101.sslip.io**. Create an account there; the original local learning history remains unchanged on this Mac. Local services were not restarted. Hosted code/SQL/practical-repair execution is unavailable until a separately isolated worker is deployed; notes/drafts and non-execution learning work remain usable.
 
-Exact next action: check the latest [GitHub Actions run](https://github.com/p-centauri/python-learning-platform/actions) for the published `main` branch, then wait for the user's next instruction before another milestone. The redesigned hosted academy remains available at https://academy.45-141-22-101.sslip.io; see UI_UX_REVIEW and ADR 0044. An owned domain and separate worker remain future options. For the next curriculum continuation, audit the original 22 acceptance criteria/introductory backend/AI modules and define one bounded expert-depth teaching/practice unit; do not infer full graduate/public multi-tenant acceptance from this release.
+Exact next action: resume learning at https://academy.45-141-22-101.sslip.io/login?mode=signin. The reported public outage was repaired on 2026-10-19; retain both applications' routes in every future shared-proxy deployment and use the stale-bind-safe reload procedure in SERVER_DEPLOYMENT. Wait for the user's next instruction before another milestone. An owned domain and separate worker remain future options. For the next curriculum continuation, audit the original 22 acceptance criteria/introductory backend/AI modules and define one bounded expert-depth teaching/practice unit; do not infer full graduate/public multi-tenant acceptance from this release.
+
+## Contabo PHP advisory triage (2026-10-22)
+
+- Verified the reported CVE-2026-109618 / CVE-2026-109619 against PHP's official advisories. Read-only SSH inspection of the documented server found no installed host PHP packages, standard PHP executables, PHP service units or PHP process names. All nine running containers have no PHP executable paths in the checked standard directories and no PHP process names; active Caddy routes use HTTP upstreams for the Vue/Python Carwash and Next.js/Python academy, with no PHP route markers or PHP modules.
+- No PHP remediation is indicated for the observed deployment. Trusted HTTPS Carwash `/health`, academy `/api/health` and `/login` return **200**. Nine container start times/restart counts remain unchanged across the main inspection. No server packages/configuration/data were changed and no service was restarted.
+- This is scoped exposure triage, not a compromise investigation or full filesystem audit: some host directories deny this account access, custom PHP installations elsewhere and stopped images were not exhaustively searched. See [SERVER_INSPECTION](SERVER_INSPECTION.md). Next action for this notice: no PHP update needed for the observed stack; reassess before adding a PHP application or changing hosting software. The academy's learning/deployment next action above remains unchanged.
+
+## Public HTTPS outage repaired (2026-10-19)
+
+- The public hostname failed its TLS handshake while academy web/API/PostgreSQL were healthy and loopback login returned 200. The current shared Carwash Caddyfile had lost both academy site blocks. No evidence identifies which later edit removed them; this was a proxy routing failure, not a failed academy build or lost database.
+- Saved the current proxy bytes and nine running containers' lifecycle baseline privately. Appended the maintained academy template to the current configuration without changing its Carwash prefix; Caddy validation passes. Detected that the proxy's read-only single-file bind still referenced an older inode: the first guarded activation stopped before reload. Loaded the verified candidate from `/tmp/academy-outage-20261019.Caddyfile` with a graceful reload instead. The repaired host file is preserved for future container starts; do not reload from the stale `/etc/caddy/Caddyfile` in this existing container. See SERVER_DEPLOYMENT.
+- Trusted external HTTPS login, recovery, readiness (`/api/health`) and liveness return **200**; browser rendering and switching to sign-in work. Four security headers remain single-valued. Carwash health stays **200**, and all **nine** container IDs/start times/restart counts match the incident baseline. No app restart, schema change, account mutation or database restore. [Restored sign-in page](screenshots/academy-restored-20261019.jpg).
+- Both original GitHub Actions runs, including published `main` commit **32a9aa71ad22ed65d936981a9f0925ade27bec2e**, are now confirmed **successful**. The outage repair changes proxy configuration and operating documentation only. Evidence is server-private `.local/outage-20261019/`; local public response evidence is ignored in the matching local directory.
 
 ## GitHub publication (2026-10-16)
 
 - At the user's explicit choice, published the academy to the public repository [p-centauri/python-learning-platform](https://github.com/p-centauri/python-learning-platform). `origin` uses HTTPS; local `main` tracks `origin/main`. The first source commit is **087eaa49ec8ae35bd4a320ed9e8bbe4cb23caa7b**; a read-only remote ref check confirmed the exact same SHA after the normal, non-force push.
 - The first commit contains **986 files**, including source, curriculum, tests, deployment configuration, licensed font assets and the append-only progress history. Expanded `.gitignore` protects private environment variants, SQLite companion files, database dumps and private-key files. Real databases, credentials, dependencies, generated builds and `.local` evidence are excluded. All staged bytes were scanned for common credential formats: zero candidate secret or forbidden-file paths. This is a scoped scan, not universal secret detection.
 - `make lint` passes (Ruff and strict TypeScript); ignore-rule checks pass and `.env.example`/font license remain included. Initial whitespace checking reports only the unmodified upstream font license's CRLF/trailing space and one existing starter Lua file's final blank line; checking the remaining files passes. Those source bytes were preserved. No application behavior or runtime was changed for publication.
-- GitHub Actions started for the source commit ([initial run](https://github.com/p-centauri/python-learning-platform/actions/runs/38904739669)); observed **in progress**. Frontend install/audit/production-build steps and backend Ruff passed; backend tests and isolated-runner checks were still running, so a complete remote pass is not claimed. Local UI/build/acceptance results above remain separate evidence. Publishing source does not synchronize the deployed server; use SERVER_DEPLOYMENT for a future release.
+- GitHub Actions started for the source commit ([initial run](https://github.com/p-centauri/python-learning-platform/actions/runs/38904739669)); on 2026-10-19 both it and the [published-main run](https://github.com/p-centauri/python-learning-platform/actions/runs/38904902826) are confirmed **completed/success**. Local UI/browser acceptance remains separate evidence. Publishing source does not synchronize the deployed server; use SERVER_DEPLOYMENT for a future release.
 
 ## Responsive study workspace (2026-10-16)
 
