@@ -1,6 +1,6 @@
 # Current project status
 
-Last updated: 2026-10-22
+Last updated: 2026-10-26
 
 ## Current milestone and exact next action
 
@@ -8,7 +8,13 @@ Last updated: 2026-10-22
 
 **The user subsequently authorized server deployment (2026-10-16), with fresh accounts.** The academy is now available at **https://academy.45-141-22-101.sslip.io**. Create an account there; the original local learning history remains unchanged on this Mac. Local services were not restarted. Hosted code/SQL/practical-repair execution is unavailable until a separately isolated worker is deployed; notes/drafts and non-execution learning work remain usable.
 
-Exact next action: resume learning at https://academy.45-141-22-101.sslip.io/login?mode=signin. The reported public outage was repaired on 2026-10-19; retain both applications' routes in every future shared-proxy deployment and use the stale-bind-safe reload procedure in SERVER_DEPLOYMENT. Wait for the user's next instruction before another milestone. An owned domain and separate worker remain future options. For the next curriculum continuation, audit the original 22 acceptance criteria/introductory backend/AI modules and define one bounded expert-depth teaching/practice unit; do not infer full graduate/public multi-tenant acceptance from this release.
+Exact next action: resume learning at **https://eng.xosilov.com/login?mode=signin** (the sslip.io address redirects there). Since 2026-10-26 the server's single shared proxy is `/opt/apps/proxy` (see its README); carwash's own Caddy and the reload procedures written for it are retired. Optionally push the local commits to GitHub. Wait for the user's next instruction before another milestone. An owned domain and separate worker remain future options. For the next curriculum continuation, audit the original 22 acceptance criteria/introductory backend/AI modules and define one bounded expert-depth teaching/practice unit; do not infer full graduate/public multi-tenant acceptance from this release.
+
+## Shared proxy, owned domain and sign-in limits (2026-10-26)
+
+- The academy is at **https://eng.xosilov.com** behind the server's shared proxy (`/opt/apps/proxy`); the sslip.io address redirects there. The move caused a ~10-minute outage on 2026-10-26 (see PROGRESS).
+- Sign-in limits now work per visitor (uvicorn trusts the web tier's exact address only) and per account (5 failed logins per 15 minutes). ADR 0045; 237 tests pass; verified live.
+- Commits 63e852f (code, ADR 0045) and the documentation commits after it are local; pushing to the public repository is the owner's call.
 
 ## Contabo PHP advisory triage (2026-10-22)
 
