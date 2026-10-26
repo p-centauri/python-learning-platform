@@ -43,6 +43,16 @@ The existing controller has powerful Docker authority and was verified for local
 
 ## Proxy update and rollback
 
+> **2026-10-26: superseded.** The server now has one shared proxy, `/opt/apps/proxy` (see its
+> README for sites, commands, adding an app and rollback), owned by no app; carwash's own Caddy,
+> `Caddyfile.ip` and the reload procedures below are retired. The academy is served at
+> **https://eng.xosilov.com**; its web container joins the `eng-edge` network (alias
+> `engineering-academy-web`) and an internal `api_link` network at `10.89.30.251` (ADR 0045), and
+> `.env.server` has `ACADEMY_ORIGIN`/`ALLOWED_ORIGINS=https://eng.xosilov.com` and
+> `ACADEMY_PROXY_NETWORK=eng-edge` (previous file: server `.local/proxy-move-*/`). The sslip.io
+> address permanently redirects there. Edit `/opt/apps/proxy/Caddyfile` in place, validate and
+> reload as its README says. The text below describes the earlier setup.
+
 The existing Caddyfile is `/opt/apps/carwash/deploy/caddy/Caddyfile.ip`. The original is backed up privately at `/srv/aiagent/academy/.local/deploy-20261016/Caddyfile.before`; container IDs/start times/restart counts are saved alongside. Candidate configuration appends only the academy site and explicit hostname HTTP→HTTPS redirect; validation occurs inside the running Caddy container before activation.
 
 Caddy uses a read-only single-file bind mount. Preserve the host inode when writing the validated candidate, and compare host and mounted bytes before relying on `/etc/caddy/Caddyfile`. A previous atomic file replacement can leave the running container bound to an older inode even when the source path is correct. This was observed on 2026-10-19. An in-place host write alone does not repair that existing stale binding.

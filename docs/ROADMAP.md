@@ -1,6 +1,11 @@
 # Implementation roadmap
 
-Operational state (2026-10-19): academy public HTTPS is restored after the shared proxy lost its academy routes. Web/API/PostgreSQL remain healthy; nine container lifecycles and current Carwash configuration are preserved. Deployment runs at https://academy.45-141-22-101.sslip.io with its separate PostgreSQL volume. Local services/data remain stopped/preserved. Hosted execution is unavailable pending a separately isolated worker; broader public acceptance remains open. See SERVER_DEPLOYMENT and STATUS.
+Operational state (2026-10-26): the academy runs at https://eng.xosilov.com behind the server's shared proxy `/opt/apps/proxy` (the sslip.io address redirects there), with its separate PostgreSQL volume. Sign-in limits work per visitor and per account (ADR 0045). Local services/data remain stopped/preserved. Hosted execution is unavailable pending a separately isolated worker; broader public acceptance remains open. See SERVER_DEPLOYMENT and STATUS.
+
+## Shared proxy, owned domain and sign-in limits (2026-10-26)
+
+- [x] Move to the server's shared proxy (`/opt/apps/proxy`) at https://eng.xosilov.com on its own `eng-edge` network; permanent redirect from the sslip.io address. The switch caused a ~10-minute outage (see PROGRESS).
+- [x] Per-visitor sign-in limit via exact proxy trust (uvicorn `--proxy-headers`, web at a fixed internal address) and a per-account failed-login limit; 237 tests, deployed and verified live (ADR 0045).
 
 ## Contabo PHP advisory triage (2026-10-22)
 
