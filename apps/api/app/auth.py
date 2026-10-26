@@ -1,7 +1,10 @@
 import hashlib
 import hmac
+import math
 import secrets
-from threading import BoundedSemaphore
+import time
+from collections import defaultdict, deque
+from threading import BoundedSemaphore, Lock
 from datetime import timedelta, timezone
 from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, Request, Response
@@ -17,6 +20,12 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 DB = Annotated[Session, Depends(get_db, scope="function")]
 COOKIE = "academy_session"
 password_work = BoundedSemaphore(2)
+# Failed sign-ins per account, so many addresses can't take turns guessing one password. The
+# per-address limit (main.py) can't see that. Per process, like that limit; see SECURITY.md.
+FAILURE_WINDOW_SECONDS = 15 * 60
+MAX_FAILURES_PER_EMAIL = 5
+login_failures = defaultdict(deque)
+failure_lock = Lock()
 
 
 def hash_password(password: str, salt: bytes | None = None):
@@ -43,6 +52,27 @@ def verify_password(password: str, stored: str):
 
 
 DUMMY_PASSWORD_HASH = hash_password("unavailable-account-placeholder")
+
+
+def failure_retry_after(email):
+    """Seconds until this account may try again, or None. Also drops expired entries."""
+    now = time.monotonic()
+    with failure_lock:
+        for key in list(login_failures):
+            window = login_failures[key]
+            while window and window[0] <= now - FAILURE_WINDOW_SECONDS:
+                window.popleft()
+            if not window:
+                del login_failures[key]
+        window = login_failures.get(email)
+        if window is None or len(window) < MAX_FAILURES_PER_EMAIL:
+            return None
+        return max(1, math.ceil(window[0] + FAILURE_WINDOW_SECONDS - now))
+
+
+def record_failure(email):
+    with failure_lock:
+        login_failures[email].append(time.monotonic())
 
 
 def token_digest(token):
@@ -133,11 +163,21 @@ def register(data: Registration, db: DB, response: Response):
 
 @router.post("/login")
 def login(data: Credentials, db: DB, response: Response):
-    user = db.scalar(select(User).where(User.email == str(data.email).lower()))
+    email = str(data.email).lower()
+    # Checked before hashing, and the same for unknown emails, so it reveals nothing about accounts.
+    retry_after = failure_retry_after(email)
+    if retry_after is not None:
+        raise HTTPException(
+            429,
+            "Too many failed sign-in attempts for this account. Try again later.",
+            headers={"Retry-After": str(retry_after)},
+        )
+    user = db.scalar(select(User).where(User.email == email))
     # Perform the same expensive hash when the account is absent.
     stored = user.password_hash if user else DUMMY_PASSWORD_HASH
     valid = verify_password(data.password, stored)
     if not user or not valid:
+        record_failure(email)
         raise HTTPException(401, "Email or password is incorrect.")
     if len(user.password_hash.split("$")) == 3:
         user.password_hash = hash_password(data.password)
