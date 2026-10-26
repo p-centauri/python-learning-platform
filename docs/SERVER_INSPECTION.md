@@ -1,5 +1,21 @@
 # Existing server inspection
 
+## PHP security notice follow-up (2026-10-22)
+
+The user supplied Contabo's PHP security notice. Independently verified [PHP's 21 October advisory](https://www.php.net/archive/2026.php#2026-10-21-5), [CVE-2026-109618](https://github.com/php/php-src/security/advisories/GHSA-w8hw-w9fx-j79w) and [CVE-2026-109619](https://github.com/php/php-src/security/advisories/GHSA-6wmf-4rv5-p3rp) at their direct official URLs. The vulnerabilities and fixed releases match the notice; email sender authenticity was not assessed.
+
+Read-only SSH checks of `aiagent@45.141.22.101` found:
+
+- `dpkg-query -W`: no installed PHP/LS PHP/FrankenPHP packages matched. `command -v` checks: no standard PHP CLI/FPM/CGI, FrankenPHP or LS PHP executables. `systemctl list-unit-files`: no PHP/LiteSpeed units. Host `ps -eo comm=`: no matching PHP/LiteSpeed process names.
+- `docker ps -a`: nine running services (six Carwash, three academy) and two exited academy setup/migration containers. In every running container, executable lookup and bounded filename searches of `/usr/bin`, `/usr/sbin`, `/usr/local/bin`, `/usr/local/sbin`, `/opt` and `/etc` found no PHP paths; `docker top <id> -eo pid,comm` succeeded with no PHP/LiteSpeed process names. Missing directories in two containers caused nonzero `find` exit status, rather than a PHP finding.
+- Read the running Caddy admin configuration privately and emitted only handler/upstream summaries: HTTP reverse proxies to `backend:8000`, `frontend:80` and `engineering-academy-web:3000`, no PHP/FastCGI/FrankenPHP markers. `caddy list-modules` contains no PHP/FrankenPHP module. No full configuration/environment/credential output was retained in this document.
+- Additional host filename checks to depth four in `/usr/local`, `/opt`, `/srv` and `/etc` found only three generic AppArmor PHP abstraction files. These are policy files, not evidence of an installed PHP runtime. `/opt` and `/etc` include permission-denied subdirectories, so this is not an exhaustive filesystem search.
+- `ss -lnt`: public TCP listeners remain 22/80/443, with academy diagnostics on loopback 3100 and local DNS listeners. Trusted `curl` probes return **200** for Carwash `/health`, academy `/api/health` and `/login`. Nine running container start timestamps/restart counts match before/after the main inspection.
+
+Conclusion: **no PHP exposure found in the checked deployment; no PHP update is indicated for the observed applications**. Academy and Carwash use JavaScript/Python. No remote packages, configuration, databases or services were changed; no restart or reboot. This does not certify freedom from compromise or exclude custom runtimes in unsearched/restricted paths. Stopped container/image filesystems were not inspected. Reassess if PHP software is introduced. The original inspection below is historical; academy deployment occurred afterward as recorded in SERVER_DEPLOYMENT.
+
+## Original inspection (2026-10-16)
+
 Inspected **2026-10-16** at the user's request, using their SSH connection. This was a read-only inspection; no academy deployment, source/configuration changes, service restarts, database writes, firewall changes or DNS changes were performed.
 
 ## Connection and capacity

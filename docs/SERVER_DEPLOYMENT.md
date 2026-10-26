@@ -45,7 +45,22 @@ The existing controller has powerful Docker authority and was verified for local
 
 The existing Caddyfile is `/opt/apps/carwash/deploy/caddy/Caddyfile.ip`. The original is backed up privately at `/srv/aiagent/academy/.local/deploy-20261016/Caddyfile.before`; container IDs/start times/restart counts are saved alongside. Candidate configuration appends only the academy site and explicit hostname HTTP→HTTPS redirect; validation occurs inside the running Caddy container before activation.
 
-Caddy uses a single-file bind mount. Preserve that inode when writing the validated candidate, then use `docker exec carwash-reverse-proxy-1 caddy reload --config /etc/caddy/Caddyfile --adapter caddyfile`. Reload is graceful and must not recreate/restart carwash containers. If activation fails, restore the exact backed-up bytes **in place** and reload, leaving the academy private for diagnosis. If someone else changes the proxy file after inspection, stop and reconcile that change rather than overwriting it.
+Caddy uses a read-only single-file bind mount. Preserve the host inode when writing the validated candidate, and compare host and mounted bytes before relying on `/etc/caddy/Caddyfile`. A previous atomic file replacement can leave the running container bound to an older inode even when the source path is correct. This was observed on 2026-10-19. An in-place host write alone does not repair that existing stale binding.
+
+For a graceful reload that works with a stale binding, copy the reconciled candidate into the container, validate those exact bytes, then reload from that candidate. Keep the same complete configuration on the host for future starts. Example, after backing up the current file and checking for concurrent edits:
+
+```sh
+docker cp /opt/apps/carwash/deploy/caddy/Caddyfile.ip \
+  carwash-reverse-proxy-1:/tmp/shared-proxy-reviewed.Caddyfile
+docker exec carwash-reverse-proxy-1 caddy validate \
+  --config /tmp/shared-proxy-reviewed.Caddyfile --adapter caddyfile
+docker exec carwash-reverse-proxy-1 caddy reload \
+  --config /tmp/shared-proxy-reviewed.Caddyfile --adapter caddyfile
+```
+
+Use a new candidate filename per operation, compare its bytes/hash with the intended host configuration and stop on a concurrent edit. Do not reload a stale mounted `/etc/caddy/Caddyfile`; it would remove the academy again. Reload is graceful and must not recreate/restart Carwash containers. If activation or Carwash continuity fails, restore the exact backed-up host bytes **in place**, copy that rollback configuration into the container, validate and gracefully reload it. Do not overwrite later edits blindly.
+
+Every future shared-proxy/Carwash deployment must retain both academy site blocks from `deploy/Caddyfile.academy` in its complete candidate. Before considering that release complete, verify trusted HTTPS academy `/login`, `/api/health` and Carwash `/health`; a healthy private academy container cannot prove its public route exists. This is an operator release requirement, not an automated route-preservation mechanism.
 
 To disable only the academy, remove its added site block from the current configuration after checking for later edits, validate and gracefully reload. Stop only the `engineering-academy` project with the same two Compose files. Preserve its database volume; never use `down -v` as a restart. Rolling back application code requires a compatible schema and the retained private database backup, not an automatic destructive downgrade.
 
@@ -102,3 +117,11 @@ docker compose --env-file .env.server -p engineering-academy \
 Before activating, save the current image/source and verify no concurrent source change. This release retains `engineering-academy-web:before-ui-ux-20261016` plus server-private `.local/ui-ux-20261016/before-source/` and manifests. A runtime rollback can retag that retained image to `engineering-academy-web:latest` and run the same `up -d --no-deps web`; source rollback must separately reconcile the recorded files before a later rebuild. Never restore old source blindly over subsequent work. No database downgrade is needed for this presentation-only change.
 
 Live verification for this update is read-only: public login/recovery/assets/health/security headers pass, with no API mutation and no production test account. Automatic approval review rejected the proposed production-data fixture; authenticated learning/filter/note/assessment UI was instead checked in an isolated local standalone production build. The earlier deployment's authenticated checks remain historical evidence, distinct from this update's test scope. Root RELEASE.json retains the previous manifest and the new source/image record. Local previews were stopped; the hosted installation remains healthy.
+
+## HTTPS route recovery (2026-10-19)
+
+The user's outage report reproduced as a TLS internal-error alert for the academy hostname. All three academy services were healthy and private login returned 200; Carwash HTTPS was also healthy. Both academy site blocks were absent from the current shared host/mounted configuration. The specific edit that removed them was not established.
+
+Saved current proxy bytes and nine container identities/start times/restarts under server-private `.local/outage-20261019/`. Appended the academy template to the current configuration, preserving every Carwash byte as the prefix. Candidate validation passed. The first guarded activation detected a stale read-only bind after writing the host file and stopped before reload. Activated the independently verified container candidate `/tmp/academy-outage-20261019.Caddyfile` instead, without recreating a container. The current host configuration SHA256 is **2cf3d4089c727729859b39fccee11914f598f031bfdd911e3fa6d3836e813fed**; the incident's previous Carwash-only prefix SHA256 is **5c80ffa72a0a5a8058d60d30941171e96445dfd76a71943290d0b28b6eb80e7c**.
+
+Trusted public login/recovery/readiness/liveness return 200, browser rendering and sign-in mode work, and four security headers remain single-valued. An initial `/api/health/ready` diagnostic probe returned 404 because readiness is `/api/health`; the corrected check passes. Carwash health remains 200. All nine running container IDs/start times/restart counts match the baseline. No application source/image/schema/learner record was changed, no database restore or app restart was performed, and no production test account was created. Screenshot: [restored sign-in](screenshots/academy-restored-20261019.jpg). The current container's mounted file remains stale; use the verified-candidate reload method above for subsequent changes until its bind is refreshed during a separately planned proxy recreation.
