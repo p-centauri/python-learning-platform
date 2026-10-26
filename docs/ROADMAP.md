@@ -2,6 +2,10 @@
 
 Operational state (2026-10-26): the academy runs at https://eng.xosilov.com behind the server's shared proxy `/opt/apps/proxy` (the sslip.io address redirects there), with its separate PostgreSQL volume. Sign-in limits work per visitor and per account (ADR 0045). Local services/data remain stopped/preserved. Hosted execution is unavailable pending a separately isolated worker; broader public acceptance remains open. See SERVER_DEPLOYMENT and STATUS.
 
+## Next.js security release (2026-10-26)
+
+- [x] Upgrade next 16.4.0 → 16.4.3 for GHSA-2464-fhr4-w9xw / GHSA-673q-mjm6-r5xr / GHSA-p3m5-59mp-jv5r; npm audit clean, build passes, web redeployed and verified read-only live.
+
 ## Shared proxy, owned domain and sign-in limits (2026-10-26)
 
 - [x] Move to the server's shared proxy (`/opt/apps/proxy`) at https://eng.xosilov.com on its own `eng-edge` network; permanent redirect from the sslip.io address. The switch caused a ~10-minute outage (see PROGRESS).

@@ -10,6 +10,11 @@ Last updated: 2026-10-26
 
 Exact next action: resume learning at **https://eng.xosilov.com/login?mode=signin** (the sslip.io address redirects there). Since 2026-10-26 the server's single shared proxy is `/opt/apps/proxy` (see its README); carwash's own Caddy and the reload procedures written for it are retired. Optionally push the local commits to GitHub. Wait for the user's next instruction before another milestone. An owned domain and separate worker remain future options. For the next curriculum continuation, audit the original 22 acceptance criteria/introductory backend/AI modules and define one bounded expert-depth teaching/practice unit; do not infer full graduate/public multi-tenant acceptance from this release.
 
+## Next.js 16.4.3 security release (2026-10-26)
+
+- CI's `npm audit` flagged next 16.0.0–16.4.0 (production ran 16.4.0): GHSA-2464-fhr4-w9xw (critical, unauthenticated RCE in image optimization with SVG), GHSA-673q-mjm6-r5xr (critical, RCE in `use cache` typed arrays), GHSA-p3m5-59mp-jv5r (DoS, server actions). The source uses none of next/image, `use cache` or server actions, so exposure was probably low, but the image endpoint exists by default.
+- Upgraded to **16.4.3** (commit 0b589a3; lockfile changes only next/@next). npm audit clean, typecheck and production build pass. Deployed web only (`up -d --no-deps web`); rollback image `engineering-academy-web:before-next-1643`. The hosted read-only browser check passed before and after (health 200, no API writes, no console errors); API login 401 for bad credentials.
+
 ## Shared proxy, owned domain and sign-in limits (2026-10-26)
 
 - The academy is at **https://eng.xosilov.com** behind the server's shared proxy (`/opt/apps/proxy`); the sslip.io address redirects there. The move caused a ~10-minute outage on 2026-10-26 (see PROGRESS).

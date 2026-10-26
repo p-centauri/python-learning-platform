@@ -1356,3 +1356,13 @@ Done from the dso_academy project's session (owner request), recorded here per A
 - **Not committed by this session:** the pre-existing uncommitted edits in PROGRESS/ROADMAP/SERVER_DEPLOYMENT/SERVER_INSPECTION/STATUS and the 2026-10-19 screenshot, and this entry and the STATUS note (they share those files). Commit 63e852f is local only (repository is public; push is the owner's call).
 - **Unresolved:** counters are per process (reset on restart; a second API process needs shared storage); the loopback diagnostic port 3100 can still carry a forged header from someone with host shell access.
 
+## 2026-10-26 — Next.js 16.4.3 security release
+
+The first CI run after pushing the earlier 2026-10-26 commits failed only at `npm audit --audit-level=high`: next 16.0.0–16.4.0 has GHSA-2464-fhr4-w9xw (critical: unauthenticated RCE in the image optimization API with SVG), GHSA-673q-mjm6-r5xr (critical: RCE in `use cache` functions returning typed arrays) and GHSA-p3m5-59mp-jv5r (DoS with server actions). Production ran 16.4.0. `grep` of `apps/web/src` and `next.config.ts`: no next/image, `use cache`, `use server` or images config, so likely low exposure; `/_next/image` is served by default, so not excluded.
+
+- `npm install next@16.4.3 --save-exact` (published 2026-10-23 by vercel-release-bot; a security fix, so not held to the release cooldown). Lockfile: ten version entries 16.4.0 → 16.4.3, all next/@next. `npm audit --audit-level=high`: 0 vulnerabilities. `npm run typecheck` and `npm run build` pass.
+- Browser tests need the local stack, whose volumes hold the owner's original learning history; not started. Instead the retained hosted read-only helper (copied to `.local/next-1643/` with its outputs redirected there; the first run had overwritten the tracked `docs/screenshots/ui-ux-hosted-login-1440.png`, which was restored) ran against https://eng.xosilov.com before and after: passed both times, health 200, zero API mutations, zero console errors.
+- Server: package files identical to the pre-bump commit first; previous image tagged `engineering-academy-web:before-next-1643`, files saved in `.local/next-1643-20261026-142259/`; `build web` (Next.js 16.4.3 compiled) and `up -d --no-deps web`: healthy in 24 s; API and database untouched. Container reports next 16.4.3. Security headers present; API login 401 for bad credentials; dso and carwash 200.
+- Rollback: `docker tag engineering-academy-web:before-next-1643 engineering-academy-web:latest` then the same `up -d --no-deps web` (source files from the saved folder).
+- Noticed, not changed: responses carry `X-Powered-By: Next.js` (`poweredByHeader: false` in next.config would drop it).
+
