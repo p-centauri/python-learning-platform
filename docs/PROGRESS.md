@@ -1370,3 +1370,12 @@ The first CI run after pushing the earlier 2026-10-26 commits failed only at `np
   unchanged; run 40332252328 (3e67887, same code) passed all three jobs. Timing-sensitive on slow CI hosts; watch
   for repeats.
 
+
+## 2026-10-29 — Site icon
+
+The site had no icon: `/favicon.ico`, `/icon.svg` and `/apple-touch-icon.png` returned the 404 page, so browser tabs showed a blank icon.
+
+- Added Next metadata files in `apps/web/src/app/`: `icon.svg` (white code braces around a node — backend code plus applied AI — on the light theme's `--green` #286047), `favicon.ico` (32 px PNG inside an ICO) and `apple-icon.png` (180 px, opaque, full-bleed), both rendered from the SVG with Chromium. Next links them from every page with cache-busting hashes; no layout or config change.
+- **Tests:** new `apps/web/tests/icons.spec.ts` (the three links are present; each path returns 200 with `image/x-icon`, `image/svg+xml`, `image/png`). `npm run typecheck` clean; `npm run build` passes; the spec passed against `next start -p 3100` on that build (1 passed). The full browser suite was not run (it needs the local stack holding the owner's learning history).
+- **Found, not touched:** uncommitted edits made at 15:40 the same day by someone else, renaming the product "Form" → "Forge — Backend & AI Engineering Academy" (`layout.tsx`, login page, shell, account page and four API files). The icon fits either name. Those edits were not committed, built into a release or deployed by this session.
+- **Not yet done:** commit, push (public repository: the owner's call) and deploy (web only).
