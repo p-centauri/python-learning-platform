@@ -1,6 +1,6 @@
 # Current project status
 
-Last updated: 2026-10-26
+Last updated: 2026-10-29
 
 ## Current milestone and exact next action
 
@@ -10,9 +10,15 @@ Last updated: 2026-10-26
 
 Exact next action: resume learning at **https://eng.xosilov.com/login?mode=signin** (the sslip.io address redirects there). Since 2026-10-26 the server's single shared proxy is `/opt/apps/proxy` (see its README); carwash's own Caddy and the reload procedures written for it are retired. Optionally push the local commits to GitHub. Wait for the user's next instruction before another milestone. An owned domain and separate worker remain future options. For the next curriculum continuation, audit the original 22 acceptance criteria/introductory backend/AI modules and define one bounded expert-depth teaching/practice unit; do not infer full graduate/public multi-tenant acceptance from this release.
 
+## Renamed to Forge (2026-10-29)
+
+- The product is now **Forge — Backend & AI Engineering Academy** (ADR 0046): page title, "forge." wordmark with an anvil mark, sidebar caption "BACKEND & AI ACADEMY" (one line), footer, recovery-key text, evidence export heading, API title, seeded curriculum title, README/AGENTS. Address unchanged: **https://eng.xosilov.com**. Infrastructure names (`engineering-academy-*`, `eng-edge`, `/srv/aiagent/academy`), the `academy-recovery-` key prefix and the GitHub repository name are unchanged on purpose.
+- Commits 72acbef (the site icon below, committed unchanged) and 3b7a72c (rename), pushed to `origin/main`. Deployed web + API only (`up -d --no-deps --wait web api`); database untouched; rollback images `engineering-academy-{web,api}:before-forge`, previous files in server `.local/forge-rename-20261029-105207/`.
+- 237 API tests, lint/typecheck, production build and `icons.spec.ts` pass; live title/wordmark/icons/health/headers verified. The seeded curriculum title changes in the database only at the next seed run.
+
 ## Site icon (2026-10-29)
 
-- `apps/web/src/app/icon.svg`, `favicon.ico` and `apple-icon.png` (braces around a node, in `--green`) give the site a browser icon; `apps/web/tests/icons.spec.ts` covers it. Built and tested locally; **not committed, pushed or deployed yet**. Uncommitted "Form" → "Forge" rename edits by someone else are in the tree and were left alone (see PROGRESS 2026-10-29).
+- `apps/web/src/app/icon.svg`, `favicon.ico` and `apple-icon.png` (braces around a node, in `--green`) give the site a browser icon; `apps/web/tests/icons.spec.ts` covers it. Committed unchanged as 72acbef and deployed with the Forge rename above (its SVG `<title>` now says Forge).
 
 ## Next.js 16.4.3 security release (2026-10-26)
 
