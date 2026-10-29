@@ -9,7 +9,7 @@ const dmSans = localFont({
   display: "swap",
 });
 export const metadata: Metadata = {
-  title: "Form — Engineering Academy",
+  title: "Forge — Backend & AI Engineering Academy",
   description:
     "A personal academy for backend and applied AI engineering. Build understanding through deliberate practice.",
 };

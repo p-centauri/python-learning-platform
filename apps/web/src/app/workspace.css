@@ -175,6 +175,7 @@ input:not([type="radio"]):not([type="checkbox"]) {
 .brand small {
   font-size: 8px;
   letter-spacing: 1.4px;
+  white-space: nowrap;
 }
 .sidebar nav {
   gap: 0;

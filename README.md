@@ -1,4 +1,6 @@
-# Form — Engineering Academy
+# Forge — Backend & AI Engineering Academy
+
+Formerly "Form — Engineering Academy" (renamed 2026-10-29, [ADR 0046](docs/adr/0046-product-name-forge.md)). Hosted at **https://eng.xosilov.com**.
 
 A personal learning application for an experienced developer building Backend + Applied AI engineering competence. Learn the mental model, practice failure scenarios, and track evidence rather than page views.
 
@@ -6,7 +8,7 @@ A personal learning application for an experienced developer building Backend + 
 
 ## Hosted academy
 
-Open **[the hosted academy](https://academy.45-141-22-101.sslip.io)** and create your account. This installation starts fresh; your original local history is preserved separately. It uses trusted HTTPS and its own PostgreSQL storage alongside the existing carwash app. Hosted coding/SQL/practical-repair execution is unavailable until a separate isolated worker is deployed; draft saving and local starter downloads remain available. See [server operations and verified scope](docs/SERVER_DEPLOYMENT.md).
+Open **[the hosted academy](https://eng.xosilov.com)** and create your account. This installation starts fresh; your original local history is preserved separately. It uses trusted HTTPS and its own PostgreSQL storage alongside the existing carwash app. Hosted coding/SQL/practical-repair execution is unavailable until a separate isolated worker is deployed; draft saving and local starter downloads remain available. See [server operations and verified scope](docs/SERVER_DEPLOYMENT.md).
 
 ## Run locally
 

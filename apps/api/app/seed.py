@@ -5,7 +5,7 @@ from .models import CurriculumVersion, Lesson, Module, Track
 
 def seed(db):
     data = catalog()
-    db.merge(CurriculumVersion(id=data["version"], title="Engineering Academy / Founding curriculum"))
+    db.merge(CurriculumVersion(id=data["version"], title="Forge / Founding curriculum"))
     db.flush()
     for position, track in enumerate(data["tracks"]):
         db.merge(

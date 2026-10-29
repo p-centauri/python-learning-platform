@@ -1,4 +1,4 @@
-# Engineering Academy — session guide
+# Forge (Backend & AI Engineering Academy) — session guide
 
 Before changing this project, read `docs/STATUS.md`, `docs/ROADMAP.md`, and the latest entry in `docs/PROGRESS.md`. Read the relevant architecture/assessment/security documents before changing those domains.
 
