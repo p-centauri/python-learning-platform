@@ -14,7 +14,7 @@ from . import portfolios
 from . import accounts
 from . import exports
 
-app = FastAPI(title="Engineering Academy API", version="0.1.0")
+app = FastAPI(title="Forge API", version="0.1.0")
 logger = logging.getLogger("academy")
 auth_requests = defaultdict(deque)
 rate_lock = Lock()

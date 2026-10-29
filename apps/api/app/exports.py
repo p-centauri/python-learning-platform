@@ -118,7 +118,7 @@ def account_export(user, db, request):
 
 def markdown(data):
     lines = [
-        "# Engineering Academy — personal evidence",
+        "# Forge — personal evidence",
         "",
         f"Captured: {data['captured_at']}",
         f"Catalog: {data['catalog_version']}",

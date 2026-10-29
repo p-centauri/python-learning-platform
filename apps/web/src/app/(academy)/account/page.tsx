@@ -57,7 +57,7 @@ export default function AccountPage() {
     const url = URL.createObjectURL(
       new Blob(
         [
-          `Engineering Academy offline recovery\nAccount: ${user?.email}\nRecovery key: ${key}\n\nKeep this private and offline. It works once until revoked or your password changes. No email is sent.\n`,
+          `Forge academy offline recovery\nAccount: ${user?.email}\nRecovery key: ${key}\n\nKeep this private and offline. It works once until revoked or your password changes. No email is sent.\n`,
         ],
         { type: "text/plain" },
       ),

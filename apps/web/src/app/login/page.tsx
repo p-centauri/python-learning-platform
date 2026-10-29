@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import {
   ArrowRight,
   BookOpen,
-  Command,
+  Anvil,
   Eye,
   EyeOff,
   FlaskConical,
@@ -57,9 +57,9 @@ export default function Login() {
       <section className="login-story">
         <div className="brand">
           <span className="brand-mark">
-            <Command size={24} />
+            <Anvil size={24} />
           </span>
-          <span>form.</span>
+          <span>forge.</span>
         </div>
         <div>
           <p className="eyebrow">Backend engineering & applied AI</p>
@@ -95,9 +95,9 @@ export default function Login() {
         <div>
           <div className="brand login-mobile-brand">
             <span className="brand-mark">
-              <Command size={22} />
+              <Anvil size={22} />
             </span>
-            <span>form.</span>
+            <span>forge.</span>
           </div>
           <p className="eyebrow">Your engineering academy</p>
           <h1>{register ? "Create your workspace." : "Welcome back."}</h1>

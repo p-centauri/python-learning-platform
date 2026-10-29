@@ -170,7 +170,7 @@ class EverydayTests(unittest.TestCase):
             self.assertNotIn("explanation", question)
         markdown = self.client.get("/api/account/export?format=markdown")
         self.assertEqual(markdown.status_code, 200)
-        self.assertIn("# Engineering Academy", markdown.text)
+        self.assertIn("# Forge — personal evidence", markdown.text)
         self.assertIn("attachment;", markdown.headers["content-disposition"])
         anonymous = TestClient(app)
         self.addCleanup(anonymous.close)

@@ -7,6 +7,7 @@ import {
   BookText,
   Bookmark,
   ChartNoAxesCombined,
+  Anvil,
   Command,
   FlaskConical,
   FolderKanban,
@@ -210,11 +211,11 @@ export function Shell({ children }: { children: React.ReactNode }) {
               )}
               <Link className="brand" href="/">
                 <span className="brand-mark">
-                  <Command size={22} />
+                  <Anvil size={22} />
                 </span>
                 <span>
-                  form<span className="brand-dot">.</span>
-                  <small>ENGINEERING ACADEMY</small>
+                  forge<span className="brand-dot">.</span>
+                  <small>BACKEND & AI ACADEMY</small>
                 </span>
               </Link>
               <nav aria-label="Main navigation">
@@ -312,7 +313,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
             {error && <ErrorNotice message={error} />} {children}
           </main>
           <footer className="workspace-footer">
-            <span>Form · Engineering Academy</span>
+            <span>Forge · Backend & AI Engineering Academy</span>
             <Link href="/account">Your account & evidence</Link>
           </footer>
           {!isExam && (
