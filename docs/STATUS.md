@@ -10,6 +10,10 @@ Last updated: 2026-10-26
 
 Exact next action: resume learning at **https://eng.xosilov.com/login?mode=signin** (the sslip.io address redirects there). Since 2026-10-26 the server's single shared proxy is `/opt/apps/proxy` (see its README); carwash's own Caddy and the reload procedures written for it are retired. Optionally push the local commits to GitHub. Wait for the user's next instruction before another milestone. An owned domain and separate worker remain future options. For the next curriculum continuation, audit the original 22 acceptance criteria/introductory backend/AI modules and define one bounded expert-depth teaching/practice unit; do not infer full graduate/public multi-tenant acceptance from this release.
 
+## Site icon (2026-10-29)
+
+- `apps/web/src/app/icon.svg`, `favicon.ico` and `apple-icon.png` (braces around a node, in `--green`) give the site a browser icon; `apps/web/tests/icons.spec.ts` covers it. Built and tested locally; **not committed, pushed or deployed yet**. Uncommitted "Form" → "Forge" rename edits by someone else are in the tree and were left alone (see PROGRESS 2026-10-29).
+
 ## Next.js 16.4.3 security release (2026-10-26)
 
 - CI's `npm audit` flagged next 16.0.0–16.4.0 (production ran 16.4.0): GHSA-2464-fhr4-w9xw (critical, unauthenticated RCE in image optimization with SVG), GHSA-673q-mjm6-r5xr (critical, RCE in `use cache` typed arrays), GHSA-p3m5-59mp-jv5r (DoS, server actions). The source uses none of next/image, `use cache` or server actions, so exposure was probably low, but the image endpoint exists by default.
